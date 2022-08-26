@@ -1343,7 +1343,10 @@
 "@screens/support-send-feedback@file:./screens/support-send-feedback":
   version "1.0.0"
 
-"@screens/user-subscribed@file:./screens/user-subscribed/":
+"@screens/support-send-feedback@file:./screens/support-send-feedback/":
+  version "1.0.0"
+
+"@screens/user-subscribed@file:./screens/user-subscribed":
   version "1.0.0"
 
 "@screens/wallet@file:./screens/wallet":
