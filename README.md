@@ -65,6 +65,7 @@ This section will show any installed modules you add from the Storyboard Modules
 - [terms-and-conditions]()
 - [react-native-social-login](modules/social-login)
 - [react-native-onboarding](modules/onboarding)
+- [screen-wallet](screens/wallet)
 
 # Getting started: Frontend
 
