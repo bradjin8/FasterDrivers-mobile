@@ -1334,7 +1334,10 @@
     redux-thunk "^2.4.1"
     reselect "^4.1.5"
 
-"@screens/support-send-feedback@file:./screens/support-send-feedback/":
+"@screens/invite-friends@file:./screens/invite-friends/":
+  version "1.0.0"
+
+"@screens/support-send-feedback@file:./screens/support-send-feedback":
   version "1.0.0"
 
 "@screens/wallet@file:./screens/wallet":

@@ -23,6 +23,7 @@
     "@react-navigation/native": "^5.9.3",
     "@react-navigation/stack": "^5.14.3",
     "@reduxjs/toolkit": "^1.5.0",
+    "@screens/invite-friends": "file:./screens/invite-friends/",
     "@screens/support-send-feedback": "file:./screens/support-send-feedback/",
     "@screens/wallet": "file:./screens/wallet/",
     "@stripe/stripe-react-native": "^0.2.2",
