@@ -1083,6 +1083,11 @@
   dependencies:
     react-native-render-html "^5.1.0"
 
+"@modules/terms-and-conditions@file:./modules/terms-and-conditions":
+  version "1.0.1"
+  dependencies:
+    react-native-render-html "^5.1.0"
+
 "@modules/user-profile@file:./modules/user-profile":
   version "1.0.0"
   dependencies:
