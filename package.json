@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@modules/camera": "file:./modules/camera",
+    "@modules/onboarding": "file:./modules/onboarding/",
     "@modules/payments": "file:./modules/payments",
     "@modules/privacy-policy": "file:./modules/privacy-policy",
     "@modules/social-login": "file:./modules/social-login/",

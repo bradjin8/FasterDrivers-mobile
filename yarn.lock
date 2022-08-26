@@ -1080,6 +1080,11 @@
   dependencies:
     react-native-actionsheet "^2.4.2"
 
+"@modules/onboarding@file:./modules/onboarding/":
+  version "1.0.0"
+  dependencies:
+    react-native-app-intro-slider "^4.0.4"
+
 "@modules/payments@file:./modules/payments":
   version "1.0.1"
 
@@ -1088,7 +1093,7 @@
   dependencies:
     react-native-render-html "^5.1.0"
 
-"@modules/social-login@file:./modules/social-login/":
+"@modules/social-login@file:./modules/social-login":
   version "1.0.0"
   dependencies:
     "@invertase/react-native-apple-authentication" "^2.1.0"
@@ -6760,6 +6765,11 @@ react-native-actionsheet@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/react-native-actionsheet/-/react-native-actionsheet-2.4.2.tgz#6a00dd51a75ef2c8974312130e405af73191500f"
   integrity sha512-DBoWIvVwuWXuptF4t46pBqkFxaUxS+rsIdHiA05t0n4BdTIDV2R4s9bLEUVOGzb94D7VxIamsXZPA/3mmw+SXg==
+
+react-native-app-intro-slider@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-app-intro-slider/-/react-native-app-intro-slider-4.0.4.tgz#fa5cda7057db62c448ac975ffd2ba0cff94cc8d8"
+  integrity sha512-Zkjaol6X3BbZkHUpVDj2LjdidpS6rCgKi0fx80xgGKa0pHxBRd4swWTv2bHnnvu5k1/HXwYk0mY2TbK+2jHl5w==
 
 react-native-codegen@^0.0.6:
   version "0.0.6"
