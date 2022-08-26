@@ -1346,6 +1346,9 @@
 "@screens/user-subscribed@file:./screens/user-subscribed":
   version "1.0.0"
 
+"@screens/user-subscribed@file:./screens/user-subscribed/":
+  version "1.0.0"
+
 "@screens/wallet@file:./screens/wallet":
   version "1.0.0"
 
