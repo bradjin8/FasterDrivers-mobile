@@ -69,6 +69,7 @@ This section will show any installed modules you add from the Storyboard Modules
 - [screen-support-send-feedback](screens/support-send-feedback)
 - [screen-invite-friends](screens/invite-friends)
 - [screen-settings](screens/settings)
+- [screen-user-subscribed](screens/user-subscribed)
 
 # Getting started: Frontend
 

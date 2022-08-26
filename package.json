@@ -26,6 +26,7 @@
     "@screens/invite-friends": "file:./screens/invite-friends/",
     "@screens/settings": "file:./screens/settings/",
     "@screens/support-send-feedback": "file:./screens/support-send-feedback/",
+    "@screens/user-subscribed": "file:./screens/user-subscribed/",
     "@screens/wallet": "file:./screens/wallet/",
     "@stripe/stripe-react-native": "^0.2.2",
     "axios": "^0.21.1",
