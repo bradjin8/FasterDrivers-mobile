@@ -12,6 +12,7 @@
     "web:build": "./node_modules/.bin/webpack --config ./webpack.config.js --color --mode production"
   },
   "dependencies": {
+    "@modules/camera": "file:./modules/camera",
     "@modules/payments": "file:./modules/payments",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.9.3",
@@ -26,6 +27,8 @@
     "react-native-dotenv": "^2.5.3",
     "react-native-elements": "^3.3.1",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-image-crop-picker": "0.36.2",
+    "react-native-permissions": "3.0.4",
     "react-native-radio-buttons-group": "^2.2.11",
     "react-native-reanimated": "~2.4.1",
     "react-native-responsive-screen": "^1.4.2",
