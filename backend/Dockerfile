@@ -1,6 +1,7 @@
 FROM crowdbotics/cb-django:3.8-slim-buster AS build
 
 # Copy dependency management files and install app packages to /.venv
+
 COPY ./Pipfile ./Pipfile.lock /
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
@@ -10,6 +11,19 @@ ARG SECRET_KEY
 
 # Set Working directory
 WORKDIR /opt/webapp
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends python3-dev libpq-dev gcc curl g++ \
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/*
+  # You can add additional steps to the build by appending commands down here using the
+  # format `&& <command>`. Remember to add a `\` at the end of LOC 12.
+  # WARNING: Changes to this file may cause unexpected behaviors when building the app.
+  # Change it at your own risk.
+
+
+RUN apt-get update \
+    && apt-get install -y binutils libproj-dev gdal-bin python3-gdal --fix-missing
 
 # Add runtime user with respective access permissions
 RUN groupadd -r django \
