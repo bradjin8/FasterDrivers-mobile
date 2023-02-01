@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "commonjs",
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": ".",
+        "jsx": "react",
+        "noImplicitAny": false,
+        "paths": {
+            "assets*": [
+                "./src/assets*",
+                "./src/assets"
+            ],
+            "navigation*": [
+                "./src/navigation*",
+                "./src/navigation"
+            ],
+            "screens*": [
+                "./src/screens*",
+                "./src/screens"
+            ],
+            "components*": [
+                "./src/components*",
+                "./src/components"
+            ],
+            "store*": [
+                "./src/store*",
+                "./src/store"
+            ],
+            "utils*": [
+                "./src/utils*",
+                "./src/utils"
+            ],
+            "apis*": [
+                "./src/apis*",
+                "./src/apis"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

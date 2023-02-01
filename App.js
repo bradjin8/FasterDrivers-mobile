@@ -1,85 +1,50 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Provider } from "react-redux"
-import "react-native-gesture-handler"
-import { NavigationContainer } from "@react-navigation/native"
-import { createStackNavigator } from "@react-navigation/stack"
-import {
-  configureStore,
-  createReducer,
-  combineReducers
-} from "@reduxjs/toolkit"
+import { ThemeProvider } from "react-native-elements"
+import { theme } from "@options"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { persistStore } from "redux-persist"
+import { PersistGate } from "redux-persist/integration/react"
+import { store } from "./redux/store"
+import Navigation from "navigation"
+import FlashMessage from "react-native-flash-message"
+import { LogBox } from "react-native"
+import moment from "moment"
 
-import { screens } from "@screens"
-import { modules, reducers, hooks, initialRoute } from "@modules"
-import { connectors } from "@store"
+const persistor = persistStore(store)
 
-const Stack = createStackNavigator()
-
-import { GlobalOptionsContext, OptionsContext, getOptions } from "@options"
-
-const getNavigation = (modules, screens, initialRoute) => {
-  const Navigation = () => {
-    const routes = modules.concat(screens).map(mod => {
-      const pakage = mod.package;
-      const name = mod.value.title;
-      const Navigator = mod.value.navigator;
-      const Component = (props) => {
-        return (
-          <OptionsContext.Provider value={getOptions(pakage)}>
-            <Navigator {...props} />
-          </OptionsContext.Provider>
-        )
-      }
-      return <Stack.Screen key={name} name={name} component={Component} />
-    })
-
-    const screenOptions = { headerShown: true };
-
-    return (
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName={initialRoute}
-          screenOptions={screenOptions}
-        >
-          {routes}
-        </Stack.Navigator>
-      </NavigationContainer>
-    )
+moment.locale("en", {
+  relativeTime: {
+    future: "in %s",
+    past: "%s ago",
+    s: "1s",
+    ss: "%ss",
+    m: "1m",
+    mm: "%dm",
+    h: "1h",
+    hh: "%dh",
+    d: "1d",
+    dd: "%dd",
+    M: "1M",
+    MM: "%dM",
+    y: "1Y",
+    yy: "%dY"
   }
-  return Navigation
-}
-
-const getStore = (globalState) => {
-  const appReducer = createReducer(globalState, _ => {
-    return globalState
-  })
-
-  const reducer = combineReducers({
-    app: appReducer,
-    ...reducers,
-    ...connectors
-  })
-
-  return configureStore({
-    reducer: reducer,
-    middleware: getDefaultMiddleware => getDefaultMiddleware()
-  })
-}
+})
 
 const App = () => {
-  const global = useContext(GlobalOptionsContext)
-  const Navigation = getNavigation(modules, screens, initialRoute)
-  const store = getStore(global)
-
-  let effects = {}
-  hooks.map(hook => {
-    effects[hook.name] = hook.value()
-  })
-
+  LogBox.ignoreAllLogs()
   return (
-    <Provider store={store}>
-      <Navigation />
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ThemeProvider theme={theme}>
+            <Navigation />
+            <FlashMessage />
+          </ThemeProvider>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   )
 }
 

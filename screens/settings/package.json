@@ -1,9 +1,0 @@
-{
-    "name": "@screens/settings",
-    "version": "1.0.0",
-    "description": "",
-    "private": true,
-    "main": "index.js",
-    "author": "Crowdbotics",
-    "license": "ISC"
-}

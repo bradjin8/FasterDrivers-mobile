@@ -9,6 +9,34 @@ module.exports = {
       "safe": false,
       "allowUndefined": true
     }],
-    "import-glob-meta"
+    "import-glob-meta",
+    [
+      'module-resolver',
+      {
+        root: ['./'],
+        extensions: [
+          '.ios.ts',
+          '.android.ts',
+          '.ts',
+          '.ios.tsx',
+          '.android.tsx',
+          '.tsx',
+          '.jsx',
+          '.js',
+          '.json',
+        ],
+        alias: {
+          src: './src',
+          assets: './src/assets',
+          navigation: './src/navigation',
+          store: './src/store',
+          screens: './src/screens',
+          components: './src/components',
+          utils: './src/utils',
+          apis: './src/apis'
+        },
+      },
+    ],
+    'react-native-reanimated/plugin',
   ]
 };
