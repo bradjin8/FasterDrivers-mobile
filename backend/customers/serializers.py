@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 
 from .models import Customer, CustomerAddress
 
@@ -12,6 +13,17 @@ class CustomerAddressSerializer(serializers.ModelSerializer):
                 'required': False
             }
         }
+
+    def create(self, validated_data):
+        user = CurrentUserDefault()
+        if 'default' in validated_data and validated_data['default']:
+            CustomerAddress.objects.filter(customer=user.customer).update(default=False)
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if 'default' in validated_data and validated_data['default']:
+            CustomerAddress.objects.filter(customer=instance.customer).update(default=False)
+        return super().update(instance, validated_data)
 
 
 class CustomerSerializer(serializers.ModelSerializer):

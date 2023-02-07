@@ -1,9 +1,11 @@
+from rest_framework import serializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from users.authentication import ExpiringTokenAuthentication
-from .serializers import DishSerializer, AddOnSerializer, ItemSerializer
-from .models import Dish, AddOn, Item
+from .serializers import DishSerializer, AddOnSerializer, ItemSerializer, \
+                         RestaurantSerializer, ListRestaurantSerializer
+from .models import Dish, AddOn, Item, Restaurant
 
 
 class DishViewSet(ModelViewSet):
@@ -28,3 +30,15 @@ class ItemViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Item.objects.all()
+
+
+class RestaurantViewSet(ModelViewSet):
+    serializer_class = RestaurantSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = [ExpiringTokenAuthentication]
+    queryset = Restaurant.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ListRestaurantSerializer
+        return RestaurantSerializer

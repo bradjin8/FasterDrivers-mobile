@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from rest_framework import serializers
 
 from .models import Restaurant, Dish, AddOn, Item
@@ -98,3 +99,22 @@ class RestaurantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
+        rep['rating_count'] = instance.reviews.count()
+        return rep
+
+
+class ListRestaurantSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Restaurant
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
+        rep['rating_count'] = instance.reviews.count()
+        return rep

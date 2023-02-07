@@ -76,7 +76,9 @@ LOCAL_APPS = [
     'users.apps.UsersConfig',
     'customers',
     'drivers',
-    'restaurants'
+    'restaurants',
+    'reviews',
+    'orders'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',

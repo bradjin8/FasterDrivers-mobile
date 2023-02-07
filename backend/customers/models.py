@@ -32,6 +32,9 @@ class CustomerAddress(UUIDModel):
         on_delete=models.CASCADE,
         related_name='addresses'
     )
+    default = models.BooleanField(
+        default=False
+    )
     street = models.CharField(
         max_length=255
     )
