@@ -3,23 +3,40 @@ import {  StyleSheet } from "react-native"
 import { createStackNavigator } from "@react-navigation/stack"
 
 //Screens
-import Setting from "screens/Setting"
-import BottomNavigator from "./Main"
+import RestaurantBottomBar from "./RestaurantBottomBar"
 
 import { Text } from "components"
 import { color } from "utils"
+import { useSelector } from "react-redux";
+import Onboard from "screens/Onboard";
 
 const mainStack = createStackNavigator()
 
 const ApplicationStack = props => {
-  return (
-    <>
-      <mainStack.Navigator screenOptions={{ headerShown: false, animationEnabled: false }}>
-        <mainStack.Screen name="BottomBar" component={BottomNavigator} />
-        <mainStack.Screen name="Setting" component={Setting} />
+  const user = useSelector(state => state.loginReducer.user)
+  const userType = user?.type;
+  
+  if(userType === 'Restaurant'){
+    return (
+      <>
+        <mainStack.Navigator
+          screenOptions={{ headerShown: false, animationEnabled: false }}
+          initialRouteName="RestaurantBottomBar"
+        >
+          <mainStack.Screen name="RestaurantBottomBar" component={RestaurantBottomBar} />
+        </mainStack.Navigator>
+      </>
+    )
+  } else {
+    return (
+      <mainStack.Navigator
+        screenOptions={{ headerShown: false, animationEnabled: false }}
+        initialRouteName="Onboard"
+      >
+        <mainStack.Screen name="Onboard" component={Onboard} />
       </mainStack.Navigator>
-    </>
-  )
+    )
+  }
 }
 
 export default ApplicationStack

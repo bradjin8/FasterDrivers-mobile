@@ -6,5 +6,7 @@ export const palette = {
   offWhite: '#EBEBEB',
   angry: '#FF2641',
   darkGray: '#636972',
-  secondary: '#3A3F4C'
+  secondary: '#F5F5F5',
+  secondaryBtn: '#32343E',
+  lightGray: '#D9D9D9'
 };

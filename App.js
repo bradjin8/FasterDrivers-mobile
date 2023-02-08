@@ -8,7 +8,7 @@ import { PersistGate } from "redux-persist/integration/react"
 import { store } from "./redux/store"
 import Navigation from "navigation"
 import FlashMessage from "react-native-flash-message"
-import { LogBox } from "react-native"
+import { LogBox, SafeAreaView } from "react-native";
 import moment from "moment"
 
 const persistor = persistStore(store)
@@ -35,16 +35,18 @@ moment.locale("en", {
 const App = () => {
   LogBox.ignoreAllLogs()
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <ThemeProvider theme={theme}>
-            <Navigation />
-            <FlashMessage />
-          </ThemeProvider>
-        </PersistGate>
-      </Provider>
-    </GestureHandlerRootView>
+    <SafeAreaView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <ThemeProvider theme={theme}>
+              <Navigation />
+              <FlashMessage />
+            </ThemeProvider>
+          </PersistGate>
+        </Provider>
+      </GestureHandlerRootView>
+    </SafeAreaView>
   )
 }
 

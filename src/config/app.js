@@ -1,6 +1,6 @@
 export const appConfig = {
   // todo add library to handle env variables
-  backendServerURL: "https://",
+  backendServerURL: "https://fancy-cherry-36842.botics.co/api/v1",
   apiClientID: 'c789e448-1d21-48e9-a51a-d4c7b995af53',
   apiSecretKey: 'dVBprfsHsIr8Z5aCoVua',
   defaultTimeout: 5000
