@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text as RNText, StyleSheet } from 'react-native';
-import { color as themeColors, scale, scaleVertical, typography } from 'utils';
+import { color, color as themeColors, scale, scaleVertical, typography } from "utils";
 
 export function Text({
   variant = 'text',
@@ -8,6 +8,7 @@ export function Text({
   color,
   font,
   fontSize,
+  fontWeight,
   lineHeight,
   letterSpacing,
   textAlign,
@@ -19,6 +20,7 @@ export function Text({
     fontSize: scaleVertical(fontSize),
     lineHeight: scaleVertical(lineHeight),
     letterSpacing: scale(letterSpacing),
+    fontWeight: fontWeight,
     textAlign,
   };
   Object.keys(customStyles).forEach(
@@ -102,5 +104,11 @@ const styles = StyleSheet.create({
     fontFamily: typography.regular_400,
     fontSize: scaleVertical(12),
     lineHeight: scaleVertical(18),
+  },
+  link: {
+    ...BASE,
+    color: color.primary,
+    fontSize: scaleVertical(16),
+    lineHeight: scaleVertical(24),
   }
 });

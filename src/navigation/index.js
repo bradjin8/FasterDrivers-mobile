@@ -4,17 +4,15 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { useSelector, useDispatch } from "react-redux"
 import { navigationRef } from "./NavigationService"
 import { color } from "utils"
-import { setAccessToken } from "../screenRedux/loginRedux"
 
 import AuthStackScreen from "./AuthScreens"
 import ApplicationStack from "./ApplicationStack"
+import AsyncStorage from "@react-native-community/async-storage";
 
 const stack = createStackNavigator()
 
 const Navigation = props => {
   const accessToken = useSelector(state => state.loginReducer.accessToken)
-  // const dispatch = useDispatch()
-  // dispatch(setAccessToken('accessToken'))
   
   return (
     <NavigationContainer
@@ -28,8 +26,8 @@ const Navigation = props => {
         {accessToken ? (
           <stack.Screen name="ApplicationStack" component={ApplicationStack} />
         ) : (
-          <stack.Screen name="AuthStack" component={AuthStackScreen} />
-        )}
+           <stack.Screen name="AuthStack" component={AuthStackScreen} />
+         )}
       </stack.Navigator>
     </NavigationContainer>
   )

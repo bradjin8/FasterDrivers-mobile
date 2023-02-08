@@ -1,7 +1,7 @@
 import { StyleSheet, View, Image, TouchableOpacity, Pressable, ActivityIndicator } from "react-native"
 import React from "react"
 import { useNavigation } from "@react-navigation/native"
-import { color, scale } from "utils";
+import { color, scale, scaleVertical } from "utils";
 //Themes
 import Images from "../theme/Images"
 //Components
@@ -41,14 +41,14 @@ const SimpleHeader = props => {
         )}
         {showBackIcon && (
           <TouchableOpacity
-            style={{ paddingLeft: 2, paddingRight: 15, paddingVertical: 10 }}
+            style={styles.backIconView}
             onPress={() => {
               showBackIcon && navigation.goBack()
             }}
           >
             <Image
-              source={Images.HomeOn}
-              style={{ width: 10, height: 17 }}
+              source={Images.Back}
+              style={{ width: 15, height: 15 }}
             />
           </TouchableOpacity>
         )}
@@ -61,7 +61,7 @@ const SimpleHeader = props => {
           marginLeft: enterChallange ? 30 : 0,
         }}
       >
-        <Text style={{ color: "#fff", fontSize: 15, fontWeight: "700" }}>
+        <Text style={{ color: color.black, fontSize: 14, fontWeight: "700" }}>
           {title}
         </Text>
       </View>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     height: scale(60),
     backgroundColor: color.white,
     alignItems: "center",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     flexDirection: "row"
   },
   imageView: {
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     borderRadius: scale(10)
   },
+  backIconView: { width: scaleVertical(30), height: scaleVertical(30), borderRadius: scaleVertical(15), backgroundColor: color.black, alignItems: 'center', justifyContent: 'center' },
 })
 
 export default SimpleHeader

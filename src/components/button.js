@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, Pressable, View } from 'react-native';
+import { StyleSheet, ActivityIndicator, Pressable, View, Dimensions } from "react-native";
 import { color, scale, scaleVertical } from 'utils';
 import { Text } from './text';
+const { width, height } = Dimensions.get('window');
 
 export function Button({
   variant = 'button',
-  textColor = variant === 'link' ? 'primary' : variant === 'outline' ? "" : 'white',
+  textColor = variant === 'link' ? 'primary' : variant === 'outline' ? "primary" : 'white',
   font = 'medium_600',
   fontSize = scaleVertical(14),
   loading = false,
@@ -15,7 +16,11 @@ export function Button({
   text,
   onPress,
   icon,
-  style
+  style,
+  isSecondary,
+  noBG,
+  mt,
+  fontWeight,
 }) {
   const buttonStyles = [];
   if (variant === 'button') {
@@ -36,9 +41,18 @@ export function Button({
   if (width) {
     buttonStyles.push({ width: scale(width) });
   }
-
+  if(isSecondary) {
+    buttonStyles.push({ ...styles.secondaryButton})
+  }
+  if(mt) {
+    buttonStyles.push({ marginTop: scaleVertical(mt)})
+  }
+  if(noBG) {
+    buttonStyles.push({backgroundColor: 'transparent'})
+  }
+  
   const isDisabled = disabled || loading;
-
+  
   return (
     <Pressable
       onPress={onPress}
@@ -48,27 +62,37 @@ export function Button({
       {loading ? (
         <ActivityIndicator color={textColor} size="small" />
       ) : (
-        <View style={styles.content}>
-          {icon}
-          <Text
-            color={textColor}
-            font={font}
-            fontSize={fontSize}
-            textAlign={variant === 'button' || variant === 'round' || variant === 'outline' ? 'center' : 'left'}
-            style={variant === 'link' && { textDecorationLine: 'underline' }}
-          >{text}
-          </Text>
-        </View>
-      )}
+         <View style={styles.content}>
+           {icon}
+           <Text
+             color={isSecondary ? 'secondaryBtn' : textColor}
+             font={font}
+             fontSize={fontSize}
+             fontWeight={fontWeight}
+             textAlign={variant === 'button' || variant === 'round' || variant === 'outline' ? 'center' : 'left'}
+             // style={variant === 'link' && { textDecorationLine: 'underline' }}
+           >
+             {text}
+           </Text>
+         </View>
+       )}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: scale(16),
-    height: scaleVertical(64),
-    backgroundColor: color.darkGray,
+    borderRadius: scale(20),
+    height: scaleVertical(60),
+    // width: scale(width-50),
+    backgroundColor: color.primary,
+    justifyContent: 'center',
+  },
+  secondaryButton: {
+    borderRadius: scale(20),
+    height: scaleVertical(65),
+    width: scale(width-50),
+    backgroundColor: color.secondary,
     justifyContent: 'center',
   },
   round: {
@@ -77,10 +101,10 @@ const styles = StyleSheet.create({
   outline: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#ffff'
+    borderColor: color.primary
   },
   link: {
-    marginTop: -3
+    // marginTop: -3
   },
   disabled: {
     opacity: 0.5,
