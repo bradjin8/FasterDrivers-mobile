@@ -18,9 +18,9 @@ router.register("users", UserViewSet, basename="users")
 router.register("orders", OrderViewSet, basename="orders")
 router.register("customers/address", CustomerAddressViewSet, basename="customer_addresses")
 router.register("restaurants", RestaurantViewSet, basename="restuarants")
-router.register("restaurants/dishes", DishViewSet, basename="dishes")
-router.register("restaurants/addons", AddOnViewSet, basename="addons")
-router.register("restaurants/items", ItemViewSet, basename="items")
+router.register("dishes", DishViewSet, basename="dishes")
+router.register("addons", AddOnViewSet, basename="addons")
+router.register("items", ItemViewSet, basename="items")
 
 urlpatterns = [
     path("", include(router.urls)),
