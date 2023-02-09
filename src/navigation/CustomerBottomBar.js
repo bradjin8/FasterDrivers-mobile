@@ -14,6 +14,7 @@ import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
 
 import Home from "screens/Customer/Home"
+import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
 import Orders from "screens/Customer/Orders"
 
@@ -114,6 +115,7 @@ const HomeTab = () => {
         initialRouteName="Home"
       >
         <settingStack.Screen name="Home" component={Home} />
+        <settingStack.Screen name="RestaurantDetails" component={RestaurantDetails} />
       </settingStack.Navigator>
     </>
   )

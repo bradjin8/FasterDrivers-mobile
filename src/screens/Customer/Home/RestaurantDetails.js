@@ -1,42 +1,28 @@
 import React, {useEffect} from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { color, scale, scaleVertical, restaurantSettingData } from "utils";
 import { Images } from "src/theme"
 import { ActivityIndicators, Text } from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantsData } from "../../../screenRedux/customerRedux";
-import { navigate } from "navigation/NavigationService";
+import { getRestaurantDetails } from "../../../screenRedux/customerRedux";
 
-const Home = () => {
+const RestaurantDetails = ({ route }) => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading)
-  const restaurants = useSelector(state => state.customerReducer.restaurants)
-
+  const restaurantDetails = useSelector(state => state.customerReducer.restaurantDetails)
+  
   useEffect(() => {
-   dispatch(getRestaurantsData())
+    // /route?.params.userType
+    dispatch(getRestaurantDetails("faf23853-1b3d-4666-a3f5-825542b118bf"))
   }, [])
   
+  console.log(restaurantDetails)
   return (
     <BaseScreen style={styles.mainWrapper}>
-      <SimpleHeader
-        title="Home"
-      />
       <View style={styles.container}>
         {loading && <ActivityIndicators />}
-          <Pressable onPress={() => navigate("RestaurantDetails")}>
-            {restaurants?.map((rest, index) => {
-              console.log(rest.id)
-              return(
-                <View key={index.toString()}>
-                  <Text variant="text" color="black" >
-                    Rest
-                  </Text>
-                </View>
-              )
-            })}
-          </Pressable>
       </View>
     </BaseScreen>
   )
@@ -49,4 +35,4 @@ const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
 })
 
-export default Home;
+export default RestaurantDetails;

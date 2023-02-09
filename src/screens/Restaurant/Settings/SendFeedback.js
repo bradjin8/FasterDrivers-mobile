@@ -76,6 +76,8 @@ const SendFeedback = ({}) => {
             onBlurText={onBlurPassword}
             onChangeText={(text) => setPassword(text)}
             hasError={passwordError}
+            multiline={true}
+            style={{textAlignVertical: 'top'}}
             errorMessage={"Enter valid message content"}
           />
         </View>
