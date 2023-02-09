@@ -70,6 +70,7 @@ const ChangePassword = ({}) => {
             Old Password
           </Text>
           <CustomTextInput
+            secureTextEntry
             value={oldPass}
             onChangeText={(text) => setOldPass(text)}
             onBlurText={onBlurOldPassword}
@@ -81,6 +82,7 @@ const ChangePassword = ({}) => {
             New Password
           </Text>
           <CustomTextInput
+            secureTextEntry
             value={newPass}
             onChangeText={(text) => setNewPass(text)}
             onBlurText={onBlurPassword}
@@ -92,6 +94,7 @@ const ChangePassword = ({}) => {
             Repeat Password
           </Text>
           <CustomTextInput
+            secureTextEntry
             value={newRepeat}
             onChangeText={(text) => setNewRepeat(text)}
             onBlurText={onBlurRePassword}

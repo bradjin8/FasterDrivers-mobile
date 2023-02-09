@@ -241,7 +241,7 @@ function* restaurantUpdateAction(data) {
       yield put(updateRestaurantCompleted(resp.data))
       goBack()
       showMessage({
-        message: "Successfully restaurant details updated",
+        message: "Successfully details updated",
         type: "success"
       })
     }
