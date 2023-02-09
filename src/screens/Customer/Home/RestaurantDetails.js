@@ -18,7 +18,6 @@ const RestaurantDetails = ({ route }) => {
     dispatch(getRestaurantDetails("faf23853-1b3d-4666-a3f5-825542b118bf"))
   }, [])
   
-  console.log(restaurantDetails)
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.container}>

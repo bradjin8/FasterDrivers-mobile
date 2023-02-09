@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 //Screens
 import RestaurantBottomBar from "./RestaurantBottomBar"
 import CustomerBottomBar from "./CustomerBottomBar"
+import DriverBottomBar from "./DriverBottomBar"
 
 import { Text } from "components"
 import { color } from "utils"
@@ -36,6 +37,17 @@ const ApplicationStack = props => {
           initialRouteName="CustomerBottomBar"
         >
           <mainStack.Screen name="CustomerBottomBar" component={CustomerBottomBar} />
+        </mainStack.Navigator>
+      </>
+    )
+  } else if(userType === 'Driver') {
+    return (
+      <>
+        <mainStack.Navigator
+          screenOptions={{ headerShown: false, animationEnabled: false }}
+          initialRouteName="DriverBottomBar"
+        >
+          <mainStack.Screen name="DriverBottomBar" component={DriverBottomBar} />
         </mainStack.Navigator>
       </>
     )

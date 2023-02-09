@@ -56,9 +56,8 @@ export const changePassword = (data) => ({
   type: CHANGE_PASSWORD_REQUEST_STARTED,
   payload: data,
 })
-export const changePasswordCompleted = (data) => ({
+export const changePasswordCompleted = () => ({
   type: CHANGE_PASSWORD_REQUEST_COMPLETED,
-  payload: data,
 })
 export const logoutRequest = (data) => ({
   type: LOGOUT_REQUEST_STARTED,
@@ -122,7 +121,6 @@ export const loginReducer = (state = initialState, action) => {
       }
     case LOGOUT_REQUEST_STARTED:
       AsyncStorage.clear()
-      navigate("SignIn")
       return {
         ...state,
         user: null,
@@ -259,10 +257,10 @@ function* changePasswordAction(data) {
   try {
     const resp = yield call(changePasswordAPI, data.payload)
     if(resp?.data) {
-      yield put(changePasswordCompleted(resp.data))
+      yield put(changePasswordCompleted())
       goBack()
       showMessage({
-        message: response?.data?.detail,
+        message: "Password Updated Successfully",
         type: "success"
       })
     }
