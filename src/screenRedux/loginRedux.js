@@ -194,6 +194,10 @@ function* loginAction(data) {
       })
       if(resp?.data.user.type === "Restaurant"){
         navigate('RestaurantBottomBar')
+      } else if(resp?.data.user.type === "Driver"){
+        navigate('DriverBottomBar')
+      } else {
+        navigate('CustomerBottomBar')
       }
     }
   } catch (e) {
@@ -219,6 +223,10 @@ function* signUpAction(data) {
       })
       if(resp?.data.user.type === "Restaurant"){
         navigate('RestaurantBottomBar')
+      } else if(resp?.data.user.type === "Driver"){
+        navigate('DriverBottomBar')
+      } else {
+        navigate('CustomerBottomBar')
       }
     }
   } catch (e) {
