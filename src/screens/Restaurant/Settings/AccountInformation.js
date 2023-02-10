@@ -15,10 +15,6 @@ const AccountInformation = ({ navigation }) => {
   const [phone, setPhone] = useState(null)
   const [phoneError, setPhoneError] = useState(null)
   
-  const redirectTo = (userType) => {
-    navigation.navigate("RestaurantProfile", {userType})
-  }
-  
   const onBlurUser = () => {
     if(!userName) {
       setUserError(true)

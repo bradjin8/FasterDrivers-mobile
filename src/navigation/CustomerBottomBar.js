@@ -4,28 +4,25 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
 import { Text } from "../components/index";
 import { color, scaleVertical, scale } from "utils";
+import { Images } from "src/theme"
 
-import Settings from "screens/Restaurant/Settings"
-import AccountInformation from "screens/Restaurant/Settings/AccountInformation";
-import OrderAcceptance from "screens/Restaurant/Settings/OrderAcceptance";
+import Settings from "screens/Customer/Settings"
+import AccountInformation from "screens/Customer/Settings/AccountInformation";
 import TermCondition from "screens/Restaurant/Settings/TermCondition";
 import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
 import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
-import RestaurantProfile from "screens/Restaurant/Settings/RestaurantProfile"
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
 
-import Menu from "screens/Restaurant/Menu"
-import AddNewDish from "screens/Restaurant/Menu/AddNewDish"
+import Home from "screens/Customer/Home"
+import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
-import Home from "screens/Restaurant/Home"
+import Orders from "screens/Customer/Orders"
 
-import Map from "screens/Restaurant/Map"
-import { Images } from "src/theme"
 
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
 
-const RestaurantBottomBar = props => {
+const CustomerBottomBar = props => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -55,31 +52,15 @@ const RestaurantBottomBar = props => {
         }}
       />
       <Tab.Screen
-        name="Menu"
-        component={MenuTab}
+        name="Orders"
+        component={OrderTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Menu</Text>
+            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Menu}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
-          ),
-          header: () => null
-        }}
-      />
-      <Tab.Screen
-        name="Map"
-        component={MapTab}
-        options={{
-          tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Map</Text>
-          ),
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Map}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
@@ -106,7 +87,7 @@ const RestaurantBottomBar = props => {
   )
 }
 
-export default RestaurantBottomBar
+export default CustomerBottomBar
 
 const SettingTab = () => {
   return (
@@ -116,10 +97,8 @@ const SettingTab = () => {
         initialRouteName="Settings"
       >
         <settingStack.Screen name="Settings" component={Settings} />
-        <settingStack.Screen name="RestaurantProfile" component={RestaurantProfile} />
         <settingStack.Screen name="ChangePassword" component={ChangePassword} />
         <settingStack.Screen name="AccountInformation" component={AccountInformation} />
-        <settingStack.Screen name="OrderAcceptance" component={OrderAcceptance} />
         <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
@@ -136,33 +115,20 @@ const HomeTab = () => {
         initialRouteName="Home"
       >
         <settingStack.Screen name="Home" component={Home} />
+        <settingStack.Screen name="RestaurantDetails" component={RestaurantDetails} />
       </settingStack.Navigator>
     </>
   )
 }
 
-const MapTab = () => {
+const OrderTab = () => {
   return (
     <>
       <settingStack.Navigator
         screenOptions={{ headerShown: false, animationEnabled: false }}
-        initialRouteName="Map"
+        initialRouteName="Orders"
       >
-        <settingStack.Screen name="Map" component={Map} />
-      </settingStack.Navigator>
-    </>
-  )
-}
-
-const MenuTab = () => {
-  return (
-    <>
-      <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
-        initialRouteName="Menu"
-      >
-        <settingStack.Screen name="Menu" component={Menu} />
-        <settingStack.Screen name="AddNewDish" component={AddNewDish} />
+        <settingStack.Screen name="Orders" component={Orders} />
       </settingStack.Navigator>
     </>
   )

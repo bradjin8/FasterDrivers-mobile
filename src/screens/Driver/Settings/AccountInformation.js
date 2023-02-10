@@ -1,72 +1,64 @@
-import React, { useState, useRef } from "react";
-import { StyleSheet, View, Image, Platform, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import { StyleSheet, View, Image, TouchableHighlight, Platform, Pressable } from "react-native";
 import { color, scale, scaleVertical } from "utils";
 import { Images } from "src/theme"
 import { Button, CustomTextInput, Text } from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { useDispatch, useSelector } from "react-redux";
 import { updateRestaurant } from "../../../screenRedux/loginRedux";
+import { useDispatch, useSelector } from "react-redux";
 import { pickFromCamera, pickFromGallery } from "utils/Camera";
 import ActionSheet from "react-native-actionsheet";
 
-const RestaurantProfile = () => {
+const AccountInformation = () => {
   const actionSheet = useRef(null);
   const ImagePickerOptions = ["Take Photo", "Choose from Gallery", "Cancel"];
   const dispatch = useDispatch();
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [pickImage, setPickImage] = useState(user?.restaurant?.photo)
+  const [pickImage, setPickImage] = useState(user?.driver?.photo)
   const [changeImage, setChangeImage] = useState(null)
-  const [restaurantDetails, setRestaurantDetails] = useState({
+  
+  const [customerDetails, setCustomerDetails] = useState({
     "name": user.name,
-    "restaurant.phone": user.restaurant.phone,
-    "restaurant.street": user.restaurant.street,
-    "restaurant.city": user.restaurant.city,
-    "restaurant.state": user.restaurant.state,
-    "restaurant.zip_code": user.restaurant.zip_code,
-    "restaurant.website": user.restaurant.website,
-    "restaurant.ein_number": user.restaurant.ein_number,
-    "restaurant.description": user.restaurant.description,
-    "restaurant.type": user.restaurant.type,
+    "driver.phone": user.driver?.phone,
+    "driver.street": user.driver?.street,
+    "driver.city": user.driver?.city,
+    "driver.state": user.driver?.state,
+    "driver.zip_code": user.driver?.zip_code,
   })
   
   const onChangeText = (key, text) => {
-    setRestaurantDetails(prevState => ({ ...prevState, [key]: text }));
+    setCustomerDetails(prevState => ({ ...prevState, [key]: text }));
   }
   
   const onSave = () => {
     let data = new FormData();
     if(changeImage) {
-      data.append('restaurant.photo', {
+      data.append('driver.photo', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
         uri: Platform.OS === 'ios' ? pickImage.sourceURL.replace('file://', '') : pickImage.path,
         data: pickImage.data
       });
     }
-    data.append("name", restaurantDetails.name);
-    data.append("restaurant.phone", restaurantDetails["restaurant.phone"]);
-    data.append("restaurant.street", restaurantDetails["restaurant.street"]);
-    data.append("restaurant.city", restaurantDetails["restaurant.city"]);
-    data.append("restaurant.state", restaurantDetails["restaurant.state"]);
-    data.append("restaurant.zip_code", restaurantDetails["restaurant.zip_code"]);
-    data.append("restaurant.website", restaurantDetails["restaurant.website"]);
-    data.append("restaurant.ein_number", restaurantDetails["restaurant.ein_number"]);
-    data.append("restaurant.description", restaurantDetails["restaurant.description"]);
-    data.append("restaurant.type", restaurantDetails["restaurant.type"]);
+    data.append("name", customerDetails.name);
+    data.append("driver.phone", customerDetails["driver.phone"]);
+    data.append("driver.street", customerDetails["driver.street"]);
+    data.append("driver.city", customerDetails["driver.city"]);
+    data.append("driver.state", customerDetails["driver.state"]);
+    data.append("driver.zip_code", customerDetails["driver.zip_code"]);
     
     dispatch(updateRestaurant(data))
   }
-
+  
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
-        title="My Restaurant"
+        title="My Account"
         showBackIcon={true}
       />
       <View style={styles.container}>
-        
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
@@ -74,7 +66,7 @@ const RestaurantProfile = () => {
             </View>
             {pickImage ?
              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />
-            :
+                       :
              <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon} />
             }
           </Pressable>
@@ -82,35 +74,34 @@ const RestaurantProfile = () => {
         
         <View>
           <Text variant="text" color="black" >
-            Restaurant Name
+            Full Name
           </Text>
           <CustomTextInput
-            value={restaurantDetails["name"]}
+            value={customerDetails["name"]}
             onChangeText={(text) => onChangeText("name", text)}
           />
           <Text variant="text" color="black" >
-            Street
+            Phone Number
           </Text>
           <CustomTextInput
-            value={restaurantDetails["restaurant.street"]}
-            onChangeText={(text) => onChangeText("restaurant.street", text)}
+            value={customerDetails["driver.phone"]}
+            onChangeText={(text) => onChangeText("driver.phone", text)}
           />
           <Text variant="text" color="black" >
-            City
+            Address
           </Text>
           <CustomTextInput
-            value={restaurantDetails["restaurant.city"]}
-            onChangeText={(text) => onChangeText("restaurant.city", text)}
+            value={customerDetails["driver.street"]}
+            onChangeText={(text) => onChangeText("driver.street", text)}
           />
-          
           <View style={styles.stateView}>
             <View style={{width: '47%'}}>
               <Text variant="text" color="black" >
                 State
               </Text>
               <CustomTextInput
-                value={restaurantDetails["restaurant.state"]}
-                onChangeText={(text) => onChangeText("restaurant.state", text)}
+                value={customerDetails["driver.state"]}
+                onChangeText={(text) => onChangeText("driver.state", text)}
               />
             </View>
             <View style={{width: '47%'}}>
@@ -118,52 +109,14 @@ const RestaurantProfile = () => {
                 Zip Code
               </Text>
               <CustomTextInput
-                value={restaurantDetails["restaurant.zip_code"]}
-                onChangeText={(text) => onChangeText("restaurant.zip_code", text)}
+                value={customerDetails["driver.zip_code"]}
+                onChangeText={(text) => onChangeText("driver.zip_code", text)}
               />
             </View>
           </View>
-          
-          <Text variant="text" color="black" >
-            Website
-          </Text>
-          <CustomTextInput
-            value={restaurantDetails["restaurant.website"]}
-            onChangeText={(text) => onChangeText("restaurant.website", text)}
-          />
-          <Text variant="text" color="black" >
-            EIN Number
-          </Text>
-          <CustomTextInput
-            value={restaurantDetails["restaurant.ein_number"]}
-            onChangeText={(text) => onChangeText("restaurant.ein_number", text)}
-          />
-          <Text variant="text" color="black" >
-            Phone Number
-          </Text>
-          <CustomTextInput
-            value={restaurantDetails["restaurant.phone"]}
-            onChangeText={(text) => onChangeText("restaurant.phone", text)}
-          />
-          <Text variant="text" color="black" >
-            Type of the restaurant
-          </Text>
-          <CustomTextInput
-            value={restaurantDetails["restaurant.type"]}
-            onChangeText={(text) => onChangeText("restaurant.type", text)}
-          />
-          <Text variant="text" color="black" >
-            Description
-          </Text>
-          <CustomTextInput
-            value={restaurantDetails["restaurant.description"]}
-            onChangeText={(text) => onChangeText("restaurant.description", text)}
-            multiline={true}
-            style={{textAlignVertical: 'top'}}
-          />
         </View>
-        <View style={{marginTop: scaleVertical(25)}}>
-          <Button loading={loading} text='Save' fontSize={16} onPress={() => onSave()} />
+        <View style={{marginTop: scaleVertical(50)}}>
+          <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()}  mt={30} fontWeight="700" />
         </View>
       </View>
       <ActionSheet
@@ -190,7 +143,6 @@ const RestaurantProfile = () => {
     </BaseScreen>
   )
 }
-
 const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
@@ -227,4 +179,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RestaurantProfile;
+export default AccountInformation;

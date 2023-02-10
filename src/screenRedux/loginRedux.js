@@ -56,9 +56,8 @@ export const changePassword = (data) => ({
   type: CHANGE_PASSWORD_REQUEST_STARTED,
   payload: data,
 })
-export const changePasswordCompleted = (data) => ({
+export const changePasswordCompleted = () => ({
   type: CHANGE_PASSWORD_REQUEST_COMPLETED,
-  payload: data,
 })
 export const logoutRequest = (data) => ({
   type: LOGOUT_REQUEST_STARTED,
@@ -122,7 +121,6 @@ export const loginReducer = (state = initialState, action) => {
       }
     case LOGOUT_REQUEST_STARTED:
       AsyncStorage.clear()
-      navigate("SignIn")
       return {
         ...state,
         user: null,
@@ -196,6 +194,10 @@ function* loginAction(data) {
       })
       if(resp?.data.user.type === "Restaurant"){
         navigate('RestaurantBottomBar')
+      } else if(resp?.data.user.type === "Driver"){
+        navigate('DriverBottomBar')
+      } else {
+        navigate('CustomerBottomBar')
       }
     }
   } catch (e) {
@@ -221,6 +223,10 @@ function* signUpAction(data) {
       })
       if(resp?.data.user.type === "Restaurant"){
         navigate('RestaurantBottomBar')
+      } else if(resp?.data.user.type === "Driver"){
+        navigate('DriverBottomBar')
+      } else {
+        navigate('CustomerBottomBar')
       }
     }
   } catch (e) {
@@ -241,7 +247,7 @@ function* restaurantUpdateAction(data) {
       yield put(updateRestaurantCompleted(resp.data))
       goBack()
       showMessage({
-        message: "Successfully restaurant details updated",
+        message: "Successfully details updated",
         type: "success"
       })
     }
@@ -259,10 +265,10 @@ function* changePasswordAction(data) {
   try {
     const resp = yield call(changePasswordAPI, data.payload)
     if(resp?.data) {
-      yield put(changePasswordCompleted(resp.data))
+      yield put(changePasswordCompleted())
       goBack()
       showMessage({
-        message: response?.data?.detail,
+        message: "Password Updated Successfully",
         type: "success"
       })
     }
