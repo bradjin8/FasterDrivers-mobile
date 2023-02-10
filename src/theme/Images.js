@@ -17,6 +17,9 @@ import Menu from "src/assets/images/menu.png"
 import Map from "src/assets/images/map.png"
 import Settings from "src/assets/images/settings.png"
 import Edit from "src/assets/images/edit.png"
+import dummyProfile from "src/assets/images/dummyProfile.png"
+import downArrow from "src/assets/images/downArrow.png"
+import item from "src/assets/images/item.png"
 
 export default {
   HomeOn,
@@ -37,5 +40,8 @@ export default {
   Home,
   Menu,
   Map,
-  Edit
+  Edit,
+  dummyProfile,
+  downArrow,
+  item
 }
