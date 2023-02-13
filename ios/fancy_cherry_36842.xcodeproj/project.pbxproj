@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		293C952BC13A0E9971F7BC1C /* libPods-fancy_cherry_36842.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60D85C35CC7AC610AF252BCB /* libPods-fancy_cherry_36842.a */; };
-		314E2093F0F7408FD092B89C /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35AF264F7FD8A2D48B0FE549 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */; };
+		3FDE766D55533FF088F79CD4 /* libPods-fancy_cherry_36842.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 87E37D4012EF1B54E0379D5B /* libPods-fancy_cherry_36842.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B4EADA8090F0A6F8134CDAFA /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DED4B784C30A69D7316B78E2 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,19 +30,19 @@
 		00E356EE1AD99517003FC87E /* fancy_cherry_36842Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = fancy_cherry_36842Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* fancy_cherry_36842Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = fancy_cherry_36842Tests.m; sourceTree = "<group>"; };
+		0189195A76B364EF879925F8 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* fancy_cherry_36842.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fancy_cherry_36842.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = fancy_cherry_36842/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = fancy_cherry_36842/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = fancy_cherry_36842/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = fancy_cherry_36842/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = fancy_cherry_36842/main.m; sourceTree = "<group>"; };
-		2249C9408C2E67FF5DD8B407 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; sourceTree = "<group>"; };
-		2978DF8660420AF6D659B273 /* Pods-fancy_cherry_36842.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.debug.xcconfig"; sourceTree = "<group>"; };
-		35AF264F7FD8A2D48B0FE549 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5071A95DD064230D165EDB55 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		5C69576B4C3ADB806EFD510A /* Pods-fancy_cherry_36842.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.release.xcconfig"; sourceTree = "<group>"; };
-		60D85C35CC7AC610AF252BCB /* libPods-fancy_cherry_36842.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1604A3B2B91B34AC2244958E /* Pods-fancy_cherry_36842.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.debug.xcconfig"; sourceTree = "<group>"; };
+		42E4B5CA23B71FFE2F648200 /* Pods-fancy_cherry_36842.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.release.xcconfig"; sourceTree = "<group>"; };
+		529E46CA3CE9241FED27E047 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = fancy_cherry_36842/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		87E37D4012EF1B54E0379D5B /* libPods-fancy_cherry_36842.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DED4B784C30A69D7316B78E2 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				314E2093F0F7408FD092B89C /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */,
+				B4EADA8090F0A6F8134CDAFA /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				293C952BC13A0E9971F7BC1C /* libPods-fancy_cherry_36842.a in Frameworks */,
+				3FDE766D55533FF088F79CD4 /* libPods-fancy_cherry_36842.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,10 +100,22 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				60D85C35CC7AC610AF252BCB /* libPods-fancy_cherry_36842.a */,
-				35AF264F7FD8A2D48B0FE549 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */,
+				87E37D4012EF1B54E0379D5B /* libPods-fancy_cherry_36842.a */,
+				DED4B784C30A69D7316B78E2 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		709482E132E97301C07AF0B3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1604A3B2B91B34AC2244958E /* Pods-fancy_cherry_36842.debug.xcconfig */,
+				42E4B5CA23B71FFE2F648200 /* Pods-fancy_cherry_36842.release.xcconfig */,
+				0189195A76B364EF879925F8 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */,
+				529E46CA3CE9241FED27E047 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -121,7 +133,7 @@
 				00E356EF1AD99517003FC87E /* fancy_cherry_36842Tests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				DB84DF6C37161DD199FD93D1 /* Pods */,
+				709482E132E97301C07AF0B3 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -137,18 +149,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DB84DF6C37161DD199FD93D1 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				2978DF8660420AF6D659B273 /* Pods-fancy_cherry_36842.debug.xcconfig */,
-				5C69576B4C3ADB806EFD510A /* Pods-fancy_cherry_36842.release.xcconfig */,
-				5071A95DD064230D165EDB55 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */,
-				2249C9408C2E67FF5DD8B407 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -156,11 +156,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "fancy_cherry_36842Tests" */;
 			buildPhases = (
-				DFBD0C344DCE4CB861BD0F89 /* [CP] Check Pods Manifest.lock */,
+				FD59CA30892C54823711AADE /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				5B4F778B39E68B177D24B6BC /* [CP] Copy Pods Resources */,
+				42A4F0F5667329D3B136F85A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,13 +176,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "fancy_cherry_36842" */;
 			buildPhases = (
-				0F799A6C75D28CCF1B475B69 /* [CP] Check Pods Manifest.lock */,
+				5624ABF1A1177903636A8ADE /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				2DAD570180A8A58ED4895B4A /* [CP] Copy Pods Resources */,
+				312964FC81C7F55FFFAF9C99 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -263,29 +263,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		0F799A6C75D28CCF1B475B69 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-fancy_cherry_36842-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2DAD570180A8A58ED4895B4A /* [CP] Copy Pods Resources */ = {
+		312964FC81C7F55FFFAF9C99 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -302,7 +280,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5B4F778B39E68B177D24B6BC /* [CP] Copy Pods Resources */ = {
+		42A4F0F5667329D3B136F85A /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -319,7 +297,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DFBD0C344DCE4CB861BD0F89 /* [CP] Check Pods Manifest.lock */ = {
+		5624ABF1A1177903636A8ADE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -334,7 +312,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-fancy_cherry_36842-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -358,6 +336,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FD59CA30892C54823711AADE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -393,7 +393,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5071A95DD064230D165EDB55 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */;
+			baseConfigurationReference = 0189195A76B364EF879925F8 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -420,7 +420,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2249C9408C2E67FF5DD8B407 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */;
+			baseConfigurationReference = 529E46CA3CE9241FED27E047 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -444,7 +444,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2978DF8660420AF6D659B273 /* Pods-fancy_cherry_36842.debug.xcconfig */;
+			baseConfigurationReference = 1604A3B2B91B34AC2244958E /* Pods-fancy_cherry_36842.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -470,7 +470,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5C69576B4C3ADB806EFD510A /* Pods-fancy_cherry_36842.release.xcconfig */;
+			baseConfigurationReference = 42E4B5CA23B71FFE2F648200 /* Pods-fancy_cherry_36842.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -525,7 +525,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -590,7 +590,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 ";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

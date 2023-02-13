@@ -109,7 +109,7 @@ const Orders = () => {
 
         <View style={styles.instructionView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            Special insructions
+            Special instructions
           </Text>
 
           <CustomTextInput
@@ -158,6 +158,7 @@ const Orders = () => {
                 content: "Lorem ipsum...",
               },
             ]}
+            underlayColor="transparent"
             activeSections={activeSections}
             renderHeader={renderHeader}
             renderContent={renderContent}
@@ -168,6 +169,7 @@ const Orders = () => {
     </BaseScreen>
   );
 };
+
 const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
