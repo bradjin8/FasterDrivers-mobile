@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, filters
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
@@ -39,6 +39,8 @@ class RestaurantViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes = [ExpiringTokenAuthentication]
     queryset = Restaurant.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     def get_serializer_class(self):
         if self.action == 'list':
