@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
@@ -6,6 +7,7 @@ from users.authentication import ExpiringTokenAuthentication
 from .serializers import DishSerializer, AddOnSerializer, ItemSerializer, \
                          RestaurantSerializer, ListRestaurantSerializer
 from .models import Dish, AddOn, Item, Restaurant
+from .utils import sort_by_type
 
 
 class DishViewSet(ModelViewSet):
@@ -42,3 +44,9 @@ class RestaurantViewSet(ModelViewSet):
         if self.action == 'list':
             return ListRestaurantSerializer
         return RestaurantSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True).data
+        resp = sort_by_type(serializer)
+        return Response(resp)
