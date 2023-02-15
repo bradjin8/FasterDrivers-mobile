@@ -15,6 +15,7 @@ class Restaurant(UUIDModel):
         )
     # Fields
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, blank=True)
     photo = models.ImageField(upload_to='restaurant/images', blank=True, null=True)
     phone = models.CharField(
         validators=[phone_regex],
