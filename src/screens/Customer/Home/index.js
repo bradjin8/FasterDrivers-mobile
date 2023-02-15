@@ -6,6 +6,8 @@ import { ActivityIndicators, CustomTextInput, Text } from "../../../components/i
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { getRestaurantsData } from "../../../screenRedux/customerRedux";
+import StarRating from 'react-native-star-rating-new';
+import Icon from 'react-native-vector-icons/dist/Feather';
 import { navigate } from "navigation/NavigationService";
 
 const Home = () => {
@@ -16,12 +18,72 @@ const Home = () => {
   const [searchText, setSearchText] = useState(null);
   
   useEffect(() => {
-    dispatch(getRestaurantsData());
-  }, []);
+    dispatch(getRestaurantsData(searchText ? searchText  : null));
+  }, [searchText]);
   
   const onBlurSearch = () => {
   
   };
+  
+  const renderItems = (rest, i) => {
+    return(
+      <Pressable key={i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", { restaurant: rest.id })}>
+        <Image source={rest.photo ? {uri: rest.photo} : Images.item} style={styles.itemImage} />
+        <View style={styles.textContain}>
+          <Text variant="text" color="item" fontSize={14} fontWeight="400">
+            {rest.name}
+          </Text>
+          <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
+            {rest.description}
+          </Text>
+          <View style={{flexDirection: 'row'}}>
+            <StarRating
+              disabled={true}
+              maxStars={1}
+              rating={rest.rating_count/5}
+              starSize={20}
+              starStyle={{color: color.primary, fontWeight: 'bold'}}
+            />
+            <Text variant="text" color="item" fontSize={16} fontWeight="700" style={{marginLeft: scaleVertical(5)}}>
+              {rest.rating_count}
+            </Text>
+          </View>
+        </View>
+      </Pressable>
+    )
+  }
+  const renderRestaurants = () => {
+    const keys = Object.keys(restaurants || {});
+    if(keys.length === 0) {
+      return <View>
+        <Text variant="text" color="black" style={styles.noData}>
+          No data found
+        </Text>
+      </View>
+    }
+    return (
+      keys.map((type, index) => {
+        return(
+          <View>
+            <View style={styles.itemTitle}>
+              <Text variant="text" color="secondaryBtn" fontSize={14} fontWeight="600">
+                {type}
+              </Text>
+              <View style={styles.flex}>
+                <Text variant="text" color="secondaryBtn" fontSize={14} fontWeight="400">
+                  See All
+                </Text>
+                <Icon name="chevron-right" style={{marginLeft: scaleVertical(7.5)}} size={20} color={color.itemPrimary} />
+              </View>
+            </View>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingTop: scaleVertical(15), paddingBottom: 20}}>
+              {restaurants[type].map((rest, i) => renderItems(rest, i))}
+            </ScrollView>
+          </View>
+        )
+      })
+    )
+  }
   
   return (
     <BaseScreen style={styles.mainWrapper}>
@@ -45,8 +107,6 @@ const Home = () => {
         </Pressable>
       </View>
       <View style={styles.container}>
-        {loading && <ActivityIndicators />}
-        
         <CustomTextInput
           isImages={true}
           value={searchText}
@@ -55,38 +115,8 @@ const Home = () => {
           onBlurText={onBlurSearch}
         />
         
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingTop: scaleVertical(15)}}>
-          {restaurants?.map((rest, index) => {
-            return (
-              <Pressable key={index.toString()} style={{
-                width: screenWidth/1.8,
-                backgroundColor: color.white,
-                shadowColor: color.secondary,
-                shadowOffset: { width: 5, height: 10 },
-                shadowOpacity: 0.8,
-                shadowRadius: 10,
-                // borderColor: 'gray',
-                // borderWidth: 1,
-                marginRight: scale(10),
-                borderRadius: scaleVertical(15),
-                overflow: 'hidden',
-              }}>
-                <Image source={Images.item} style={styles.itemImage} />
-                <View style={styles.textContain}>
-                  <Text variant="text" color="item" fontSize={14} fontWeight="400">
-                    Great burger restaurant
-                  </Text>
-                  <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-                    Burger - Chicken - Rice - Wings
-                  </Text>
-                  <Text variant="text" color="item" fontSize={16} fontWeight="700">
-                    5 star
-                  </Text>
-                </View>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
+        {loading && <ActivityIndicators />}
+        {renderRestaurants()}
       </View>
     </BaseScreen>);
 };
@@ -102,7 +132,13 @@ const styles = StyleSheet.create({
   locationView: { flexDirection: "row", alignItems: "center" },
   profilePic: { width: scaleVertical(34), height: scaleVertical(34), borderRadius: scaleVertical(17) },
   downIcon: { width: scaleVertical(11), height: scaleVertical(8) },
-  container: { flex: 1, backgroundColor: color.white, padding: scaleVertical(25), paddingTop: scaleVertical(0) },
+  flex: {flexDirection: 'row', alignItems: 'center'},
+  container: {
+    flex: 1,
+    backgroundColor: color.white,
+    padding: scaleVertical(25),
+    paddingTop: scaleVertical(0),
+  },
   itemImage: {
     width: '100%',
     height: screenWidth/3,
@@ -112,6 +148,16 @@ const styles = StyleSheet.create({
     padding: scaleVertical(7.5),
     paddingHorizontal: scaleVertical(10)
   },
+  itemContain: {
+    width: screenWidth/1.8,
+    backgroundColor: color.secondary,
+    shadowColor: color.secondary,
+    marginHorizontal: scaleVertical(5),
+    borderRadius: scaleVertical(15),
+    overflow: 'hidden',
+  },
+  itemTitle: { flexDirection: 'row', justifyContent: 'space-between'},
+  noData: {textAlign: 'center', marginTop: scaleVertical(20)},
 });
 
 export default Home;

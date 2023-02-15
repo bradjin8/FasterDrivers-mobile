@@ -21,6 +21,8 @@ import dummyProfile from "src/assets/images/dummyProfile.png"
 import downArrow from "src/assets/images/downArrow.png"
 import item from "src/assets/images/item.png"
 import search from "src/assets/images/seacrh.png"
+import orders from "src/assets/images/orders.png"
+import history from "src/assets/images/history.png"
 
 export default {
   HomeOn,
@@ -46,4 +48,6 @@ export default {
   downArrow,
   item,
   search,
+  orders,
+  history,
 }

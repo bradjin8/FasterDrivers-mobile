@@ -81,13 +81,15 @@ export const customerReducer = (state = initialState, action) => {
 
 //PhoneNumberSaga
 function getRestaurantAPI(data) {
-  const URL = `${appConfig.backendServerURL}/restaurants/`
+  let URL = `${appConfig.backendServerURL}/restaurants/`
+  if(data) {
+    URL = `${appConfig.backendServerURL}/restaurants/?search=${data} `
+  }
   const options = {
     headers: {
       Accept: "application/json",
     },
     method: "GET",
-    data: data
   }
   return XHR(URL, options)
 }
@@ -121,7 +123,6 @@ function* getRestaurantsAction(data) {
 
 function* getRestaurantDetailsAction(data) {
   try {
-    debugger
    const resp = yield call(getRestaurantDetailsAPI, data.payload)
     if(resp?.data) {
       yield put(setRestaurantDetails(resp.data))

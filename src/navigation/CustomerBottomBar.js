@@ -18,7 +18,6 @@ import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
 import Orders from "screens/Customer/Orders"
 
-
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
 
@@ -48,7 +47,7 @@ const CustomerBottomBar = props => {
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
-          header: () => null
+          header: () => null,
         }}
       />
       <Tab.Screen
@@ -60,7 +59,7 @@ const CustomerBottomBar = props => {
           ),
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.Menu}
+              source={Images.orders}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
