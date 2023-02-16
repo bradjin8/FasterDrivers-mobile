@@ -1,93 +1,75 @@
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import Accordion from "react-native-collapsible/Accordion";
-import { color, scale, scaleVertical, restaurantSettingData } from "utils";
+import { color, scale, scaleVertical } from "utils";
 import { Images } from "src/theme";
 import { ActivityIndicators, Button, CustomTextInput, Text } from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { getRestaurantsData } from "../../../screenRedux/customerRedux";
-import { navigate } from "navigation/NavigationService";
 
 const Orders = () => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
-  const user = useSelector(state => state.loginReducer.user);
+  const [cartItems, setCartItems] = useState(useSelector(state => state.customerReducer.carts))
   const restaurants = useSelector(state => state.customerReducer.restaurants);
-  const [searchtext, setSearchText] = useState(null);
-  const [activeSections, setActiveSections] = useState([]);
+  const [searchText, setSearchText] = useState(null);
+  console.log("@@@@ landing", cartItems)
 
   useEffect(() => {
-    dispatch(getRestaurantsData());
-  }, []);
+    console.log("@@@@ landing")
+  }, [cartItems]);
 
   const onBlurSearch = () => {
 
   };
-
-  const renderSectionTitle = (section) => {
+  
+  const renderFinalTotal = () => {
+    return  cartItems.length && cartItems.reduce((prev,curr) => {
+      return prev + (curr.quantity * curr.price)
+    }, 0).toFixed(2)
+  }
+  
+  const renderHeader = (cart, index) => {
     return (
-      <View style={styles.itemContain}>
+      <View style={styles.itemContain} key={index.toString()}>
         <View style={styles.flexRow}>
-          <Image source={Images.item} style={styles.downIcon} />
+          <Image source={cart?.image_1 ? {uri: cart.image_1} : Images.item} style={styles.downIcon} />
           <View style={{ width: "72%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="500">
-              2x Double Cheeseburger
+              <Text variant="text" color="primary" fontSize={12} fontWeight="500">
+                {cart.quantity > 1 && cart.quantity + "x "}
+              </Text>{cart.name}
             </Text>
             <Text variant="text" color="black" fontSize={12} fontWeight="300" numberOfLines={2}
                   ellipsizeMode="tail">
-              Our signature Double Cheeseburger comes with two 3oz patties, american cheese.
+              {cart.description}
             </Text>
           </View>
         </View>
         <View style={{ width: "20%", alignItems: "center" }}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            $9.99
+            ${(cart.price * cart.quantity).toFixed(2)}
           </Text>
         </View>
       </View>
     );
   };
 
-  const renderHeader = (section) => {
-    return (
-      <View style={styles.itemContain}>
-        <View style={styles.flexRow}>
-          <Image source={Images.item} style={styles.downIcon} />
-          <View style={{ width: "72%" }}>
-            <Text variant="text" color="black" fontSize={12} fontWeight="500">
-              2x Double Cheeseburger
-            </Text>
-            <Text variant="text" color="black" fontSize={12} fontWeight="300" numberOfLines={2}
-                  ellipsizeMode="tail">
-              Our signature Double Cheeseburger comes with two 3oz patties, american cheese.
-            </Text>
-          </View>
-        </View>
-        <View style={{ width: "20%", alignItems: "center" }}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            $9.99
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
-  const renderContent = (section) => {
+  const renderContent = () => {
     return (
       <View>
         <View style={styles.pricingView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">Price</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">$41.87</Text>
+          <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
         </View>
         <View style={styles.pricingView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">Fee</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">$6.87</Text>
+          <Text variant="text" color="black" fontSize={14} fontWeight="400">$0.00</Text>
         </View>
         <View style={styles.pricingView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">Total</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">48.87</Text>
+          <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
         </View>
         <View style={styles.items}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">
@@ -109,11 +91,11 @@ const Orders = () => {
 
         <View style={styles.instructionView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            Special insructions
+            Special instructions
           </Text>
 
           <CustomTextInput
-            value={searchtext}
+            value={searchText}
             onChangeText={(text) => setSearchText(text)}
             onBlurText={onBlurSearch}
             multiline={true}
@@ -126,11 +108,11 @@ const Orders = () => {
       </View>
     );
   };
-
-  const updateSections = (activeSections) => {
-    setActiveSections(activeSections);
-  };
-
+  
+  if(loading) {
+    return (<ActivityIndicators />)
+  }
+  
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -138,8 +120,6 @@ const Orders = () => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-        {loading && <ActivityIndicators />}
-
         <View style={styles.items}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">
             Items
@@ -147,27 +127,14 @@ const Orders = () => {
         </View>
 
         <View style={styles.itemContainer}>
-          <Accordion
-            sections={restaurants ?? [
-              {
-                title: "First",
-                content: "Lorem ipsum...",
-              },
-              {
-                title: "Second",
-                content: "Lorem ipsum...",
-              },
-            ]}
-            activeSections={activeSections}
-            renderHeader={renderHeader}
-            renderContent={renderContent}
-            onChange={updateSections}
-          />
+          {cartItems.map((cart, index) => renderHeader(cart, index))}
+          {renderContent()}
         </View>
       </View>
     </BaseScreen>
   );
 };
+
 const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,

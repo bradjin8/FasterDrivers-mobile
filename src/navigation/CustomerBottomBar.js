@@ -18,7 +18,6 @@ import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
 import Orders from "screens/Customer/Orders"
 
-
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
 
@@ -39,7 +38,10 @@ const CustomerBottomBar = props => {
         name="Home"
         component={HomeTab}
         options={{
-          tabBarLabel: ({focused, color, size}) => (
+          tabBarStyle: {
+            display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex'
+          },
+          tabBarLabel: ({ focused }) => (
             <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
@@ -48,19 +50,19 @@ const CustomerBottomBar = props => {
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
-          header: () => null
+          header: () => null,
         }}
       />
       <Tab.Screen
         name="Orders"
         component={OrderTab}
         options={{
-          tabBarLabel: ({focused, color, size}) => (
+          tabBarLabel: ({ focused }) => (
             <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.Menu}
+              source={Images.orders}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
@@ -71,7 +73,7 @@ const CustomerBottomBar = props => {
         name="Settings"
         component={SettingTab}
         options={{
-          tabBarLabel: ({focused, color, size}) => (
+          tabBarLabel: ({ focused }) => (
             <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (

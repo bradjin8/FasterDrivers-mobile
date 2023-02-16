@@ -62,7 +62,7 @@ const DriverBottomBar = props => {
           ),
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.Menu}
+              source={Images.history}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
@@ -78,7 +78,7 @@ const DriverBottomBar = props => {
           ),
           tabBarIcon: ({ focused }) => (
             <Image
-              source={Images.Menu}
+              source={Images.OrderAcceptance}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),

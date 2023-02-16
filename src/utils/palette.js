@@ -8,5 +8,9 @@ export const palette = {
   darkGray: '#636972',
   secondary: '#F5F5F5',
   secondaryBtn: '#32343E',
-  lightGray: '#D9D9D9'
+  lightGray: '#D9D9D9',
+  item: '#181C2E',
+  itemPrimary: '#A0A5BA',
+  priceText: '#2F2F37',
+  slightGray: '#F3F3F3',
 };
