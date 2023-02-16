@@ -14,6 +14,7 @@ export function ActivityIndicators({
 
 const styles = StyleSheet.create({
   loading: {
+    backgroundColor: color.white,
     position: 'absolute',
     left: 0,
     right: 0,

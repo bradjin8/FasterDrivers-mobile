@@ -8,10 +8,14 @@ import { appConfig } from "../config/app"
 // utils
 import XHR from "../utils/XHR"
 import { goBack, navigate } from "navigation/NavigationService";
+import restaurantDetails from "screens/Customer/Home/RestaurantDetails";
 
 //Types
 const GET_RESTAURANTS_REQUEST_STARTED = "GET_RESTAURANTS_REQUEST_STARTED"
 const GET_RESTAURANTS_REQUEST_COMPLETED = "GET_RESTAURANTS_REQUEST_COMPLETED"
+const GET_ADDRESSES_REQUEST_STARTED = "GET_ADDRESSES_REQUEST_STARTED"
+const GET_ADDRESSES_REQUEST_COMPLETED = "GET_ADDRESSES_REQUEST_COMPLETED"
+const SET_CART_ITEMS = "SET_CART_ITEMS"
 const GET_RESTAURANT_DETAILS_REQUEST_STARTED = "GET_RESTAURANT_DETAILS_REQUEST_STARTED"
 const GET_RESTAURANT_DETAILS_REQUEST_COMPLETED = "GET_RESTAURANT_DETAILS_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
@@ -19,12 +23,26 @@ const REQUEST_FAILED = "REQUEST_FAILED"
 const initialState = {
   loading: false,
   restaurants: null,
+  addresses: null,
+  carts: [],
   restaurantDetails: null
 }
 
 //Actions
 export const getRestaurantsData = (data) => ({
   type: GET_RESTAURANTS_REQUEST_STARTED,
+  payload: data,
+})
+export const getAddressesData = (data) => ({
+  type: GET_ADDRESSES_REQUEST_STARTED,
+  payload: data,
+})
+export const setAddressesData = (data) => ({
+  type: GET_ADDRESSES_REQUEST_COMPLETED,
+  payload: data,
+})
+export const setUserCartItems = (data) => ({
+  type: SET_CART_ITEMS,
   payload: data,
 })
 export const getRestaurantDetails = (data) => ({
@@ -57,6 +75,22 @@ export const customerReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         restaurants: action.payload
+      }
+    case GET_ADDRESSES_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case GET_ADDRESSES_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        addresses: action.payload
+      }
+     case SET_CART_ITEMS:
+      return {
+        ...state,
+        carts: action.payload
       }
     case GET_RESTAURANT_DETAILS_REQUEST_STARTED:
       return {
@@ -94,6 +128,17 @@ function getRestaurantAPI(data) {
   return XHR(URL, options)
 }
 
+function getAddressesAPI() {
+  const URL = `${appConfig.backendServerURL}/customers/address/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 function getRestaurantDetailsAPI(data) {
   const URL = `${appConfig.backendServerURL}/restaurants/${data}/`
   const options = {
@@ -110,6 +155,22 @@ function* getRestaurantsAction(data) {
    const resp = yield call(getRestaurantAPI, data.payload)
     if(resp?.data) {
       yield put(setRestaurantData(resp.data))
+    }
+  } catch (e) {
+    const { response } = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* getAddressesAction() {
+  try {
+   const resp = yield call(getAddressesAPI)
+    if(resp?.data) {
+      yield put(setAddressesData(resp.data))
     }
   } catch (e) {
     const { response } = e
@@ -140,4 +201,5 @@ function* getRestaurantDetailsAction(data) {
 export default all([
   takeLatest(GET_RESTAURANT_DETAILS_REQUEST_STARTED, getRestaurantDetailsAction),
   takeLatest(GET_RESTAURANTS_REQUEST_STARTED, getRestaurantsAction),
+  takeLatest(GET_ADDRESSES_REQUEST_STARTED, getAddressesAction),
 ])

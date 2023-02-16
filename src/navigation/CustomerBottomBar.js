@@ -39,7 +39,7 @@ const CustomerBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarStyle: {
-            display: props.route.state?.routes?.[0].state.index > 0 ? 'none' : 'flex'
+            display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex'
           },
           tabBarLabel: ({ focused }) => (
             <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>

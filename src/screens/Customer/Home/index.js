@@ -5,7 +5,7 @@ import { Images } from "src/theme";
 import { ActivityIndicators, CustomTextInput, Text } from "../../../components/index";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantsData } from "../../../screenRedux/customerRedux";
+import { getAddressesData, getRestaurantsData } from "../../../screenRedux/customerRedux";
 import StarRating from 'react-native-star-rating-new';
 import Icon from 'react-native-vector-icons/dist/Feather';
 import { navigate } from "navigation/NavigationService";
@@ -15,7 +15,12 @@ const Home = () => {
   const loading = useSelector(state => state.customerReducer.loading);
   const user = useSelector(state => state.loginReducer.user);
   const restaurants = useSelector(state => state.customerReducer.restaurants);
+  const addresses = useSelector(state => state.customerReducer.addresses);
   const [searchText, setSearchText] = useState(null);
+  
+  useEffect(() => {
+    dispatch(getAddressesData())
+  }, [])
   
   useEffect(() => {
     dispatch(getRestaurantsData(searchText ? searchText  : null));
@@ -27,7 +32,7 @@ const Home = () => {
   
   const renderItems = (rest, i) => {
     return(
-      <Pressable key={i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", { restaurant: rest.id })}>
+      <Pressable key={i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", { restaurant: rest })}>
         <Image source={rest.photo ? {uri: rest.photo} : Images.item} style={styles.itemImage} />
         <View style={styles.textContain}>
           <Text variant="text" color="item" fontSize={14} fontWeight="400">
@@ -85,6 +90,9 @@ const Home = () => {
     )
   }
   
+  if(loading) {
+    return (<ActivityIndicators />)
+  }
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.headerView}>
@@ -115,7 +123,6 @@ const Home = () => {
           onBlurText={onBlurSearch}
         />
         
-        {loading && <ActivityIndicators />}
         {renderRestaurants()}
       </View>
     </BaseScreen>);
