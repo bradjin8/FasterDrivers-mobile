@@ -15,31 +15,31 @@ const RestaurantDetails = ({ route }) => {
   const loading = useSelector(state => state.customerReducer.loading);
   const restaurantDetails = useSelector(state => state.customerReducer.restaurantDetails);
   const selectedRestaurant = route?.params.restaurant;
-  const [cartItems, setCartItems] = useState(useSelector(state => state.customerReducer.carts))
-  
+  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
+  const [cartItems, setCartItems] = useState(cartItemsReducer)
+
   useEffect(() => {
     dispatch(getRestaurantDetails(selectedRestaurant.id));
   }, []);
-  
+
+  useEffect(() => {
+    setCartItems(cartItemsReducer)
+  }, [cartItemsReducer]);
+
   const onAdd = (product) => {
     const index = cartItems.findIndex((item) => item.id === product.id);
     if (index > -1) {
       let _cartItems = _.cloneDeep(cartItems);
       _cartItems[index].quantity += 1;
       dispatch(setUserCartItems(_cartItems))
-      setCartItems(_cartItems)
     } else {
       dispatch(setUserCartItems([
         ...cartItems,
         { ...product, quantity: 1 },
       ]))
-      setCartItems([
-        ...cartItems,
-        { ...product, quantity: 1 },
-      ]);
     }
   };
-  
+
   const onRemove = (product) => {
     const index = cartItems.findIndex((item) => item.id === product.id);
     if (index > -1) {
@@ -47,15 +47,13 @@ const RestaurantDetails = ({ route }) => {
       if(_cartItems[index].quantity === 1) {
         _cartItems.splice(index, 1);
         dispatch(setUserCartItems(_cartItems))
-        setCartItems(_cartItems)
         return
       }
       _cartItems[index].quantity -= 1;
       dispatch(setUserCartItems(_cartItems))
-      setCartItems(_cartItems)
     }
   };
-  
+
   const renderPrice = (item, findIndex) => {
     if(findIndex > -1) {
       if(cartItems[findIndex].quantity === 0) return `$ ${item.price}`
@@ -64,13 +62,13 @@ const RestaurantDetails = ({ route }) => {
       return `$ ${item.price}`
     }
   }
-  
+
   const renderFinalTotal = () => {
     return  cartItems.length && cartItems.reduce((prev,curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
-  
+
   const renderItems = (item, i) => {
     const findIndex = cartItems.findIndex((product) => product.id === item.id);
     return (
@@ -99,7 +97,7 @@ const RestaurantDetails = ({ route }) => {
       </View>
     )
   }
-  
+
   const renderDishes = () => {
     const keys = Object.keys(restaurantDetails || {});
     if (keys.length === 0) {
@@ -109,7 +107,7 @@ const RestaurantDetails = ({ route }) => {
         </Text>
       </View>
     }
-    
+
     return (
       keys.map((type, index) => {
         return(
@@ -125,7 +123,7 @@ const RestaurantDetails = ({ route }) => {
       })
     )
   }
-  
+
   if(loading) {
     return (<ActivityIndicators />)
   }
@@ -139,7 +137,7 @@ const RestaurantDetails = ({ route }) => {
           <Image source={selectedRestaurant?.photo ? { uri: selectedRestaurant.photo } : Images.item}
                  style={styles.itemImage} />
         </View>
-        
+
         <View style={styles.content}>
           <View style={styles.flex}>
             <Text variant="text" color="item" fontSize={14} fontWeight="600">
@@ -172,11 +170,11 @@ const RestaurantDetails = ({ route }) => {
           </View>
           <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12} />
         </View>
-        
+
         <View style={styles.itemContainer}>
           {renderDishes()}
         </View>
-      
+
       </ScrollView>
       <View style={styles.cartView}>
         <View style={styles.cartContain}>

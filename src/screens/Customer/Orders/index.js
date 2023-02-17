@@ -11,25 +11,21 @@ import { createNewOrder, getRestaurantsData } from "../../../screenRedux/custome
 const Orders = () => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
-  const [cartItems, setCartItems] = useState(useSelector(state => state.customerReducer.carts))
+  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
+  const [cartItems, setCartItems] = useState(cartItemsReducer)
   const restaurants = useSelector(state => state.customerReducer.restaurants);
   const [searchText, setSearchText] = useState(null);
-  console.log("@@@@ landing", cartItems)
-  
+
   useEffect(() => {
-    console.log("@@@@ landing")
-  }, [cartItems]);
-  
-  const onBlurSearch = () => {
-  
-  };
-  
+    setCartItems(cartItemsReducer)
+  }, [cartItemsReducer]);
+
   const renderFinalTotal = () => {
     return  cartItems.length && cartItems.reduce((prev,curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
-  
+
   const renderHeader = (cart, index) => {
     return (
       <View style={styles.itemContain} key={index.toString()}>
@@ -55,7 +51,7 @@ const Orders = () => {
       </View>
     );
   };
-  
+
   const renderContent = () => {
     return (
       <View>
@@ -76,7 +72,7 @@ const Orders = () => {
             Address
           </Text>
         </View>
-        
+
         <View style={[styles.instructionView, { flexDirection: "row", justifyContent: "space-between" }]}>
           <View style={{ width: "60%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="400" numberOfLines={2} ellipsizeMode="tail">
@@ -88,7 +84,7 @@ const Orders = () => {
                   onPress={() => {
                   }} />
         </View>
-        
+
         <View style={styles.instructionView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
             Special instructions
@@ -96,7 +92,6 @@ const Orders = () => {
           <CustomTextInput
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
-            onBlurText={onBlurSearch}
             multiline={true}
           />
           <Button loading={false} text="Confirm" onPress={createOrder} />
@@ -104,13 +99,13 @@ const Orders = () => {
       </View>
     );
   };
-  
+
   const createOrder = () => {
     debugger
-    
+
     let data = new FormData();
     data.append('restaurant', cartItems[0].restaurant);
-    data.append('address', "874a91c1-e312-4925-9bf4-ab59526e39c4");
+    data.append('address', "5e2a064e-cff7-4f3b-90db-f90e65b9b13c");
     cartItems.map((item, index) => {
       data.append(`dishes[${index}]dish`, item.id);
       data.append(`dishes[${index}]quantity`, item.quantity);
@@ -119,11 +114,11 @@ const Orders = () => {
     })
     dispatch(createNewOrder(data))
   }
-  
+
   if(loading) {
     return (<ActivityIndicators />)
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -136,7 +131,7 @@ const Orders = () => {
             Items
           </Text>
         </View>
-        
+
         <View style={styles.itemContainer}>
           {cartItems.map((cart, index) => renderHeader(cart, index))}
           {renderContent()}

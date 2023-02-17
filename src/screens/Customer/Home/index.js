@@ -17,19 +17,19 @@ const Home = () => {
   const restaurants = useSelector(state => state.customerReducer.restaurants);
   const addresses = useSelector(state => state.customerReducer.addresses);
   const [searchText, setSearchText] = useState(null);
-  
+
   useEffect(() => {
     dispatch(getAddressesData())
   }, [])
-  
+
   useEffect(() => {
     dispatch(getRestaurantsData(searchText ? searchText  : null));
   }, [searchText]);
-  
+
   const onBlurSearch = () => {
-  
+
   };
-  
+
   const renderItems = (rest, i) => {
     return(
       <Pressable key={i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", { restaurant: rest })}>
@@ -89,7 +89,7 @@ const Home = () => {
       })
     )
   }
-  
+
   if(loading) {
     return (<ActivityIndicators />)
   }
@@ -122,7 +122,7 @@ const Home = () => {
           onChangeText={(text) => setSearchText(text)}
           onBlurText={onBlurSearch}
         />
-        
+
         {renderRestaurants()}
       </View>
     </BaseScreen>);
