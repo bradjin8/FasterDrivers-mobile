@@ -6,7 +6,7 @@ import { ActivityIndicators, Button, CustomTextInput, Text } from "../../../comp
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantsData } from "../../../screenRedux/customerRedux";
+import { createNewOrder, getRestaurantsData } from "../../../screenRedux/customerRedux";
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -15,13 +15,13 @@ const Orders = () => {
   const restaurants = useSelector(state => state.customerReducer.restaurants);
   const [searchText, setSearchText] = useState(null);
   console.log("@@@@ landing", cartItems)
-
+  
   useEffect(() => {
     console.log("@@@@ landing")
   }, [cartItems]);
-
+  
   const onBlurSearch = () => {
-
+  
   };
   
   const renderFinalTotal = () => {
@@ -55,7 +55,7 @@ const Orders = () => {
       </View>
     );
   };
-
+  
   const renderContent = () => {
     return (
       <View>
@@ -76,7 +76,7 @@ const Orders = () => {
             Address
           </Text>
         </View>
-
+        
         <View style={[styles.instructionView, { flexDirection: "row", justifyContent: "space-between" }]}>
           <View style={{ width: "60%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="400" numberOfLines={2} ellipsizeMode="tail">
@@ -88,26 +88,37 @@ const Orders = () => {
                   onPress={() => {
                   }} />
         </View>
-
+        
         <View style={styles.instructionView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
             Special instructions
           </Text>
-
           <CustomTextInput
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
             onBlurText={onBlurSearch}
             multiline={true}
           />
-
-          <Button loading={false} text="Confirm"
-                  onPress={() => {
-                  }} />
+          <Button loading={false} text="Confirm" onPress={createOrder} />
         </View>
       </View>
     );
   };
+  
+  const createOrder = () => {
+    debugger
+    
+    let data = new FormData();
+    data.append('restaurant', cartItems[0].restaurant);
+    data.append('address', "874a91c1-e312-4925-9bf4-ab59526e39c4");
+    cartItems.map((item, index) => {
+      data.append(`dishes[${index}]dish`, item.id);
+      data.append(`dishes[${index}]quantity`, item.quantity);
+      // data.append('dishes[0]dish_addons[0]item', "7516a864-c9b8-494e-be5b-8b80b2bfd7fd");
+      // data.append('dishes[0]dish_addons[0]quantity', "2");
+    })
+    dispatch(createNewOrder(data))
+  }
   
   if(loading) {
     return (<ActivityIndicators />)
@@ -125,7 +136,7 @@ const Orders = () => {
             Items
           </Text>
         </View>
-
+        
         <View style={styles.itemContainer}>
           {cartItems.map((cart, index) => renderHeader(cart, index))}
           {renderContent()}
