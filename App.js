@@ -10,6 +10,8 @@ import Navigation from "navigation"
 import FlashMessage from "react-native-flash-message"
 import { LogBox, SafeAreaView } from "react-native";
 import moment from "moment"
+import {enableLatestRenderer} from 'react-native-maps';
+enableLatestRenderer();
 
 const persistor = persistStore(store)
 
