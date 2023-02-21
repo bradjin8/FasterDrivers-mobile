@@ -18,12 +18,13 @@ const CarDetails = () => {
   const loading = useSelector(state => state.loginReducer.loading)
   const [pickImage, setPickImage] = useState(user?.driver?.photo)
   const [changeImage, setChangeImage] = useState(null)
+  const { driver: { car_make, car_model, car_vin, car_license_number } } = user
   
   const [customerDetails, setCustomerDetails] = useState({
-    "driver.car_make": user.driver?.car_make,
-    "driver.car_model": user.driver?.car_model,
-    "driver.car_vin": user.driver?.car_vin,
-    "driver.car_license_number": user.driver?.car_license_number,
+    "driver.car_make": car_make,
+    "driver.car_model": car_model,
+    "driver.car_vin": car_vin,
+    "driver.car_license_number": car_license_number,
   })
   
   const onChangeText = (key, text) => {

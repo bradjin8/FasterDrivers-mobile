@@ -15,6 +15,7 @@ const Orders = () => {
   const [cartItems, setCartItems] = useState(cartItemsReducer)
   const restaurants = useSelector(state => state.customerReducer.restaurants);
   const [searchText, setSearchText] = useState(null);
+  const addresses = useSelector(state => state.customerReducer.addresses);
 
   useEffect(() => {
     setCartItems(cartItemsReducer)
@@ -27,25 +28,26 @@ const Orders = () => {
   }
 
   const renderHeader = (cart, index) => {
+    const { image_1, quantity, name, description, price } = cart
     return (
       <View style={styles.itemContain} key={index.toString()}>
         <View style={styles.flexRow}>
-          <Image source={cart?.image_1 ? {uri: cart.image_1} : Images.item} style={styles.downIcon} />
+          <Image source={image_1 ? {uri: image_1} : Images.item} style={styles.downIcon} />
           <View style={{ width: "72%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="500">
               <Text variant="text" color="primary" fontSize={12} fontWeight="500">
-                {cart.quantity > 1 && cart.quantity + "x "}
-              </Text>{cart.name}
+                {quantity > 1 && quantity + "x "}
+              </Text>{name}
             </Text>
             <Text variant="text" color="black" fontSize={12} fontWeight="300" numberOfLines={2}
                   ellipsizeMode="tail">
-              {cart.description}
+              {description}
             </Text>
           </View>
         </View>
         <View style={{ width: "20%", alignItems: "center" }}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            ${(cart.price * cart.quantity).toFixed(2)}
+            ${(price * quantity).toFixed(2)}
           </Text>
         </View>
       </View>
@@ -101,11 +103,13 @@ const Orders = () => {
   };
 
   const createOrder = () => {
-    debugger
-
     let data = new FormData();
     data.append('restaurant', cartItems[0].restaurant);
-    data.append('address', "5e2a064e-cff7-4f3b-90db-f90e65b9b13c");
+    
+    let defaultAddress = addresses?.find(o => o.default);
+    if(defaultAddress) {
+      data.append('address', defaultAddress.id);
+    }
     cartItems.map((item, index) => {
       data.append(`dishes[${index}]dish`, item.id);
       data.append(`dishes[${index}]quantity`, item.quantity);

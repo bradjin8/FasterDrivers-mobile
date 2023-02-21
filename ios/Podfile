@@ -34,5 +34,4 @@ target 'fancy_cherry_36842' do
         end
       end
     end
-
-end`
+end

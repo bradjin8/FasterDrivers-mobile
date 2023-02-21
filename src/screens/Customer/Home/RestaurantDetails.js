@@ -17,9 +17,10 @@ const RestaurantDetails = ({ route }) => {
   const selectedRestaurant = route?.params.restaurant;
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-
+  const { id, photo, name, street, city, zip_code, state, description, type, rating_count  } = selectedRestaurant
+  
   useEffect(() => {
-    dispatch(getRestaurantDetails(selectedRestaurant.id));
+    dispatch(getRestaurantDetails(id));
   }, []);
 
   useEffect(() => {
@@ -134,38 +135,38 @@ const RestaurantDetails = ({ route }) => {
           <Pressable onPress={() => goBack()} style={styles.backView}>
             <Icon name="arrow-left" size={20} color={color.black} />
           </Pressable>
-          <Image source={selectedRestaurant?.photo ? { uri: selectedRestaurant.photo } : Images.item}
+          <Image source={photo ? { uri: photo } : Images.item}
                  style={styles.itemImage} />
         </View>
 
         <View style={styles.content}>
           <View style={styles.flex}>
             <Text variant="text" color="item" fontSize={14} fontWeight="600">
-              {selectedRestaurant?.name}
+              {name}
             </Text>
             <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400" numberOfLines={2}
                   ellipsizeMode="tail">
-              {selectedRestaurant?.street}, {selectedRestaurant?.city} - {selectedRestaurant?.zip_code}, {selectedRestaurant?.state}
+              {street}, {city} - {zip_code}, {state}
             </Text>
           </View>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-            {selectedRestaurant?.description}
+            {description}
           </Text>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-            {selectedRestaurant?.type}
+            {type}
           </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <StarRating
               disabled={true}
               maxStars={5}
-              rating={selectedRestaurant?.rating_count}
+              rating={rating_count}
               starSize={18}
               emptyStarColor={color.lightGray}
               fullStarColor={color.lightGray}
               starStyle={{ color: color.primary, fontWeight: "bold", marginRight: scaleVertical(3) }}
             />
             <Text variant="text" color="item" fontSize={14} fontWeight="600" style={{ marginLeft: scaleVertical(5) }}>
-              {selectedRestaurant?.rating_count}
+              {rating_count}
             </Text>
           </View>
           <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12} />

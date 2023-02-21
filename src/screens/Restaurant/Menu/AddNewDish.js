@@ -17,7 +17,7 @@ const AddNewDish = ({}) => {
   const loading = useSelector(state => state.restaurantReducer.loading)
   const ImagePickerOptions = ["Take Photo", "Choose from Gallery", "Cancel"];
   const [uploadImage, setUploadImage] = useState([]);
-  const[newDish, setNewDish] = useState({});
+  const [newDish, setNewDish] = useState({});
   const [changeImage, setChangeImage] = useState(null)
   const [category, setCategory] = useState(null);
   const [openCategory, setOpenCategory] = useState(false);
@@ -27,6 +27,8 @@ const AddNewDish = ({}) => {
     {label: 'Salads', value: 'Salads'},
     {label: 'Soups', value: 'Soups'},
   ])
+  
+  const { name, description, price, sku_number } = newDish
   
   const onChangeText = (key, text) => {
     setNewDish(prevState => ({ ...prevState, [key]: text }));
@@ -44,11 +46,11 @@ const AddNewDish = ({}) => {
         });
       });
     }
-    data.append("name", newDish.name);
+    data.append("name", name);
     data.append("category", category);
-    data.append("description", newDish.description);
-    data.append("price", newDish.price);
-    data.append("sku_number", newDish.sku_number);
+    data.append("description", description);
+    data.append("price", price);
+    data.append("sku_number", sku_number);
     
     dispatch(addNewDishRequest(data));
   }
@@ -91,7 +93,7 @@ const AddNewDish = ({}) => {
             Name of the dish
           </Text>
           <CustomTextInput
-            value={newDish?.name}
+            value={name}
             onChangeText={(text) => onChangeText("name", text)}
           />
           
@@ -99,7 +101,7 @@ const AddNewDish = ({}) => {
             Description
           </Text>
           <CustomTextInput
-            value={newDish?.description}
+            value={description}
             onChangeText={(text) => onChangeText("description", text)}
             multiline={true}
             style={{textAlignVertical: 'top'}}
@@ -109,7 +111,7 @@ const AddNewDish = ({}) => {
             Price
           </Text>
           <CustomTextInput
-            value={newDish?.price}
+            value={price}
             onChangeText={(text) => onChangeText("price", text)}
           />
           
@@ -117,7 +119,7 @@ const AddNewDish = ({}) => {
             SKU Number
           </Text>
           <CustomTextInput
-            value={newDish?.sku_number}
+            value={sku_number}
             onChangeText={(text) => onChangeText("sku_number", text)}
           />
         </View>

@@ -9,12 +9,15 @@ import { appConfig } from "../config/app"
 import XHR from "../utils/XHR"
 import { goBack, navigate } from "navigation/NavigationService";
 import restaurantDetails from "screens/Customer/Home/RestaurantDetails";
+import _ from "lodash";
 
 //Types
 const GET_RESTAURANTS_REQUEST_STARTED = "GET_RESTAURANTS_REQUEST_STARTED"
 const GET_RESTAURANTS_REQUEST_COMPLETED = "GET_RESTAURANTS_REQUEST_COMPLETED"
 const CREATE_NEW_ORDER_REQUEST_STARTED = "CREATE_NEW_ORDER_REQUEST_STARTED"
 const CREATE_NEW_ORDER_REQUEST_COMPLETED = "CREATE_NEW_ORDER_REQUEST_COMPLETED"
+const UPDATE_ADDRESSES_REQUEST_STARTED = "UPDATE_ADDRESSES_REQUEST_STARTED"
+const UPDATE_ADDRESSES_REQUEST_COMPLETED = "UPDATE_ADDRESSES_REQUEST_COMPLETED"
 const GET_ADDRESSES_REQUEST_STARTED = "GET_ADDRESSES_REQUEST_STARTED"
 const GET_ADDRESSES_REQUEST_COMPLETED = "GET_ADDRESSES_REQUEST_COMPLETED"
 const SET_CART_ITEMS = "SET_CART_ITEMS"
@@ -38,6 +41,16 @@ export const getRestaurantsData = (data) => ({
 export const getAddressesData = (data) => ({
   type: GET_ADDRESSES_REQUEST_STARTED,
   payload: data,
+})
+export const updateAddresses = (id, data) => ({
+  type: UPDATE_ADDRESSES_REQUEST_STARTED,
+  payload: data,
+  id
+})
+export const setUpdatedAddresses = (id, data) => ({
+  type: UPDATE_ADDRESSES_REQUEST_COMPLETED,
+  payload: data,
+  id
 })
 export const setAddressesData = (data) => ({
   type: GET_ADDRESSES_REQUEST_COMPLETED,
@@ -102,6 +115,20 @@ export const customerReducer = (state = initialState, action) => {
         loading: false,
         addresses: action.payload
       }
+     case UPDATE_ADDRESSES_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case UPDATE_ADDRESSES_REQUEST_COMPLETED:
+      let dummyAddress = _.cloneDeep(state.addresses);
+      const index = dummyAddress.findIndex((item) => item.id === action.id);
+      dummyAddress[index] = action.payload;
+      return {
+        ...state,
+        addresses: dummyAddress,
+        loading: false
+      }
     case SET_CART_ITEMS:
       return {
         ...state,
@@ -164,6 +191,18 @@ function getAddressesAPI() {
   return XHR(URL, options)
 }
 
+function updateAddressesAPI(id, data) {
+  const URL = `${appConfig.backendServerURL}/customers/address/${id}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "PATCH",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
 function createNewOrderAPI(data) {
   const URL = `${appConfig.backendServerURL}/orders/`
   const options = {
@@ -219,6 +258,22 @@ function* getAddressesAction() {
   }
 }
 
+function* updateAddressesAction(data) {
+  try {
+    const resp = yield call(updateAddressesAPI, data.id, data.payload)
+    if(resp?.data) {
+      yield put(setUpdatedAddresses(data.id, resp.data))
+    }
+  } catch (e) {
+    const { response } = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 function* createNewOrderAction(data) {
   try {
     const resp = yield call(createNewOrderAPI, data.payload)
@@ -257,5 +312,6 @@ export default all([
   takeLatest(GET_RESTAURANT_DETAILS_REQUEST_STARTED, getRestaurantDetailsAction),
   takeLatest(GET_RESTAURANTS_REQUEST_STARTED, getRestaurantsAction),
   takeLatest(GET_ADDRESSES_REQUEST_STARTED, getAddressesAction),
+  takeLatest(UPDATE_ADDRESSES_REQUEST_STARTED, updateAddressesAction),
   takeLatest(CREATE_NEW_ORDER_REQUEST_STARTED, createNewOrderAction),
 ])

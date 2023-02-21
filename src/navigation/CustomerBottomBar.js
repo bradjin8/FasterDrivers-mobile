@@ -1,5 +1,5 @@
-import React from "react"
-import { Image } from "react-native"
+import React, { useEffect, useState } from "react";
+import { Image, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
 import { Text } from "../components/index";
@@ -17,18 +17,27 @@ import Home from "screens/Customer/Home"
 import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
 import Orders from "screens/Customer/Orders"
+import { useSelector } from "react-redux";
+import Icon from "react-native-vector-icons/dist/Feather";
 
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
 
 const CustomerBottomBar = props => {
+  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
+  const [cartItems, setCartItems] = useState(cartItemsReducer)
+  
+  useEffect(() => {
+    setCartItems(cartItemsReducer)
+  }, [cartItemsReducer]);
+  
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
           backgroundColor: color.white,
-          height: scaleVertical(65),
+          // height: scaleVertical(65),
           tabBarActiveTintColor: color.black,
           tabBarInactiveTintColor: color.gray,
         }
@@ -61,10 +70,30 @@ const CustomerBottomBar = props => {
             <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.orders}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <View>
+              {cartItems.length ? <View style={{
+                position: 'absolute',
+                right: -20,
+                top: -8,
+                width: 25,
+                height: 25,
+                borderRadius: 12.5,
+                zIndex: 1,
+                borderColor: color.white,
+                borderWidth: scale(1.5),
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: color.angry
+              }}>
+                <Text variant="text" color="white" fontSize={12} fontWeight="600">
+                  {cartItems.length}
+                </Text>
+              </View> : null}
+              <Image
+                source={Images.orders}
+                style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              />
+            </View>
           ),
           header: () => null
         }}

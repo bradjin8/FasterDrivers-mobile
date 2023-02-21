@@ -16,16 +16,17 @@ const AccountInformation = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [pickImage, setPickImage] = useState(user?.customer?.photo)
   const [changeImage, setChangeImage] = useState(null)
+  const { name, customer: { phone, addresses, photo } } = user
+  const [pickImage, setPickImage] = useState(photo)
   
   const [customerDetails, setCustomerDetails] = useState({
-    "name": user.name,
-    "customer.phone": user.customer.phone,
-    "customer.addresses[0]street": user.customer?.addresses[0]?.street,
-    "customer.addresses[0]city": user.customer?.addresses[0]?.city,
-    "customer.addresses[0]state": user.customer?.addresses[0]?.state,
-    "customer.addresses[0]zip_code": user.customer?.addresses[0]?.zip_code,
+    "name": name,
+    "customer.phone": phone,
+    "customer.addresses[0]street": addresses[0]?.street,
+    "customer.addresses[0]city": addresses[0]?.city,
+    "customer.addresses[0]state": addresses[0]?.state,
+    "customer.addresses[0]zip_code": addresses[0]?.zip_code,
   })
   
   const onChangeText = (key, text) => {
@@ -43,7 +44,6 @@ const AccountInformation = () => {
       });
     }
     data.append("name", customerDetails.name);
-    data.append("customer.phone", customerDetails["customer.phone"]);
     data.append("customer.addresses[0]street", customerDetails["customer.addresses[0]street"]);
     data.append("customer.addresses[0]city", customerDetails["customer.addresses[0]city"]);
     data.append("customer.addresses[0]state", customerDetails["customer.addresses[0]state"]);
