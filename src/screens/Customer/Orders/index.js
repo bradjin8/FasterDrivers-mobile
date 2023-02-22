@@ -13,9 +13,9 @@ const Orders = () => {
   const loading = useSelector(state => state.customerReducer.loading);
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-  const restaurants = useSelector(state => state.customerReducer.restaurants);
   const [searchText, setSearchText] = useState(null);
   const addresses = useSelector(state => state.customerReducer.addresses);
+  const defaultAddress = addresses?.find(o => o.default)
 
   useEffect(() => {
     setCartItems(cartItemsReducer)
@@ -78,7 +78,7 @@ const Orders = () => {
         <View style={[styles.instructionView, { flexDirection: "row", justifyContent: "space-between" }]}>
           <View style={{ width: "60%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="400" numberOfLines={2} ellipsizeMode="tail">
-              2972 Westheimer Rd. Santa Ana, Illinois 85486
+              {defaultAddress.street}, {defaultAddress.state} - {defaultAddress.zip_code}
             </Text>
           </View>
           <Button loading={false} text="Other"
@@ -106,7 +106,6 @@ const Orders = () => {
     let data = new FormData();
     data.append('restaurant', cartItems[0].restaurant);
     
-    let defaultAddress = addresses?.find(o => o.default);
     if(defaultAddress) {
       data.append('address', defaultAddress.id);
     }

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, View, Platform, PermissionsAndroid, Linking, ToastAndroid, Alert } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { Image, Pressable, ScrollView, StyleSheet, View, Platform, PermissionsAndroid, Linking, ToastAndroid, Alert, ActivityIndicator } from "react-native";
 import { color, scale, scaleVertical, screenWidth } from "utils";
 import { Images } from "src/theme";
 import { ActivityIndicators, CustomTextInput, Text } from "../../../components/index";
@@ -18,10 +18,12 @@ import { Menu, MenuItem } from 'react-native-material-menu';
 const Home = () => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
+  const locationLoadingReducer = useSelector(state => state.customerReducer.locationLoading);
   const user = useSelector(state => state.loginReducer.user);
   const restaurants = useSelector(state => state.customerReducer.restaurants);
   const addressesReducer = useSelector(state => state.customerReducer.addresses);
   const [addresses, setAddresses] = useState(addressesReducer);
+  const [locationLoading, setLocationLoading] = useState(locationLoadingReducer);
   const [searchText, setSearchText] = useState(null);
   const watchId = useRef(0);
   const [visible, setVisible] = useState(false);
@@ -29,7 +31,8 @@ const Home = () => {
   
   useEffect(() => {
     setAddresses(addressesReducer)
-  }, [addressesReducer]);
+    setLocationLoading(locationLoadingReducer)
+  }, [addressesReducer, locationLoadingReducer]);
   
   useEffect(() => {
     dispatch(getAddressesData())
@@ -223,52 +226,53 @@ const Home = () => {
             {name}
           </Text>
         </View>
-        <Pressable onPress={() => showMenu()} style={styles.locationView}>
-          <Text onPress={() => showMenu()} variant="text" color="primary" fontSize={12} fontWeight="700" style={{textAlign: 'left'}}>
-            DELIVER TO
-          </Text>
-          <Menu
-            visible={visible}
-            anchor={
-              <View style={styles.locationContain}>
-                <Text variant="text" color="gray" fontSize={14} fontWeight="400">
-                  {renderLocation()}
-                </Text>
-                <Image source={Images.downArrow} style={styles.downIcon} />
-              </View>
-            }
-            onRequestClose={() => hideMenu()}
-          >
-            <MenuItem style={styles.locationPopup}>
-              <View style={styles.locationMenuItem}>
-                <Text variant="text" color="black" fontSize={14} fontWeight="600" style={{marginLeft: Platform.OS === 'ios' ? scale(15) : 0}}>
-                  Choose Location
-                </Text>
-                <Icon onPress={() => hideMenu()} name="x" size={16} color={color.black} />
-              </View>
-            </MenuItem>
-            {addresses?.map((address, index) => {
-              return(
-                <MenuItem
-                  style={{justifyContent: 'center',height: 35}}
-                  key={index.toString()}
-                  onPress={() => setDefaultAddress(address.id)}>
-                  <Text variant="text" color="gray" fontSize={12} fontWeight="400">
-                    {address.street}, {address.state} - {address.zip_code}
-                  </Text>
-                </MenuItem>
-              )
-            })}
-            <MenuItem onPress={() => hideMenu()} style={{justifyContent: 'center'}}>
-              <View style={[styles.locationPopup, styles.flex]}>
-                <MaterialIcons name="location-pin" size={16} color={color.black} style={{marginLeft: Platform.OS === 'ios' ? scale(12.5) : 0}} />
-                <Text variant="text" color="gray" fontSize={12} fontWeight="400" style={{marginLeft: scale(5)}}>
-                  Use Current Location
-                </Text>
-              </View>
-            </MenuItem>
-          </Menu>
-        </Pressable>
+        {locationLoading ? (<ActivityIndicator color={color.primary} size='small' style={styles.activityView} />) :
+         <Pressable onPress={() => showMenu()} style={styles.locationView}>
+           <Text onPress={() => showMenu()} variant="text" color="primary" fontSize={12} fontWeight="700" style={{textAlign: 'left'}}>
+             DELIVER TO
+           </Text>
+           <Menu
+             visible={visible}
+             anchor={
+               <View style={styles.locationContain}>
+                 <Text variant="text" color="gray" fontSize={14} fontWeight="400">
+                   {renderLocation()}
+                 </Text>
+                 <Image source={Images.downArrow} style={styles.downIcon} />
+               </View>
+             }
+             onRequestClose={() => hideMenu()}
+           >
+             <MenuItem style={styles.locationPopup}>
+               <View style={styles.locationMenuItem}>
+                 <Text variant="text" color="black" fontSize={14} fontWeight="600" style={{marginLeft: Platform.OS === 'ios' ? scale(15) : 0}}>
+                   Choose Location
+                 </Text>
+                 <Icon onPress={() => hideMenu()} name="x" size={16} color={color.black} />
+               </View>
+             </MenuItem>
+             {addresses?.map((address, index) => {
+               return(
+                 <MenuItem
+                   style={{justifyContent: 'center',height: 35}}
+                   key={index.toString()}
+                   onPress={() => setDefaultAddress(address.id)}>
+                   <Text variant="text" color="gray" fontSize={12} fontWeight="400">
+                     {address.street}, {address.state} - {address.zip_code}
+                   </Text>
+                 </MenuItem>
+               )
+             })}
+             <MenuItem onPress={() => hideMenu()} style={{justifyContent: 'center'}}>
+               <View style={[styles.locationPopup, styles.flex]}>
+                 <MaterialIcons name="location-pin" size={16} color={color.black} style={{marginLeft: Platform.OS === 'ios' ? scale(12.5) : 0}} />
+                 <Text variant="text" color="gray" fontSize={12} fontWeight="400" style={{marginLeft: scale(5)}}>
+                   Use Current Location
+                 </Text>
+               </View>
+             </MenuItem>
+           </Menu>
+         </Pressable>}
       </View>
       <View style={styles.container}>
         <CustomTextInput
@@ -298,6 +302,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "50%"
   },
+  activityView: {width: '50%',  alignItems: 'center', justifyContent: 'flex-start'},
   locationView: {
     flex: 1,
     width: "100%",
