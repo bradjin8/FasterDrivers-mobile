@@ -18,6 +18,7 @@ const RestaurantDetails = ({ route }) => {
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
   const { id, photo, name, street, city, zip_code, state, description, type, rating_count  } = selectedRestaurant
+  const [rating, setRating] = useState(rating_count)
   
   useEffect(() => {
     dispatch(getRestaurantDetails(id));
@@ -26,6 +27,10 @@ const RestaurantDetails = ({ route }) => {
   useEffect(() => {
     setCartItems(cartItemsReducer)
   }, [cartItemsReducer]);
+  
+  const handleRating = (rate) => {
+    setRating(rate)
+  }
 
   const onAdd = (product) => {
     const index = cartItems.findIndex((item) => item.id === product.id);
@@ -157,16 +162,19 @@ const RestaurantDetails = ({ route }) => {
           </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <StarRating
-              disabled={true}
+              disabled={false}
+              halfStarEnabled={true}
               maxStars={5}
-              rating={rating_count}
+              rating={rating}
               starSize={18}
               emptyStarColor={color.lightGray}
-              fullStarColor={color.lightGray}
-              starStyle={{ color: color.primary, fontWeight: "bold", marginRight: scaleVertical(3) }}
+              fullStarColor={color.primary}
+              containerStyle={styles.starContainer}
+              starStyle={styles.starStyle}
+              selectedStar={(rating) => handleRating(rating)}
             />
             <Text variant="text" color="item" fontSize={14} fontWeight="600" style={{ marginLeft: scaleVertical(5) }}>
-              {rating_count}
+              {rating}
             </Text>
           </View>
           <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12} />
@@ -276,6 +284,8 @@ const styles = StyleSheet.create({
   },
   itemTitle: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
+  starContainer: { width: 100, justifyContent: "space-evenly" },
+  starStyle: { fontWeight: "bold", marginRight: scaleVertical(3), margin: 3 }
 });
 
 export default RestaurantDetails;
