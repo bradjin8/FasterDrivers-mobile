@@ -51,7 +51,7 @@ const Payment = ({}) => {
         <View style={styles.innerContain}>
           {addresses?.map((address, index) => {
             return(
-              <Pressable style={styles.itemContain} key={index.toString()}>
+              <Pressable style={[styles.itemContain, address.default && styles.activeItem]} key={index.toString()}>
                 {address.default && <View style={styles.checkView}>
                   <FontAwesomeIcons name="check-circle" size={16} color={color.primary} />
                 </View>}
@@ -68,7 +68,7 @@ const Payment = ({}) => {
             variant="outline"
             text="Add New Payment Method"
             textColor="black"
-            onPress={() => {}}
+            onPress={() => navigate("AddCard")}
             fontSize={16}
             fontWeight="600"
             icon="add"
@@ -102,16 +102,20 @@ const styles = StyleSheet.create({
   itemContain: {
     backgroundColor: color.secondary,
     borderRadius: scale(10),
-    borderColor: color.primary,
+    borderColor: color.black,
     borderWidth: scale(1),
     marginBottom: scale(15),
     padding: scale(10),
     justifyContent: 'center',
   },
+  activeItem: {
+    borderColor: color.primary,
+  },
   checkView: {
     position: 'absolute',
     right: -4,
     top: -6,
+    zIndex: 12,
   },
   pricingView: {
     justifyContent: "space-between",
