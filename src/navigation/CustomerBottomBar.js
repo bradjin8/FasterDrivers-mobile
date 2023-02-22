@@ -17,8 +17,9 @@ import Home from "screens/Customer/Home"
 import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
 import Orders from "screens/Customer/Orders"
+import Payment from "screens/Customer/Orders/Payment"
+
 import { useSelector } from "react-redux";
-import Icon from "react-native-vector-icons/dist/Feather";
 
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
@@ -160,6 +161,7 @@ const OrderTab = () => {
         initialRouteName="Orders"
       >
         <settingStack.Screen name="Orders" component={Orders} />
+        <settingStack.Screen name="Payment" component={Payment} />
       </settingStack.Navigator>
     </>
   )

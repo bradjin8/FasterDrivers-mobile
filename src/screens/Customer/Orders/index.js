@@ -6,7 +6,7 @@ import { ActivityIndicators, Button, CustomTextInput, Text } from "../../../comp
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewOrder, getRestaurantsData } from "../../../screenRedux/customerRedux";
+import { navigate } from "navigation/NavigationService";
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -96,28 +96,12 @@ const Orders = () => {
             onChangeText={(text) => setSearchText(text)}
             multiline={true}
           />
-          <Button loading={false} text="Confirm" onPress={createOrder} />
+          <Button loading={false} text="Confirm" onPress={() => navigate("Payment")} />
         </View>
       </View>
     );
   };
-
-  const createOrder = () => {
-    let data = new FormData();
-    data.append('restaurant', cartItems[0].restaurant);
-    
-    if(defaultAddress) {
-      data.append('address', defaultAddress.id);
-    }
-    cartItems.map((item, index) => {
-      data.append(`dishes[${index}]dish`, item.id);
-      data.append(`dishes[${index}]quantity`, item.quantity);
-      // data.append('dishes[0]dish_addons[0]item', "7516a864-c9b8-494e-be5b-8b80b2bfd7fd");
-      // data.append('dishes[0]dish_addons[0]quantity', "2");
-    })
-    dispatch(createNewOrder(data))
-  }
-
+  
   if(loading) {
     return (<ActivityIndicators />)
   }
