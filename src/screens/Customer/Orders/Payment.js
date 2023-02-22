@@ -73,6 +73,7 @@ const Payment = ({}) => {
             fontWeight="600"
             icon="add"
           />
+          <Button loading={false} text="Pay" mt={20} onPress={() => navigate("Payment")} />
         </View>
       </ScrollView>
     </View>
