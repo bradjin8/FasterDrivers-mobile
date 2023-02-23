@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, Pressable, View, Dimensions } from "react-native";
+import { StyleSheet, ActivityIndicator, Pressable, View, Dimensions, Platform } from "react-native";
 import { color, scale, scaleVertical } from 'utils';
 import { Text } from './text';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 const { width, height } = Dimensions.get('window');
 
 export function Button({
@@ -63,7 +64,7 @@ export function Button({
         <ActivityIndicator color={textColor} size="small" />
       ) : (
          <View style={styles.content}>
-           {icon}
+           <MaterialIcons name={icon} size={16} color={color.black} style={{marginRight: scale(5)}} />
            <Text
              color={isSecondary ? 'secondaryBtn' : textColor}
              font={font}

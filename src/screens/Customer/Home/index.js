@@ -1,26 +1,131 @@
-import React, { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { Image, Pressable, ScrollView, StyleSheet, View, Platform, PermissionsAndroid, Linking, ToastAndroid, Alert, ActivityIndicator } from "react-native";
 import { color, scale, scaleVertical, screenWidth } from "utils";
 import { Images } from "src/theme";
 import { ActivityIndicators, CustomTextInput, Text } from "../../../components/index";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
-import { getAddressesData, getRestaurantsData } from "../../../screenRedux/customerRedux";
+import { getAddressesData, getRestaurantsData, updateAddresses } from "../../../screenRedux/customerRedux";
 import StarRating from 'react-native-star-rating-new';
 import Icon from 'react-native-vector-icons/dist/Feather';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import { navigate } from "navigation/NavigationService";
+import MapView from 'react-native-maps';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import Geolocation from 'react-native-geolocation-service';
+import { Menu, MenuItem } from 'react-native-material-menu';
 
 const Home = () => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
+  const locationLoadingReducer = useSelector(state => state.customerReducer.locationLoading);
   const user = useSelector(state => state.loginReducer.user);
   const restaurants = useSelector(state => state.customerReducer.restaurants);
-  const addresses = useSelector(state => state.customerReducer.addresses);
+  const addressesReducer = useSelector(state => state.customerReducer.addresses);
+  const [addresses, setAddresses] = useState(addressesReducer);
+  const [locationLoading, setLocationLoading] = useState(locationLoadingReducer);
   const [searchText, setSearchText] = useState(null);
+  const watchId = useRef(0);
+  const [visible, setVisible] = useState(false);
+  const { customer: { photo }, name } = user
+  
+  useEffect(() => {
+    setAddresses(addressesReducer)
+    setLocationLoading(locationLoadingReducer)
+  }, [addressesReducer, locationLoadingReducer]);
   
   useEffect(() => {
     dispatch(getAddressesData())
   }, [])
+  
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        Alert.alert('Unable to open settings');
+      });
+    };
+    const status = await Geolocation.requestAuthorization('whenInUse');
+    
+    if (status === 'granted') {
+      return true;
+    }
+    
+    if (status === 'denied') {
+      Alert.alert('Location permission denied');
+    }
+    
+    if (status === 'disabled') {
+      Alert.alert(`Turn on Location Services to determine your location.`, '', [
+        { text: 'Go to Settings', onPress: openSetting },
+        { text: "Don't Use Location", onPress: () => {} },
+      ]);
+    }
+    
+    return false;
+  };
+  
+  const hasLocationPermission = (async () => {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    }
+    
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+    
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    
+    if (hasPermission) {
+      return true;
+    }
+    
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+    
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show(
+        'Location permission denied by user.',
+        ToastAndroid.LONG,
+      );
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show(
+        'Location permission revoked by user.',
+        ToastAndroid.LONG,
+      );
+    }
+    return false;
+  });
+  
+  const startLocationWatch = (async () => {
+    const hasPermission = await hasLocationPermission();
+    
+    if (!hasPermission) {
+      return;
+    }
+    
+    watchId.current = Geolocation.getCurrentPosition((position) => {
+        return position;
+      },
+      (error) => {
+        // See error code charts below.
+        return error;
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  });
+  
+  useEffect(async () => {
+    // const resp = await startLocationWatch();
+    // console.log("@@@@@@@@", resp)
+  }, []);
   
   useEffect(() => {
     dispatch(getRestaurantsData(searchText ? searchText  : null));
@@ -31,26 +136,27 @@ const Home = () => {
   };
   
   const renderItems = (rest, i) => {
+    const { photo, name, description, rating_count, } = rest || {}
     return(
       <Pressable key={i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", { restaurant: rest })}>
-        <Image source={rest.photo ? {uri: rest.photo} : Images.item} style={styles.itemImage} />
+        <Image source={photo ? {uri: photo} : Images.item} style={styles.itemImage} />
         <View style={styles.textContain}>
           <Text variant="text" color="item" fontSize={14} fontWeight="400">
-            {rest.name}
+            {name}
           </Text>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-            {rest.description}
+            {description}
           </Text>
           <View style={{flexDirection: 'row'}}>
             <StarRating
               disabled={true}
               maxStars={1}
-              rating={rest.rating_count/5}
+              rating={rating_count/5}
               starSize={20}
               starStyle={{color: color.primary, fontWeight: 'bold'}}
             />
             <Text variant="text" color="item" fontSize={16} fontWeight="700" style={{marginLeft: scaleVertical(5)}}>
-              {rest.rating_count}
+              {rating_count}
             </Text>
           </View>
         </View>
@@ -89,30 +195,85 @@ const Home = () => {
       })
     )
   }
+  const renderLocation = () => {
+    let defaultAddress = addresses?.find(o => o.default);
+    if(defaultAddress) {
+      const { street, zip_code } = defaultAddress || {}
+      return `${street} - ${zip_code}`
+    }
+    return 'Chosen Address'
+  }
   
   if(loading) {
     return (<ActivityIndicators />)
   }
+  const hideMenu = () => setVisible(false);
+  
+  const showMenu = () => setVisible(true);
+  
+  const setDefaultAddress = (id) => {
+    hideMenu();
+    let data = new FormData();
+    data.append('default', true);
+    dispatch(updateAddresses(id, data))
+  }
+  
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.headerView}>
         <View style={styles.profileView}>
-          <Image source={Images.dummyProfile} defaultSource={Images.dummyProfile} style={styles.profilePic} />
+          <Image source={{ uri: photo }} defaultSource={Images.dummyProfile} style={styles.profilePic} />
           <Text variant="text" color="gray" fontSize={12} fontWeight="500" style={{ marginLeft: scaleVertical(5) }}>
-            {user.name}
+            {name}
           </Text>
         </View>
-        <Pressable onPress={() => alert("ss")} style={{ alignItems: "flex-start" }}>
-          <Text variant="text" color="primary" fontSize={12} fontWeight="700">
-            DELIVER TO
-          </Text>
-          <View style={styles.locationView}>
-            <Text variant="text" color="gray" fontSize={14} fontWeight="400" style={{ marginRight: scaleVertical(5) }}>
-              Chosen Address
-            </Text>
-            <Image source={Images.downArrow} style={styles.downIcon} />
-          </View>
-        </Pressable>
+        {locationLoading ? (<ActivityIndicator color={color.primary} size='small' style={styles.activityView} />) :
+         <Pressable onPress={() => showMenu()} style={styles.locationView}>
+           <Text onPress={() => showMenu()} variant="text" color="primary" fontSize={12} fontWeight="700" style={{textAlign: 'left'}}>
+             DELIVER TO
+           </Text>
+           <Menu
+             visible={visible}
+             anchor={
+               <View style={styles.locationContain}>
+                 <Text variant="text" color="gray" fontSize={14} fontWeight="400">
+                   {renderLocation()}
+                 </Text>
+                 <Image source={Images.downArrow} style={styles.downIcon} />
+               </View>
+             }
+             onRequestClose={() => hideMenu()}
+           >
+             <MenuItem style={styles.locationPopup}>
+               <View style={styles.locationMenuItem}>
+                 <Text variant="text" color="black" fontSize={14} fontWeight="600" style={{marginLeft: Platform.OS === 'ios' ? scale(15) : 0}}>
+                   Choose Location
+                 </Text>
+                 <Icon onPress={() => hideMenu()} name="x" size={16} color={color.black} />
+               </View>
+             </MenuItem>
+             {addresses?.map((address, index) => {
+               return(
+                 <MenuItem
+                   style={{justifyContent: 'center',height: 35}}
+                   key={index.toString()}
+                   onPress={() => setDefaultAddress(address.id)}>
+                   <Text variant="text" color="gray" fontSize={12} fontWeight="400">
+                     {address.street}, {address.state} - {address.zip_code}
+                   </Text>
+                 </MenuItem>
+               )
+             })}
+             <MenuItem onPress={() => hideMenu()} style={{justifyContent: 'center'}}>
+               <View style={[styles.locationPopup, styles.flex]}>
+                 <MaterialIcons name="location-pin" size={16} color={color.black} style={{marginLeft: Platform.OS === 'ios' ? scale(12.5) : 0}} />
+                 <Text variant="text" color="gray" fontSize={12} fontWeight="400" style={{marginLeft: scale(5)}}>
+                   Use Current Location
+                 </Text>
+               </View>
+             </MenuItem>
+           </Menu>
+         </Pressable>}
       </View>
       <View style={styles.container}>
         <CustomTextInput
@@ -122,7 +283,6 @@ const Home = () => {
           onChangeText={(text) => setSearchText(text)}
           onBlurText={onBlurSearch}
         />
-        
         {renderRestaurants()}
       </View>
     </BaseScreen>);
@@ -133,10 +293,29 @@ const styles = StyleSheet.create({
     flex: 1, backgroundColor: color.white,
   },
   headerView: {
-    width: "100%", padding: scaleVertical(25), justifyContent: "space-between", flexDirection: "row",
+    width: "100%",
+    padding: scaleVertical(25),
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
-  profileView: { flexDirection: "row", alignItems: "center", width: "50%" },
-  locationView: { flexDirection: "row", alignItems: "center" },
+  profileView: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "50%"
+  },
+  activityView: {width: '50%',  alignItems: 'center', justifyContent: 'flex-start'},
+  locationView: {
+    flex: 1,
+    width: "100%",
+    justifyContent: 'center'
+  },
+  locationContain: {
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  locationPopup: {justifyContent: 'center',width: '100%' },
+  locationMenuItem: {justifyContent: 'space-between', flexDirection: 'row', width: '100%', alignItems: 'center' },
   profilePic: { width: scaleVertical(34), height: scaleVertical(34), borderRadius: scaleVertical(17) },
   downIcon: { width: scaleVertical(11), height: scaleVertical(8) },
   flex: {flexDirection: 'row', alignItems: 'center'},

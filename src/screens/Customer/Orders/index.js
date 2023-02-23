@@ -1,55 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { color, scale, scaleVertical } from "utils";
 import { Images } from "src/theme";
 import { ActivityIndicators, Button, CustomTextInput, Text } from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantsData } from "../../../screenRedux/customerRedux";
+import { navigate } from "navigation/NavigationService";
 
 const Orders = () => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
-  const [cartItems, setCartItems] = useState(useSelector(state => state.customerReducer.carts))
-  const restaurants = useSelector(state => state.customerReducer.restaurants);
+  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
+  const [cartItems, setCartItems] = useState(cartItemsReducer)
   const [searchText, setSearchText] = useState(null);
-  console.log("@@@@ landing", cartItems)
+  const addresses = useSelector(state => state.customerReducer.addresses);
+  const defaultAddress = addresses?.find(o => o.default)
+  const { street, state, zip_code } = defaultAddress || {}
 
   useEffect(() => {
-    console.log("@@@@ landing")
-  }, [cartItems]);
+    setCartItems(cartItemsReducer)
+  }, [cartItemsReducer]);
 
-  const onBlurSearch = () => {
-
-  };
-  
   const renderFinalTotal = () => {
     return  cartItems.length && cartItems.reduce((prev,curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
-  
+
   const renderHeader = (cart, index) => {
+    const { image_1, quantity, name, description, price } = cart
     return (
       <View style={styles.itemContain} key={index.toString()}>
         <View style={styles.flexRow}>
-          <Image source={cart?.image_1 ? {uri: cart.image_1} : Images.item} style={styles.downIcon} />
+          <Image source={image_1 ? {uri: image_1} : Images.item} style={styles.downIcon} />
           <View style={{ width: "72%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="500">
               <Text variant="text" color="primary" fontSize={12} fontWeight="500">
-                {cart.quantity > 1 && cart.quantity + "x "}
-              </Text>{cart.name}
+                {quantity > 1 && quantity + "x "}
+              </Text>{name}
             </Text>
             <Text variant="text" color="black" fontSize={12} fontWeight="300" numberOfLines={2}
                   ellipsizeMode="tail">
-              {cart.description}
+              {description}
             </Text>
           </View>
         </View>
         <View style={{ width: "20%", alignItems: "center" }}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            ${(cart.price * cart.quantity).toFixed(2)}
+            ${(price * quantity).toFixed(2)}
           </Text>
         </View>
       </View>
@@ -80,7 +79,7 @@ const Orders = () => {
         <View style={[styles.instructionView, { flexDirection: "row", justifyContent: "space-between" }]}>
           <View style={{ width: "60%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="400" numberOfLines={2} ellipsizeMode="tail">
-              2972 Westheimer Rd. Santa Ana, Illinois 85486
+              {street}, {state} - {zip_code}
             </Text>
           </View>
           <Button loading={false} text="Other"
@@ -93,17 +92,12 @@ const Orders = () => {
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
             Special instructions
           </Text>
-
           <CustomTextInput
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
-            onBlurText={onBlurSearch}
             multiline={true}
           />
-
-          <Button loading={false} text="Confirm"
-                  onPress={() => {
-                  }} />
+          <Button loading={false} text="Confirm" onPress={() => navigate("Payment")} />
         </View>
       </View>
     );
@@ -112,14 +106,14 @@ const Orders = () => {
   if(loading) {
     return (<ActivityIndicators />)
   }
-  
+
   return (
-    <BaseScreen style={styles.mainWrapper}>
+    <View style={styles.mainWrapper}>
       <SimpleHeader
         title="My Basket"
         showBackIcon={true}
       />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.items}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">
             Items
@@ -127,11 +121,11 @@ const Orders = () => {
         </View>
 
         <View style={styles.itemContainer}>
-          {cartItems.map((cart, index) => renderHeader(cart, index))}
+          {cartItems?.map((cart, index) => renderHeader(cart, index))}
           {renderContent()}
         </View>
-      </View>
-    </BaseScreen>
+      </ScrollView>
+    </View>
   );
 };
 

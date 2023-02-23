@@ -16,16 +16,17 @@ const AccountInformation = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [pickImage, setPickImage] = useState(user?.driver?.photo)
   const [changeImage, setChangeImage] = useState(null)
+  const { name, driver: { phone, street, city, state, zip_code, photo } } = user
+  const [pickImage, setPickImage] = useState(photo)
   
   const [customerDetails, setCustomerDetails] = useState({
-    "name": user.name,
-    "driver.phone": user.driver?.phone,
-    "driver.street": user.driver?.street,
-    "driver.city": user.driver?.city,
-    "driver.state": user.driver?.state,
-    "driver.zip_code": user.driver?.zip_code,
+    "name": name,
+    "driver.phone": phone,
+    "driver.street": street,
+    "driver.city": city,
+    "driver.state": state,
+    "driver.zip_code": zip_code,
   })
   
   const onChangeText = (key, text) => {

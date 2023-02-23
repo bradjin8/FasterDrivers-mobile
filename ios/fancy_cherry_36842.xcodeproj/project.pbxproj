@@ -27,9 +27,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		306940A305CB6B7D032B0A33 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0676AC4808DDEE0773539FF7 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		AC1F57A985A3EA227E776AD4 /* libPods-fancy_cherry_36842.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3D36B4A27B884350DE056C /* libPods-fancy_cherry_36842.a */; };
+		8A4C7A4F0B0ED49BD7CE57C7 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C805689DAB9746B134A10F77 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */; };
+		A4D091CD0A6BF00D4FBDD1CF /* libPods-fancy_cherry_36842.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9958F12B20EA856AEF54CCB5 /* libPods-fancy_cherry_36842.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,20 +62,20 @@
 		041B651C299B66E2005A0743 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		041B651D299B66E2005A0743 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		041B651E299B66E2005A0743 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
-		0676AC4808DDEE0773539FF7 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* fancy_cherry_36842.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fancy_cherry_36842.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = fancy_cherry_36842/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = fancy_cherry_36842/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = fancy_cherry_36842/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = fancy_cherry_36842/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = fancy_cherry_36842/main.m; sourceTree = "<group>"; };
-		55B1293DC095D70814B57337 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		7B3D36B4A27B884350DE056C /* libPods-fancy_cherry_36842.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		23D287A37A89272AE3D5FD10 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = fancy_cherry_36842/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9131D7C0574A90632A7ABD9F /* Pods-fancy_cherry_36842.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.debug.xcconfig"; sourceTree = "<group>"; };
-		94EBD7A17F5935E2ACF83A61 /* Pods-fancy_cherry_36842.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.release.xcconfig"; sourceTree = "<group>"; };
-		E4BA7A4E9027B22877A44EF7 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig"; sourceTree = "<group>"; };
+		9958F12B20EA856AEF54CCB5 /* libPods-fancy_cherry_36842.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4DFFC976DD959049BE27C20 /* Pods-fancy_cherry_36842.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.debug.xcconfig"; sourceTree = "<group>"; };
+		C805689DAB9746B134A10F77 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD9D9FD8DE5350A184BC28A8 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F0507719C09F317BC99058C3 /* Pods-fancy_cherry_36842.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fancy_cherry_36842.release.xcconfig"; path = "Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				306940A305CB6B7D032B0A33 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */,
+				8A4C7A4F0B0ED49BD7CE57C7 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC1F57A985A3EA227E776AD4 /* libPods-fancy_cherry_36842.a in Frameworks */,
+				A4D091CD0A6BF00D4FBDD1CF /* libPods-fancy_cherry_36842.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,8 +156,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				7B3D36B4A27B884350DE056C /* libPods-fancy_cherry_36842.a */,
-				0676AC4808DDEE0773539FF7 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */,
+				9958F12B20EA856AEF54CCB5 /* libPods-fancy_cherry_36842.a */,
+				C805689DAB9746B134A10F77 /* libPods-fancy_cherry_36842-fancy_cherry_36842Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -196,10 +196,10 @@
 		E6EA7B839333BC2EEFC14CB3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9131D7C0574A90632A7ABD9F /* Pods-fancy_cherry_36842.debug.xcconfig */,
-				94EBD7A17F5935E2ACF83A61 /* Pods-fancy_cherry_36842.release.xcconfig */,
-				55B1293DC095D70814B57337 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */,
-				E4BA7A4E9027B22877A44EF7 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */,
+				A4DFFC976DD959049BE27C20 /* Pods-fancy_cherry_36842.debug.xcconfig */,
+				F0507719C09F317BC99058C3 /* Pods-fancy_cherry_36842.release.xcconfig */,
+				DD9D9FD8DE5350A184BC28A8 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */,
+				23D287A37A89272AE3D5FD10 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -211,11 +211,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "fancy_cherry_36842Tests" */;
 			buildPhases = (
-				93E26498D7416F7DCB25BE1E /* [CP] Check Pods Manifest.lock */,
+				1C8D92918F5CE3E3DCA120A3 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				7AC3FAACC6F5BB1F95787066 /* [CP] Copy Pods Resources */,
+				D81CD2598454BCFEFF273166 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -231,13 +231,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "fancy_cherry_36842" */;
 			buildPhases = (
-				7DDB67320BEE12410477D528 /* [CP] Check Pods Manifest.lock */,
+				E48801B3A02F35091C4CE6DC /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				98044B5A6BBEA082C05B54E4 /* [CP] Copy Pods Resources */,
+				CCEC861FA16102CD81FD39C1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -334,46 +334,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		7AC3FAACC6F5BB1F95787066 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7DDB67320BEE12410477D528 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-fancy_cherry_36842-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		93E26498D7416F7DCB25BE1E /* [CP] Check Pods Manifest.lock */ = {
+		1C8D92918F5CE3E3DCA120A3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -395,7 +356,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		98044B5A6BBEA082C05B54E4 /* [CP] Copy Pods Resources */ = {
+		CCEC861FA16102CD81FD39C1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -410,6 +371,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842/Pods-fancy_cherry_36842-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D81CD2598454BCFEFF273166 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fancy_cherry_36842-fancy_cherry_36842Tests/Pods-fancy_cherry_36842-fancy_cherry_36842Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E48801B3A02F35091C4CE6DC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-fancy_cherry_36842-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -464,7 +464,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55B1293DC095D70814B57337 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */;
+			baseConfigurationReference = DD9D9FD8DE5350A184BC28A8 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -491,7 +491,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E4BA7A4E9027B22877A44EF7 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */;
+			baseConfigurationReference = 23D287A37A89272AE3D5FD10 /* Pods-fancy_cherry_36842-fancy_cherry_36842Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -515,13 +515,14 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9131D7C0574A90632A7ABD9F /* Pods-fancy_cherry_36842.debug.xcconfig */;
+			baseConfigurationReference = A4DFFC976DD959049BE27C20 /* Pods-fancy_cherry_36842.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = fancy_cherry_36842/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -541,12 +542,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 94EBD7A17F5935E2ACF83A61 /* Pods-fancy_cherry_36842.release.xcconfig */;
+			baseConfigurationReference = F0507719C09F317BC99058C3 /* Pods-fancy_cherry_36842.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = fancy_cherry_36842/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -612,7 +614,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -670,7 +672,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

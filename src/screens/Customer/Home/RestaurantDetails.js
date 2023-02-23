@@ -15,31 +15,37 @@ const RestaurantDetails = ({ route }) => {
   const loading = useSelector(state => state.customerReducer.loading);
   const restaurantDetails = useSelector(state => state.customerReducer.restaurantDetails);
   const selectedRestaurant = route?.params.restaurant;
-  const [cartItems, setCartItems] = useState(useSelector(state => state.customerReducer.carts))
+  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
+  const [cartItems, setCartItems] = useState(cartItemsReducer)
+  const { id, photo, name, street, city, zip_code, state, description, type, rating_count  } = selectedRestaurant
+  const [rating, setRating] = useState(rating_count)
   
   useEffect(() => {
-    dispatch(getRestaurantDetails(selectedRestaurant.id));
+    dispatch(getRestaurantDetails(id));
   }, []);
+
+  useEffect(() => {
+    setCartItems(cartItemsReducer)
+  }, [cartItemsReducer]);
   
+  const handleRating = (rate) => {
+    setRating(rate)
+  }
+
   const onAdd = (product) => {
     const index = cartItems.findIndex((item) => item.id === product.id);
     if (index > -1) {
       let _cartItems = _.cloneDeep(cartItems);
       _cartItems[index].quantity += 1;
       dispatch(setUserCartItems(_cartItems))
-      setCartItems(_cartItems)
     } else {
       dispatch(setUserCartItems([
         ...cartItems,
         { ...product, quantity: 1 },
       ]))
-      setCartItems([
-        ...cartItems,
-        { ...product, quantity: 1 },
-      ]);
     }
   };
-  
+
   const onRemove = (product) => {
     const index = cartItems.findIndex((item) => item.id === product.id);
     if (index > -1) {
@@ -47,15 +53,13 @@ const RestaurantDetails = ({ route }) => {
       if(_cartItems[index].quantity === 1) {
         _cartItems.splice(index, 1);
         dispatch(setUserCartItems(_cartItems))
-        setCartItems(_cartItems)
         return
       }
       _cartItems[index].quantity -= 1;
       dispatch(setUserCartItems(_cartItems))
-      setCartItems(_cartItems)
     }
   };
-  
+
   const renderPrice = (item, findIndex) => {
     if(findIndex > -1) {
       if(cartItems[findIndex].quantity === 0) return `$ ${item.price}`
@@ -64,13 +68,13 @@ const RestaurantDetails = ({ route }) => {
       return `$ ${item.price}`
     }
   }
-  
+
   const renderFinalTotal = () => {
     return  cartItems.length && cartItems.reduce((prev,curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
-  
+
   const renderItems = (item, i) => {
     const findIndex = cartItems.findIndex((product) => product.id === item.id);
     return (
@@ -99,7 +103,7 @@ const RestaurantDetails = ({ route }) => {
       </View>
     )
   }
-  
+
   const renderDishes = () => {
     const keys = Object.keys(restaurantDetails || {});
     if (keys.length === 0) {
@@ -109,7 +113,7 @@ const RestaurantDetails = ({ route }) => {
         </Text>
       </View>
     }
-    
+
     return (
       keys.map((type, index) => {
         return(
@@ -125,7 +129,7 @@ const RestaurantDetails = ({ route }) => {
       })
     )
   }
-  
+
   if(loading) {
     return (<ActivityIndicators />)
   }
@@ -136,47 +140,50 @@ const RestaurantDetails = ({ route }) => {
           <Pressable onPress={() => goBack()} style={styles.backView}>
             <Icon name="arrow-left" size={20} color={color.black} />
           </Pressable>
-          <Image source={selectedRestaurant?.photo ? { uri: selectedRestaurant.photo } : Images.item}
+          <Image source={photo ? { uri: photo } : Images.item}
                  style={styles.itemImage} />
         </View>
-        
+
         <View style={styles.content}>
           <View style={styles.flex}>
             <Text variant="text" color="item" fontSize={14} fontWeight="600">
-              {selectedRestaurant?.name}
+              {name}
             </Text>
             <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400" numberOfLines={2}
                   ellipsizeMode="tail">
-              {selectedRestaurant?.street}, {selectedRestaurant?.city} - {selectedRestaurant?.zip_code}, {selectedRestaurant?.state}
+              {street}, {city} - {zip_code}, {state}
             </Text>
           </View>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-            {selectedRestaurant?.description}
+            {description}
           </Text>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-            {selectedRestaurant?.type}
+            {type}
           </Text>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <StarRating
-              disabled={true}
+              disabled={false}
+              halfStarEnabled={true}
               maxStars={5}
-              rating={selectedRestaurant?.rating_count}
+              rating={rating}
               starSize={18}
               emptyStarColor={color.lightGray}
-              fullStarColor={color.lightGray}
-              starStyle={{ color: color.primary, fontWeight: "bold", marginRight: scaleVertical(3) }}
+              fullStarColor={color.primary}
+              containerStyle={styles.starContainer}
+              starStyle={styles.starStyle}
+              selectedStar={(rating) => handleRating(rating)}
             />
             <Text variant="text" color="item" fontSize={14} fontWeight="600" style={{ marginLeft: scaleVertical(5) }}>
-              {selectedRestaurant?.rating_count}
+              {rating}
             </Text>
           </View>
           <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12} />
         </View>
-        
+
         <View style={styles.itemContainer}>
           {renderDishes()}
         </View>
-      
+
       </ScrollView>
       <View style={styles.cartView}>
         <View style={styles.cartContain}>
@@ -277,6 +284,8 @@ const styles = StyleSheet.create({
   },
   itemTitle: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
+  starContainer: { width: 100, justifyContent: "space-evenly" },
+  starStyle: { fontWeight: "bold", marginRight: scaleVertical(3), margin: 3 }
 });
 
 export default RestaurantDetails;

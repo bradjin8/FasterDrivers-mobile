@@ -24,6 +24,7 @@ import search from "src/assets/images/seacrh.png"
 import orders from "src/assets/images/orders.png"
 import history from "src/assets/images/history.png"
 import cartBedge from "src/assets/images/cartBedge.png"
+import ticks from "src/assets/images/ticks.png"
 
 export default {
   HomeOn,
@@ -52,4 +53,5 @@ export default {
   orders,
   history,
   cartBedge,
+  ticks
 }
