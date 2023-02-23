@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { color, scale, scaleVertical } from "utils";
 import { Images } from "src/theme";
 import { ActivityIndicators, Button, CustomTextInput, Text } from "../../../components/index";
@@ -108,12 +108,12 @@ const Orders = () => {
   }
 
   return (
-    <BaseScreen style={styles.mainWrapper}>
+    <View style={styles.mainWrapper}>
       <SimpleHeader
         title="My Basket"
         showBackIcon={true}
       />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.items}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">
             Items
@@ -124,8 +124,8 @@ const Orders = () => {
           {cartItems?.map((cart, index) => renderHeader(cart, index))}
           {renderContent()}
         </View>
-      </View>
-    </BaseScreen>
+      </ScrollView>
+    </View>
   );
 };
 
