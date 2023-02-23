@@ -83,7 +83,7 @@ export const requestFailed = () => ({
 export const customerReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_RESTAURANTS_REQUEST_STARTED:
-      if (action.payload !== "" || action.payload !== undefined) {
+      if (action.payload !== null) {
         return {
           ...state
         }
