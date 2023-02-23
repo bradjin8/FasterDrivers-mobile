@@ -16,6 +16,7 @@ const Orders = () => {
   const [searchText, setSearchText] = useState(null);
   const addresses = useSelector(state => state.customerReducer.addresses);
   const defaultAddress = addresses?.find(o => o.default)
+  const { street, state, zip_code } = defaultAddress || {}
 
   useEffect(() => {
     setCartItems(cartItemsReducer)
@@ -78,7 +79,7 @@ const Orders = () => {
         <View style={[styles.instructionView, { flexDirection: "row", justifyContent: "space-between" }]}>
           <View style={{ width: "60%" }}>
             <Text variant="text" color="black" fontSize={12} fontWeight="400" numberOfLines={2} ellipsizeMode="tail">
-              {defaultAddress.street}, {defaultAddress.state} - {defaultAddress.zip_code}
+              {street}, {state} - {zip_code}
             </Text>
           </View>
           <Button loading={false} text="Other"
@@ -120,7 +121,7 @@ const Orders = () => {
         </View>
 
         <View style={styles.itemContainer}>
-          {cartItems.map((cart, index) => renderHeader(cart, index))}
+          {cartItems?.map((cart, index) => renderHeader(cart, index))}
           {renderContent()}
         </View>
       </View>

@@ -7,6 +7,8 @@ import FontAwesomeIcons from 'react-native-vector-icons/dist/FontAwesome';
 import { navigate } from "navigation/NavigationService";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewOrder } from "../../../screenRedux/customerRedux";
+import Icon from "react-native-vector-icons/dist/Feather";
+import { Images } from "../../../theme";
 
 const Payment = ({}) => {
   const dispatch = useDispatch()
@@ -51,14 +53,16 @@ const Payment = ({}) => {
         <View style={styles.innerContain}>
           {addresses?.map((address, index) => {
             return(
-              <Pressable style={[styles.itemContain, address.default && styles.activeItem]} key={index.toString()}>
-                {address.default && <View style={styles.checkView}>
-                  <FontAwesomeIcons name="check-circle" size={16} color={color.primary} />
+              <Pressable onPress={() => alert('select method')}>
+                {address.default && <View style={styles.circle}>
+                  <Image source={Images.ticks}style={styles.tickImg} />
                 </View>}
-                <Text variant="text" color="black" fontSize={16} fontWeight="700">Master Card</Text>
-                <View style={[styles.flexDirection, styles.paddingTop]}>
-                  <FontAwesomeIcons name="cc-mastercard" size={16} color={color.black} style={{marginRight: scaleVertical(10)}} />
-                  <Text variant="text" color="black" fontSize={16} fontWeight="400">************* 436</Text>
+                <View style={[styles.itemContain, address.default && styles.activeItem]} key={index.toString()}>
+                  <Text variant="text" color="black" fontSize={16} fontWeight="700">Master Card</Text>
+                  <View style={[styles.flexDirection, styles.paddingTop]}>
+                    <FontAwesomeIcons name="cc-mastercard" size={16} color={color.black} style={{marginRight: scaleVertical(10)}} />
+                    <Text variant="text" color="black" fontSize={16} fontWeight="400">************* 436</Text>
+                  </View>
                 </View>
               </Pressable>
             )
@@ -73,7 +77,7 @@ const Payment = ({}) => {
             fontWeight="600"
             icon="add"
           />
-          <Button loading={false} text="Pay" mt={20} onPress={() => navigate("Payment")} />
+          <Button loading={false} text="Pay" mt={20} onPress={() => navigate("AddCard")} />
         </View>
       </ScrollView>
     </View>
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
   checkView: {
     position: 'absolute',
     right: -4,
-    top: -6,
+    top: -4,
     zIndex: 12,
   },
   pricingView: {
@@ -126,6 +130,15 @@ const styles = StyleSheet.create({
   btnStyle: {
     borderColor: color.black,
   },
+  circle: {
+    position: 'absolute',
+    right: -10,
+    top: -8,
+    zIndex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tickImg: { height: 24, width: 24, borderRadius: 12},
 })
 
 export default Payment;

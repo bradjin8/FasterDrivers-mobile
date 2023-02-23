@@ -136,7 +136,7 @@ const Home = () => {
   };
   
   const renderItems = (rest, i) => {
-    const { photo, name, description, rating_count, } = rest
+    const { photo, name, description, rating_count, } = rest || {}
     return(
       <Pressable key={i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", { restaurant: rest })}>
         <Image source={photo ? {uri: photo} : Images.item} style={styles.itemImage} />
@@ -198,7 +198,8 @@ const Home = () => {
   const renderLocation = () => {
     let defaultAddress = addresses?.find(o => o.default);
     if(defaultAddress) {
-      return `${defaultAddress.street} - ${defaultAddress.zip_code}`
+      const { street, zip_code } = defaultAddress || {}
+      return `${street} - ${zip_code}`
     }
     return 'Chosen Address'
   }

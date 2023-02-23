@@ -232,8 +232,9 @@ function* signUpAction(data) {
   } catch (e) {
     const { response } = e
     yield put(requestFailed())
+    const error = response?.data?.email?.[0] || response?.data?.password?.[0]
     showMessage({
-      message: response?.data?.email[0] ?? "Something went wrong, Please try again!",
+      message: error ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
