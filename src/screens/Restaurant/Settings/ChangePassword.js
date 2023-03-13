@@ -61,10 +61,6 @@ const ChangePassword = ({}) => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-        <TouchableHighlight style={styles.imageButton}>
-          <Image source={Images.Capture} style={styles.icon} />
-        </TouchableHighlight>
-        
         <View>
           <Text variant="text" color="black" style={styles.inputTitle}>
             Old Password

@@ -204,9 +204,6 @@ const Home = () => {
     return 'Chosen Address'
   }
   
-  if(loading) {
-    return (<ActivityIndicators />)
-  }
   const hideMenu = () => setVisible(false);
   
   const showMenu = () => setVisible(true);
@@ -283,7 +280,10 @@ const Home = () => {
           onChangeText={(text) => setSearchText(text)}
           onBlurText={onBlurSearch}
         />
-        {renderRestaurants()}
+        {loading ?
+           (<ActivityIndicators />)
+          :
+        renderRestaurants()}
       </View>
     </BaseScreen>);
 };

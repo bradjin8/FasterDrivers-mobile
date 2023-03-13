@@ -28,7 +28,7 @@ const SignIn = ({ route }) => {
       setUserError(false)
     }
   }
-  
+
   const onBlurPassword = () => {
     if(!password) {
       setPasswordError(true)
@@ -36,7 +36,7 @@ const SignIn = ({ route }) => {
       setPasswordError(false)
     }
   }
-  
+
   const onSignIn = () => {
     if(userName && password && validator.email.regEx.test(userName)) {
       let data = new FormData();
@@ -48,7 +48,7 @@ const SignIn = ({ route }) => {
       onBlurPassword();
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.container}>
@@ -65,7 +65,7 @@ const SignIn = ({ route }) => {
           <CustomTextInput
             title="EMAIL"
             value={userName}
-            placeholder="jennywilson@email.com"
+            placeholder="email"
             onChangeText={(text) => setUserName(text)}
             onBlurText={onBlurUser}
             hasError={userError}
