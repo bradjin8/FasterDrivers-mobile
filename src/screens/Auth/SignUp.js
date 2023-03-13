@@ -19,7 +19,7 @@ const SignUp = ({ navigation, route }) => {
   const [rePassword, setRePassword] = useState("test@123")
   const [rePasswordError, setRePasswordError] = useState(null)
   const userType = route?.params.userType;
-  
+
   const onBlurUser = () => {
     if(!userName) {
       setUserError(true)
@@ -29,7 +29,7 @@ const SignUp = ({ navigation, route }) => {
       setUserError(false)
     }
   }
-  
+
   const onBlurPassword = () => {
     if(!password) {
       setPasswordError(true)
@@ -44,7 +44,7 @@ const SignUp = ({ navigation, route }) => {
       setRePasswordError(false)
     }
   }
-  
+
   const onSignUp = () => {
     if(userName && validator.email.regEx.test(userName) && password && rePassword === password) {
       let data = new FormData();
@@ -58,7 +58,7 @@ const SignUp = ({ navigation, route }) => {
       onBlurRePassword();
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.container}>
@@ -75,7 +75,7 @@ const SignUp = ({ navigation, route }) => {
           <CustomTextInput
             title="EMAIL"
             value={userName}
-            placeholder="jennywilson@email.com"
+            placeholder="email"
             onChangeText={(text) => setUserName(text)}
             onBlurText={onBlurUser}
             hasError={userError}

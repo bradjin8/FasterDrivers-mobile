@@ -48,6 +48,7 @@
     "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^2.18.1",
+    "react-native-snap-carousel": "^3.9.1",
     "react-native-star-rating-new": "^1.0.3",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "^0.18.2",

@@ -9,7 +9,7 @@ import BaseScreen from "../../components/BaseScreen";
 const ForgotPassword = ({ navigation }) => {
   const [userName, setUserName] = useState(null)
   const [userError, setUserError] = useState(null)
-  
+
   const onBlurUser = () => {
     if(!userName) {
       setUserError(true)
@@ -19,7 +19,7 @@ const ForgotPassword = ({ navigation }) => {
       setUserError(false)
     }
   }
-  
+
   const onSignIn = () => {
     if(userName && validator.email.regEx.test(userName)) {
       // api call
@@ -27,7 +27,7 @@ const ForgotPassword = ({ navigation }) => {
       onBlurUser();
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.container}>
@@ -52,7 +52,7 @@ const ForgotPassword = ({ navigation }) => {
           <CustomTextInput
             title="EMAIL"
             value={userName}
-            placeholder="jennywilson@email.com"
+            placeholder="email"
             onChangeText={(text) => setUserName(text)}
             onBlurText={onBlurUser}
             hasError={userError}

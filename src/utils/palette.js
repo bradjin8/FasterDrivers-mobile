@@ -13,4 +13,5 @@ export const palette = {
   itemPrimary: '#A0A5BA',
   priceText: '#2F2F37',
   slightGray: '#F3F3F3',
+  dotColor: '#616A7D'
 };
