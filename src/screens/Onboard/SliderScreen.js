@@ -9,20 +9,22 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 const SliderScreen = ({}) => {
   const carouselRef = useRef(null);
   const [index, setIndex] = useState(0);
-
+  
   const renderCarouselItem = () => {
     return (
-      <Image
-        source={Images.AppLogo}
-        style={styles.icon}
-      />
+      <View style={{alignItems: 'center'}}>
+        <Image
+          source={Images.AppLogo}
+          style={styles.icon}
+        />
+      </View>
     );
   };
-
+  
   const renderMultipleMedia = () => {
     return (
       <Carousel
-        // layout="default"
+        layout="default"
         // layoutCardOffset={9}
         // ref={carouselRef}
         data={[{}, {}, {}]}
@@ -47,7 +49,7 @@ const SliderScreen = ({}) => {
       containerStyle={styles.dotContainer}
     />
   );
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.imageContain}>
