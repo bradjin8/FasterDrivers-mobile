@@ -4,7 +4,7 @@ from restaurants.serializers import ListRestaurantSerializer
 from users.serializers import UserProfileSerializer
 
 from .models import OrderDishAddon, Order, OrderDish
-
+from .utility import calculate_total_cost
 
 class OrderDishAddonSerializer(serializers.ModelSerializer):
     """
@@ -67,8 +67,11 @@ class OrderSerializer(serializers.ModelSerializer):
                     for addon_data in addons_data:
                         OrderDishAddon.objects.create(
                             **addon_data,
-                            order_dish=order_dish
+                            order_dish=order_dish,
+                            order=order
                         )
+        order.sub_total = calculate_total_cost(dishes=order.dishes.all())
+        order.save()
         return order
 
     def update(self, instance, validated_data):
@@ -88,8 +91,11 @@ class OrderSerializer(serializers.ModelSerializer):
                     for addon_data in addons_data:
                         OrderDishAddon.objects.create(
                             **addon_data,
-                            order_dish=order_dish
+                            order_dish=order_dish,
+                            order=order
                         )
+        order.sub_total = calculate_total_cost(dishes=order.dishes.all())
+        order.save()
         return order
 
     def to_representation(self, instance):

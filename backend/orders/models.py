@@ -8,6 +8,7 @@ from restaurants.models import Dish, Item, Restaurant
 from customers.models import CustomerAddress
 
 from .constants import ORDER_STATUS
+from .utility import calculate_total_cost
 
 
 User = get_user_model()
@@ -112,6 +113,12 @@ class OrderDish(UUIDModel):
 
 
 class OrderDishAddon(UUIDModel):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="addon_items",
+        null=True
+    )
     order_dish = models.ForeignKey(
         OrderDish,
         on_delete=models.CASCADE,

@@ -15,6 +15,7 @@ class OrderViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Order.objects.all()
+    filterset_fields = ['user', 'driver', 'status']
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

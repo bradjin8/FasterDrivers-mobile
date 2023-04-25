@@ -2,6 +2,7 @@ from home.models import UUIDModel
 from users.models import User
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
+from djstripe.models import Account
 
 
 class Restaurant(UUIDModel):
@@ -55,6 +56,13 @@ class Restaurant(UUIDModel):
     )
     description = models.TextField(
         blank=True
+    )
+    connect_account = models.ForeignKey(
+        Account,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="The Restaurant owner's Stripe Account object, if it exists"
     )
 
 

@@ -1,7 +1,13 @@
 from django.db.models import Avg
+from django.contrib.gis.geos import Point
+
 from rest_framework import serializers
 
 from .models import Restaurant, Dish, AddOn, Item
+
+from fancy_cherry_36842.settings import GOOGLE_API_KEY
+
+import requests
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -105,6 +111,23 @@ class RestaurantSerializer(serializers.ModelSerializer):
         rep['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
         rep['rating_count'] = instance.reviews.count()
         return rep
+
+    def update(self, instance, validated_data):
+        restaurant = super().update(instance, validated_data)
+        address_fields = ['street', 'city', 'state', 'zip_code']
+        if any(x in address_fields for x in validated_data):
+            address = restaurant.street + ', ' + restaurant.city + ', ' + restaurant.state + ', ' + restaurant.zip_code
+            url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={GOOGLE_API_KEY}"
+            response = requests.post(url)
+            response = response.json()
+            result = response.get('results')[0]
+            location = result.get('geometry', {}).get('location')
+            lat = location.get('lat')
+            lng = location.get('lng')
+            location = Point(lng, lat)
+            restaurant.location = location
+            restaurant.save()
+        return restaurant
 
 
 class ListRestaurantSerializer(serializers.ModelSerializer):

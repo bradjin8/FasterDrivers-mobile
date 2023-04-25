@@ -2,6 +2,7 @@ from home.models import UUIDModel
 from users.models import User
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
+from djstripe.models import Customer as StripeCustomer
 
 
 class Customer(UUIDModel):
@@ -20,6 +21,12 @@ class Customer(UUIDModel):
         validators=[phone_regex],
         max_length=17,
         blank=True
+    )
+    stripe_account = models.ForeignKey(
+        StripeCustomer,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
     )
 
 

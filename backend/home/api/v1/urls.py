@@ -9,6 +9,7 @@ from customers.views import CustomerAddressViewSet
 from users.viewsets import UserViewSet
 from restaurants.views import DishViewSet, AddOnViewSet, ItemViewSet, RestaurantViewSet
 from orders.views import OrderViewSet
+from payments.views import PaymentViewSet
 
 
 router = DefaultRouter()
@@ -21,6 +22,7 @@ router.register("restaurants", RestaurantViewSet, basename="restuarants")
 router.register("dishes", DishViewSet, basename="dishes")
 router.register("addons", AddOnViewSet, basename="addons")
 router.register("items", ItemViewSet, basename="items")
+router.register("payments", PaymentViewSet, basename="payments")
 
 urlpatterns = [
     path("", include(router.urls)),

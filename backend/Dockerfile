@@ -40,4 +40,4 @@ COPY --chown=django:django . .
 
 # Collect static files and serve app
 RUN python3 manage.py collectstatic --no-input
-CMD waitress-serve --port=$PORT fancy_cherry_36842.wsgi:application
+CMD daphne -p $PORT -b 0.0.0.0 fancy_cherry_36842.asgi:application

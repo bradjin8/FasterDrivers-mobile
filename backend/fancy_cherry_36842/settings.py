@@ -78,7 +78,8 @@ LOCAL_APPS = [
     'drivers',
     'restaurants',
     'reviews',
-    'orders'
+    'orders',
+    'payments'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -96,6 +97,9 @@ THIRD_PARTY_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_filters',
     'corsheaders',
+    'channels',
+    'channels_redis',
+    "djstripe",
 ]
 MODULES_APPS = get_modules()
 
@@ -306,3 +310,21 @@ AWS_QUERYSTRING_AUTH = False
 
 GOOGLE_API_KEY = env.str("GOOGLE_API_KEY", "")
 SENDGRID_SENDER = env.str("SENDGRID_SENDER", "sallar.rezaie@crowdbotics.com")
+
+ASGI_APPLICATION = 'fancy_cherry_36842.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
+
+CONNECTED_SECRET = env.str("CONNECTED_SECRET", "")
+STRIPE_TEST_SECRET_KEY = env.str("STRIPE_TEST_SECRET_KEY", "")
+STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "")
+STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", False)
+DJSTRIPE_WEBHOOK_SECRET = env.str("DJSTRIPE_WEBHOOK_SECRET", "")
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"

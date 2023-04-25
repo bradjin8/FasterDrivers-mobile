@@ -1,7 +1,13 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
+from django.contrib.gis.geos import Point
+
 from .models import Customer, CustomerAddress
+
+from fancy_cherry_36842.settings import GOOGLE_API_KEY
+
+import requests
 
 
 class CustomerAddressSerializer(serializers.ModelSerializer):
@@ -15,15 +21,36 @@ class CustomerAddressSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        user = CurrentUserDefault()
-        if 'default' in validated_data and validated_data['default']:
-            CustomerAddress.objects.filter(customer=user.customer).update(default=False)
-        return super().create(validated_data)
+        address_obj = super().create(validated_data)
+        address = address_obj.street + ', ' + address_obj.city + ', ' + address_obj.state + ', ' + address_obj.zip_code
+        url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={GOOGLE_API_KEY}"
+        response = requests.post(url)
+        response = response.json()
+        result = response.get('results')[0]
+        location = result.get('geometry', {}).get('location')
+        lat = location.get('lat')
+        lng = location.get('lng')
+        location = Point(lng, lat)
+        address_obj.location = location
+        address_obj.save()
+        return address_obj
 
     def update(self, instance, validated_data):
-        if 'default' in validated_data and validated_data['default']:
-            CustomerAddress.objects.filter(customer=instance.customer).update(default=False)
-        return super().update(instance, validated_data)
+        address_obj = super().update(instance, validated_data)
+        address_fields = ['street', 'city', 'state', 'zip_code']
+        if any(x in address_fields for x in validated_data):
+            address = address_obj.street + ', ' + address_obj.city + ', ' + address_obj.state + ', ' + address_obj.zip_code
+            url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={GOOGLE_API_KEY}"
+            response = requests.post(url)
+            response = response.json()
+            result = response.get('results')[0]
+            location = result.get('geometry', {}).get('location')
+            lat = location.get('lat')
+            lng = location.get('lng')
+            location = Point(lng, lat)
+            address_obj.location = location
+            address_obj.save()
+        return address_obj
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -37,11 +64,17 @@ class CustomerSerializer(serializers.ModelSerializer):
         addresses_data = validated_data.pop('addresses', None)
         customer = super().update(instance, validated_data)
         if addresses_data:
-            addresses_to_create = []
+            # addresses_to_create = []
             for address_data in addresses_data:
-                addresses_to_create.append(CustomerAddress(
-                    customer=customer,
-                    **address_data
-                ))
-            CustomerAddress.objects.bulk_create(addresses_to_create)
+                address_data["customer"] = customer.id
+                serializer = CustomerAddressSerializer(data=address_data)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    raise serializers.ValidationError(serializer.errors)
+                # addresses_to_create.append(CustomerAddress(
+                #     customer=customer,
+                #     **address_data
+                # ))
+            # CustomerAddress.objects.bulk_create(addresses_to_create)
         return customer
