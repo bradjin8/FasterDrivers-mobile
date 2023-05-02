@@ -1,13 +1,13 @@
-import { all, call, put, takeLatest } from "redux-saga/effects"
+import {all, call, put, takeLatest} from "redux-saga/effects"
 import AsyncStorage from "@react-native-community/async-storage"
-import { showMessage } from "react-native-flash-message"
+import {showMessage} from "react-native-flash-message"
 
 // config
-import { appConfig } from "../config/app"
+import {appConfig} from "../config/app"
 
 // utils
 import XHR from "../utils/XHR"
-import { goBack, navigate } from "navigation/NavigationService";
+import {goBack, navigate} from "navigation/NavigationService";
 import restaurantDetails from "screens/Customer/Home/RestaurantDetails";
 import _ from "lodash";
 
@@ -16,6 +16,8 @@ const GET_RESTAURANTS_REQUEST_STARTED = "GET_RESTAURANTS_REQUEST_STARTED"
 const GET_RESTAURANTS_REQUEST_COMPLETED = "GET_RESTAURANTS_REQUEST_COMPLETED"
 const CREATE_NEW_ORDER_REQUEST_STARTED = "CREATE_NEW_ORDER_REQUEST_STARTED"
 const CREATE_NEW_ORDER_REQUEST_COMPLETED = "CREATE_NEW_ORDER_REQUEST_COMPLETED"
+const GET_MY_ORDERS_REQUEST_STARTED = "GET_MY_ORDERS_REQUEST_STARTED"
+const GET_MY_ORDERS_REQUEST_COMPLETED = "GET_MY_ORDERS_REQUEST_COMPLETED"
 const UPDATE_ADDRESSES_REQUEST_STARTED = "UPDATE_ADDRESSES_REQUEST_STARTED"
 const GET_ADDRESSES_REQUEST_STARTED = "GET_ADDRESSES_REQUEST_STARTED"
 const GET_ADDRESSES_REQUEST_COMPLETED = "GET_ADDRESSES_REQUEST_COMPLETED"
@@ -30,7 +32,8 @@ const initialState = {
   restaurants: null,
   addresses: null,
   carts: [],
-  restaurantDetails: null
+  restaurantDetails: null,
+  orders: [],
 }
 
 //Actions
@@ -74,7 +77,14 @@ export const createNewOrderFinished = (data) => ({
   type: CREATE_NEW_ORDER_REQUEST_COMPLETED,
   payload: data,
 })
-
+export const getMyOrders = (data) => ({
+  type: GET_MY_ORDERS_REQUEST_STARTED,
+  payload: data,
+})
+export const getMyOrdersFinished = (data) => ({
+  type: GET_MY_ORDERS_REQUEST_COMPLETED,
+  payload: data,
+})
 export const requestFailed = () => ({
   type: REQUEST_FAILED,
 })
@@ -109,7 +119,7 @@ export const customerReducer = (state = initialState, action) => {
         locationLoading: false,
         addresses: action.payload
       }
-     case UPDATE_ADDRESSES_REQUEST_STARTED:
+    case UPDATE_ADDRESSES_REQUEST_STARTED:
       return {
         ...state,
         locationLoading: true
@@ -140,6 +150,17 @@ export const customerReducer = (state = initialState, action) => {
         ...state,
         loading: false,
       }
+    case GET_MY_ORDERS_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case GET_MY_ORDERS_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        orders: action.payload,
+      }
     case REQUEST_FAILED:
       return {
         ...state,
@@ -153,7 +174,7 @@ export const customerReducer = (state = initialState, action) => {
 //PhoneNumberSaga
 function getRestaurantAPI(data) {
   let URL = `${appConfig.backendServerURL}/restaurants/`
-  if(data) {
+  if (data) {
     URL = `${appConfig.backendServerURL}/restaurants/?search=${data} `
   }
   const options = {
@@ -200,6 +221,17 @@ function createNewOrderAPI(data) {
   return XHR(URL, options)
 }
 
+function getMyOrdersAPI(data) {
+  const URL = `${appConfig.backendServerURL}/orders/?user=${data}&status=Pending`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 function getRestaurantDetailsAPI(data) {
   const URL = `${appConfig.backendServerURL}/restaurants/${data}/`
   const options = {
@@ -214,11 +246,11 @@ function getRestaurantDetailsAPI(data) {
 function* getRestaurantsAction(data) {
   try {
     const resp = yield call(getRestaurantAPI, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(setRestaurantData(resp.data))
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail ?? "Something went wrong, Please try again!",
@@ -230,11 +262,11 @@ function* getRestaurantsAction(data) {
 function* getAddressesAction() {
   try {
     const resp = yield call(getAddressesAPI)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(setAddressesData(resp.data))
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail ?? "Something went wrong, Please try again!",
@@ -246,11 +278,11 @@ function* getAddressesAction() {
 function* updateAddressesAction(data) {
   try {
     const resp = yield call(updateAddressesAPI, data.id, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(getAddressesData())
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail ?? "Something went wrong, Please try again!",
@@ -263,11 +295,29 @@ function* createNewOrderAction(data) {
   try {
     const resp = yield call(createNewOrderAPI, data.payload)
     debugger
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(createNewOrderFinished(resp.data))
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
+    yield put(requestFailed())
+    debugger
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* getMyOrdersAction(data) {
+  try {
+    const resp = yield call(getMyOrdersAPI, data.payload)
+    debugger
+    if (resp?.data) {
+      yield put(getMyOrdersFinished(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
     yield put(requestFailed())
     debugger
     showMessage({
@@ -280,11 +330,11 @@ function* createNewOrderAction(data) {
 function* getRestaurantDetailsAction(data) {
   try {
     const resp = yield call(getRestaurantDetailsAPI, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(setRestaurantDetails(resp.data))
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail ?? "Something went wrong, Please try again!",
@@ -299,4 +349,5 @@ export default all([
   takeLatest(GET_ADDRESSES_REQUEST_STARTED, getAddressesAction),
   takeLatest(UPDATE_ADDRESSES_REQUEST_STARTED, updateAddressesAction),
   takeLatest(CREATE_NEW_ORDER_REQUEST_STARTED, createNewOrderAction),
+  takeLatest(GET_MY_ORDERS_REQUEST_STARTED, getMyOrdersAction),
 ])

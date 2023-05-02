@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+ import React, { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { color, scale, scaleVertical, screenWidth } from "utils";
 import { Images } from "src/theme";
@@ -19,7 +19,7 @@ const RestaurantDetails = ({ route }) => {
   const [cartItems, setCartItems] = useState(cartItemsReducer)
   const { id, photo, name, street, city, zip_code, state, description, type, rating_count  } = selectedRestaurant
   const [rating, setRating] = useState(rating_count)
-  
+
   useEffect(() => {
     dispatch(getRestaurantDetails(id));
   }, []);
@@ -27,7 +27,7 @@ const RestaurantDetails = ({ route }) => {
   useEffect(() => {
     setCartItems(cartItemsReducer)
   }, [cartItemsReducer]);
-  
+
   const handleRating = (rate) => {
     setRating(rate)
   }

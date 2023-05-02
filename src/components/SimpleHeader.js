@@ -27,7 +27,7 @@ const SimpleHeader = props => {
     enterChallange,
     rightComponent
   } = props
-  
+
   const navigation = useNavigation()
   return (
     <View style={styles.mainView}>
@@ -53,7 +53,7 @@ const SimpleHeader = props => {
           </TouchableOpacity>
         )}
       </View>
-      
+
       <View
         style={{
           alignItems: "center",
@@ -84,7 +84,7 @@ const SimpleHeader = props => {
           </TouchableOpacity>
         </View>
       }
-      
+
       <View style={styles.imageView}>
         {showRightButton && (
           <Pressable onPress={rightButtonPress} style={[styles.editButton, {width: 55}]}>
@@ -118,7 +118,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     borderRadius: scale(10)
   },
-  backIconView: { width: scaleVertical(30), height: scaleVertical(30), borderRadius: scaleVertical(15), backgroundColor: color.black, alignItems: 'center', justifyContent: 'center' },
+  backIconView: {
+    width: scaleVertical(30),
+    height: scaleVertical(30),
+    borderRadius: scaleVertical(15),
+    backgroundColor: color.black,
+    alignItems: 'center',
+    justifyContent: 'center' },
 })
 
 export default SimpleHeader

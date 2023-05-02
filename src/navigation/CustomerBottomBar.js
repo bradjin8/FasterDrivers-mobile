@@ -16,7 +16,9 @@ import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
 import Home from "screens/Customer/Home"
 import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
 
-import Orders from "screens/Customer/Orders"
+import Orders from "screens/Customer/Orders/Orders"
+import OrderDetails from "screens/Customer/Orders/OrderDetails"
+import Cart from "screens/Customer/Orders/Cart"
 import Payment from "screens/Customer/Orders/Payment"
 import AddCard from "screens/Customer/Orders/AddCard"
 
@@ -28,11 +30,11 @@ const settingStack = createStackNavigator()
 const CustomerBottomBar = props => {
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-  
+
   useEffect(() => {
     setCartItems(cartItemsReducer)
   }, [cartItemsReducer]);
-  
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -162,6 +164,8 @@ const OrderTab = () => {
         initialRouteName="Orders"
       >
         <settingStack.Screen name="Orders" component={Orders} />
+        <settingStack.Screen name="OrderDetails" component={OrderDetails} />
+        <settingStack.Screen name="Cart" component={Cart} />
         <settingStack.Screen name="Payment" component={Payment} />
         <settingStack.Screen name="AddCard" component={AddCard} />
       </settingStack.Navigator>

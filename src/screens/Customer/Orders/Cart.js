@@ -8,7 +8,7 @@ import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { navigate } from "navigation/NavigationService";
 
-const Orders = () => {
+const Cart = () => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
@@ -102,7 +102,7 @@ const Orders = () => {
       </View>
     );
   };
-  
+
   if(loading) {
     return (<ActivityIndicators />)
   }
@@ -174,4 +174,4 @@ const styles = StyleSheet.create({
   btnOther: { width: "25%", backgroundColor: color.black, height: scaleVertical(45) },
 });
 
-export default Orders;
+export default Cart;
