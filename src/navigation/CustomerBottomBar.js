@@ -44,6 +44,8 @@ const CustomerBottomBar = props => {
           // height: scaleVertical(65),
           tabBarActiveTintColor: color.black,
           tabBarInactiveTintColor: color.gray,
+          paddingTop: scaleVertical(10),
+          boxShadow: '0px -40px 40px rgba(0, 0, 0, 0.4)',
         }
       }}
     >

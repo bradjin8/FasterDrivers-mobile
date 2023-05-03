@@ -25,6 +25,9 @@ import orders from "src/assets/images/orders.png"
 import history from "src/assets/images/history.png"
 import cartBedge from "src/assets/images/cartBedge.png"
 import ticks from "src/assets/images/ticks.png"
+import OrderAccepted from "src/assets/images/order_accepted.png"
+import OrderInProgress from "src/assets/images/order_inprogress.png"
+import OrderDelivered from "src/assets/images/order_delivered.png"
 
 export default {
   HomeOn,
@@ -53,5 +56,8 @@ export default {
   orders,
   history,
   cartBedge,
-  ticks
+  ticks,
+  OrderAccepted,
+  OrderInProgress,
+  OrderDelivered,
 }

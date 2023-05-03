@@ -243,6 +243,17 @@ function getRestaurantDetailsAPI(data) {
   return XHR(URL, options)
 }
 
+export function getDishById(id) {
+  const URL = `${appConfig.backendServerURL}/dishes/${id}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 function* getRestaurantsAction(data) {
   try {
     const resp = yield call(getRestaurantAPI, data.payload)
