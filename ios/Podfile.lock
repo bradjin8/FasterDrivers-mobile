@@ -35,9 +35,17 @@ PODS:
   - GoogleMaps/Base (7.3.0)
   - GoogleMaps/Maps (7.3.0):
     - GoogleMaps/Base
+  - Permission-Camera (3.6.1):
+    - RNPermissions
   - Permission-LocationAlways (3.6.1):
     - RNPermissions
   - Permission-LocationWhenInUse (3.6.1):
+    - RNPermissions
+  - Permission-MediaLibrary (3.6.1):
+    - RNPermissions
+  - Permission-PhotoLibrary (3.6.1):
+    - RNPermissions
+  - Permission-PhotoLibraryAddOnly (3.6.1):
     - RNPermissions
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -379,8 +387,12 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera/Permission-Camera.podspec`)
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways/Permission-LocationAlways.podspec`)
   - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse/Permission-LocationWhenInUse.podspec`)
+  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary/Permission-MediaLibrary.podspec`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary/Permission-PhotoLibrary.podspec`)
+  - Permission-PhotoLibraryAddOnly (from `../node_modules/react-native-permissions/ios/PhotoLibraryAddOnly/Permission-PhotoLibraryAddOnly.podspec`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -440,10 +452,18 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera/Permission-Camera.podspec"
   Permission-LocationAlways:
     :path: "../node_modules/react-native-permissions/ios/LocationAlways/Permission-LocationAlways.podspec"
   Permission-LocationWhenInUse:
     :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
+  Permission-MediaLibrary:
+    :path: "../node_modules/react-native-permissions/ios/MediaLibrary/Permission-MediaLibrary.podspec"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary/Permission-PhotoLibrary.podspec"
+  Permission-PhotoLibraryAddOnly:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibraryAddOnly/Permission-PhotoLibraryAddOnly.podspec"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -530,8 +550,12 @@ SPEC CHECKSUMS:
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: a146f275ee429d14822178c7a841c03366ec92a1
+  Permission-Camera: bf6791b17c7f614b6826019fcfdcc286d3a107f6
   Permission-LocationAlways: 8d99b025c9f73c696e0cdb367e42525f2e9a26f2
   Permission-LocationWhenInUse: 3ba99e45c852763f730eabecec2870c2382b7bd4
+  Permission-MediaLibrary: a994236bae41b3597a376ff08298fb1c6d84729b
+  Permission-PhotoLibrary: 5b34ca67279f7201ae109cef36f9806a6596002d
+  Permission-PhotoLibraryAddOnly: 6dba8924024e239af2e282daa8a88967679b4983
   RCT-Folly: 4d8508a426467c48885f1151029bc15fa5d7b3b8
   RCTRequired: 530916cd48c5f7cf1fc16966ad5ea01638ca4799
   RCTTypeSafety: 5fb4cb3080efd582e5563c3e9a0e459fc51396c5
@@ -572,6 +596,6 @@ SPEC CHECKSUMS:
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 0bc4b37c3b8a345336ff601e2cf7d9704bab7e93
 
-PODFILE CHECKSUM: 6b3f003d253e89f0c0297d17c97258ae87b3dbcf
+PODFILE CHECKSUM: 2668b39ebf3d1b9a72c826c30e966a0533d44a1c
 
 COCOAPODS: 1.11.3

@@ -57,7 +57,7 @@ const CustomerBottomBar = props => {
             display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex'
           },
           tabBarLabel: ({ focused }) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
@@ -73,7 +73,7 @@ const CustomerBottomBar = props => {
         component={OrderTab}
         options={{
           tabBarLabel: ({ focused }) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <View>
@@ -91,7 +91,7 @@ const CustomerBottomBar = props => {
                 justifyContent: 'center',
                 backgroundColor: color.angry
               }}>
-                <Text variant="text" color="white" fontSize={12} fontWeight="600">
+                <Text variant="strong" color="white" fontSize={12} fontWeight="600">
                   {cartItems.length}
                 </Text>
               </View> : null}
@@ -109,7 +109,7 @@ const CustomerBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({ focused }) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image

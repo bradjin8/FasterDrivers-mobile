@@ -9,7 +9,7 @@ import { navigate } from "navigation/NavigationService";
 
 const Menu = ({ navigation }) => {
   const [searchValue, setSearchValue] = useState(null);
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -24,7 +24,7 @@ const Menu = ({ navigation }) => {
             onChangeText={(text) => setSearchValue(text)}
           />
         </View>
-        
+
         <View style={styles.titleView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="600">
             Dishes
@@ -33,11 +33,11 @@ const Menu = ({ navigation }) => {
             <Button loading={false} text='Add New' fontSize={16} onPress={() => navigate("AddNewDish")} />
           </View>
         </View>
-  
+
         <ScrollView style={styles.scrollContainer}>
-          {restaurantSettingData.map((setting) => {
+          {restaurantSettingData.map((setting, id) => {
             return(
-              <Pressable onPress={() => {}}>
+              <Pressable onPress={() => {}} key={id}>
                 <View  style={styles.listContain}>
                   <View style={{flexDirection: 'row'}}>
                     <Image source={setting.icon}  style={{width: 20, height: 20}} resizeMode="contain" />
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
   btnView: {width: scale(100)},
   titleView: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
-  
+
   scrollContainer: {flex:1, paddingVertical: scaleVertical(10)},
   listContain: {
     flexDirection: 'row',

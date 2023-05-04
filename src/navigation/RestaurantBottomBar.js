@@ -43,11 +43,12 @@ const RestaurantBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Home}
+              resizeMode={'contain'}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
@@ -59,11 +60,12 @@ const RestaurantBottomBar = props => {
         component={MenuTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Menu</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Menu</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Menu}
+              resizeMode={'contain'}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
@@ -75,11 +77,12 @@ const RestaurantBottomBar = props => {
         component={MapTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Map</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Map</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Map}
+              resizeMode={'contain'}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),
@@ -91,11 +94,12 @@ const RestaurantBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Settings}
+              resizeMode={'contain'}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
             />
           ),

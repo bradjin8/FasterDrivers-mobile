@@ -6,10 +6,12 @@ const global = getGlobalOptions();
 
 async function askPermission(permission) {
   try {
-    const status = await Permissions.check(permission);
+    let status = await Permissions.check(permission);
+    console.log('check permission', permission, 'status', status)
     if (status !== Permissions.RESULTS.GRANTED) {
       // if not already granted then ask
-      const status = await Permissions.request(permission);
+      status = await Permissions.request(permission);
+      console.log('request permission', permission, 'status', status)
       if (status !== Permissions.RESULTS.GRANTED) {
         // user denied on ask
         return false;
@@ -23,19 +25,20 @@ async function askPermission(permission) {
 }
 
 export async function getCameraGalleryPermissions() {
-  // need both permisisons for camera, so ask both on galery and camera
+  // need both permissions for camera, so ask both on gallery and camera
   const { PERMISSIONS } = Permissions;
   let permission = Platform.select({
     android: PERMISSIONS.ANDROID.CAMERA,
     ios: PERMISSIONS.IOS.CAMERA
   });
-  
+
   const cameraPermissions = await askPermission(permission);
   permission = Platform.select({
     android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
     ios: PERMISSIONS.IOS.PHOTO_LIBRARY
   });
   const storagePermissions = await askPermission(permission);
+  console.log("cameraPermissions", cameraPermissions, "storagePermissions", storagePermissions)
   return cameraPermissions && storagePermissions;
 }
 

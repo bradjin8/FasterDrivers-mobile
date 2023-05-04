@@ -110,5 +110,11 @@ const styles = StyleSheet.create({
     color: color.primary,
     fontSize: scaleVertical(16),
     lineHeight: scaleVertical(24),
+  },
+  hint: {
+    ...BASE,
+    fontFamily: typography.regular_400,
+    fontSize: scaleVertical(12),
+    lineHeight: scaleVertical(14),
   }
 });

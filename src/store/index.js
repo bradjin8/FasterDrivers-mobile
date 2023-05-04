@@ -24,6 +24,8 @@ export const getStore = (globalState) => {
 
   return configureStore({
     reducer: rootReducer,
-    middleware: getDefaultMiddleware => getDefaultMiddleware()
+    middleware: getDefaultMiddleware => getDefaultMiddleware({
+      serializableCheck: false
+    })
   })
 }

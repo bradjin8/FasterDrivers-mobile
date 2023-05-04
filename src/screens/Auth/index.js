@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { StyleSheet, View, Image } from "react-native";
 import { color, scale, scaleVertical } from "utils";
 import validator from "utils/validation";
 import { Images } from "src/theme"
 import { Button, CustomTextInput, Text } from "../../components/index";
 import BaseScreen from "../../components/BaseScreen";
-import { loginRequest } from "../../screenRedux/loginRedux";
+import { loginRequest, requestFailed } from "../../screenRedux/loginRedux";
 import { useSelector, useDispatch } from "react-redux"
 import { navigate } from "navigation/NavigationService";
 
@@ -48,6 +48,10 @@ const SignIn = ({ route }) => {
       onBlurPassword();
     }
   }
+
+  useEffect(() => {
+    dispatch(requestFailed())
+  }, [])
 
   return (
     <BaseScreen style={styles.mainWrapper}>

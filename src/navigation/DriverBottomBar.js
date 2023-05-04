@@ -42,7 +42,7 @@ const DriverBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
@@ -58,7 +58,7 @@ const DriverBottomBar = props => {
         component={HistoryTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">History</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">History</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
@@ -74,7 +74,7 @@ const DriverBottomBar = props => {
         component={WalletTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Wallet</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Wallet</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
@@ -90,7 +90,7 @@ const DriverBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, View, Platform, PermissionsAndroid, Linking, ToastAndroid, Alert, ActivityIndicator } from "react-native";
 import { color, scale, scaleVertical, screenWidth } from "utils";
 import { Images } from "src/theme";
+import {truncateString} from "utils/utils";
 import { ActivityIndicators, CustomTextInput, Text } from "../../../components/index";
 import BaseScreen from "../../../components/BaseScreen";
 import { useDispatch, useSelector } from "react-redux";
@@ -140,7 +141,7 @@ const Home = () => {
             {name}
           </Text>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-            {description}
+            {truncateString(description, 50)}
           </Text>
           <View style={{flexDirection: 'row'}}>
             <StarRating
@@ -148,7 +149,9 @@ const Home = () => {
               maxStars={1}
               rating={rating_count/5}
               starSize={20}
-              starStyle={{color: color.primary, fontWeight: 'bold'}}
+              fullStarColor={color.primary}
+              emptyStarColor={color.lightGray}
+              halfStarColor={color.primary}
             />
             <Text variant="text" color="item" fontSize={16} fontWeight="700" style={{marginLeft: scaleVertical(5)}}>
               {rating_count}

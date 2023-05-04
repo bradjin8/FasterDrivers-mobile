@@ -28,6 +28,7 @@ import ticks from "src/assets/images/ticks.png"
 import OrderAccepted from "src/assets/images/order_accepted.png"
 import OrderInProgress from "src/assets/images/order_inprogress.png"
 import OrderDelivered from "src/assets/images/order_delivered.png"
+import Down from "src/assets/images/down.png"
 
 export default {
   HomeOn,
@@ -60,4 +61,5 @@ export default {
   OrderAccepted,
   OrderInProgress,
   OrderDelivered,
+  Down,
 }
