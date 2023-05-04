@@ -132,7 +132,8 @@ export const customerSettingData = [
   },
   {
     title: "My Wallet",
-    icon: Images.OrderAcceptance
+    icon: Images.OrderAcceptance,
+    key: "Wallet "
   },
   {
     title: "Privacy Policy",

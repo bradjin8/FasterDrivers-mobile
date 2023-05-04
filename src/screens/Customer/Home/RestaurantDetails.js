@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   itemTitle: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
   starContainer: { width: 100, justifyContent: "space-evenly" },
-  starStyle: { fontWeight: "bold", marginRight: scaleVertical(3), margin: 3 }
+  starStyle: { marginRight: scaleVertical(3), margin: 3 }
 });
 
 export default RestaurantDetails;

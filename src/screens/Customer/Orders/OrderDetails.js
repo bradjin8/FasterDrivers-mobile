@@ -18,10 +18,13 @@ const OrderDetails = ({route}) => {
   const {id, photo, name, street, city, zip_code, state, description, type, rating, rating_count} = order.restaurant
   const [orderedDishes, setOrderedDishes] = useState([])
 
-  const fetchDishes = async () => {
+  const fetchDishes = () => {
     if (order?.dishes) {
-      const _dishes = await Promise.all(order?.dishes.map((d) => getDishById(d.dish)))
-      setOrderedDishes(_dishes.map((d) => d.data))
+      // write a function to get all dishes by ids in the order
+      Promise.all(order?.dishes.map((d) => getDishById(d.dish)))
+        .then(_dishes => {
+          setOrderedDishes(_dishes.map((d) => d.data))
+        })
     }
   }
 

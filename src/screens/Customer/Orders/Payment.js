@@ -16,11 +16,11 @@ const Payment = ({}) => {
   const [cartItems, setCartItems] = useState(cartItemsReducer)
   const addresses = useSelector(state => state.customerReducer.addresses);
   const defaultAddress = addresses?.find(o => o.default)
-  
+
   const createPayment = () => {
     let data = new FormData();
     data.append('restaurant', cartItems[0].restaurant);
-    
+
     if(defaultAddress) {
       data.append('address', defaultAddress.id);
     }
@@ -32,54 +32,56 @@ const Payment = ({}) => {
     })
     dispatch(createNewOrder(data))
   }
-  
+
   const renderFinalTotal = () => {
     return  cartItems.length && cartItems.reduce((prev,curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
-  
+
   return (
     <View style={styles.mainWrapper}>
       <SimpleHeader
         title="Payment"
         showBackIcon={true}
       />
-      <ScrollView style={styles.container}>
-        <View style={styles.pricingView}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">Total</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
-        </View>
-        <View style={styles.innerContain}>
-          {addresses?.map((address, index) => {
-            return(
-              <Pressable onPress={() => alert('select method')}>
-                {address.default && <View style={styles.circle}>
-                  <Image source={Images.ticks}style={styles.tickImg} />
-                </View>}
-                <View style={[styles.itemContain, address.default && styles.activeItem]} key={index.toString()}>
-                  <Text variant="text" color="black" fontSize={16} fontWeight="700">Master Card</Text>
-                  <View style={[styles.flexDirection, styles.paddingTop]}>
-                    <FontAwesomeIcons name="cc-mastercard" size={16} color={color.black} style={{marginRight: scaleVertical(10)}} />
-                    <Text variant="text" color="black" fontSize={16} fontWeight="400">************* 436</Text>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.pricingView}>
+            <Text variant="text" color="black" fontSize={14} fontWeight="400">Total</Text>
+            <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+          </View>
+          <View style={styles.innerContain}>
+            {addresses?.map((address, index) => {
+              return(
+                <Pressable onPress={() => alert('select method')}>
+                  {address.default && <View style={styles.circle}>
+                    <Image source={Images.ticks}style={styles.tickImg} />
+                  </View>}
+                  <View style={[styles.itemContain, address.default && styles.activeItem]} key={index.toString()}>
+                    <Text variant="text" color="black" fontSize={16} fontWeight="700">Master Card</Text>
+                    <View style={[styles.flexDirection, styles.paddingTop]}>
+                      <FontAwesomeIcons name="cc-mastercard" size={16} color={color.black} style={{marginRight: scaleVertical(10)}} />
+                      <Text variant="text" color="black" fontSize={16} fontWeight="400">************* 436</Text>
+                    </View>
                   </View>
-                </View>
-              </Pressable>
-            )
-          })}
-          <Button
-            style={styles.btnStyle}
-            variant="outline"
-            text="Add New Payment Method"
-            textColor="black"
-            onPress={() => navigate("AddCard")}
-            fontSize={16}
-            fontWeight="600"
-            icon="add"
-          />
-          <Button loading={false} text="Pay" mt={20} onPress={() => navigate("AddCard")} />
-        </View>
-      </ScrollView>
+                </Pressable>
+              )
+            })}
+            <Button
+              style={styles.btnStyle}
+              variant="outline"
+              text="Add New Payment Method"
+              textColor="black"
+              onPress={() => navigate("AddCard")}
+              fontSize={16}
+              fontWeight="600"
+              icon="add"
+            />
+          </View>
+        </ScrollView>
+        <Button loading={false} text="Pay" mt={20} onPress={() => navigate("AddCard")} />
+      </View>
     </View>
   )
 }

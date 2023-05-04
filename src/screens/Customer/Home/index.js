@@ -28,16 +28,16 @@ const Home = () => {
   const watchId = useRef(0);
   const [visible, setVisible] = useState(false);
   const { customer: { photo }, name } = user
-  
+
   useEffect(() => {
     setAddresses(addressesReducer)
     setLocationLoading(locationLoadingReducer)
   }, [addressesReducer, locationLoadingReducer]);
-  
+
   useEffect(() => {
     dispatch(getAddressesData())
   }, [])
-  
+
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
@@ -45,51 +45,51 @@ const Home = () => {
       });
     };
     const status = await Geolocation.requestAuthorization('whenInUse');
-    
+
     if (status === 'granted') {
       return true;
     }
-    
+
     if (status === 'denied') {
       Alert.alert('Location permission denied');
     }
-    
+
     if (status === 'disabled') {
       Alert.alert(`Turn on Location Services to determine your location.`, '', [
         { text: 'Go to Settings', onPress: openSetting },
         { text: "Don't Use Location", onPress: () => {} },
       ]);
     }
-    
+
     return false;
   };
-  
+
   const hasLocationPermission = (async () => {
     if (Platform.OS === 'ios') {
       const hasPermission = await hasPermissionIOS();
       return hasPermission;
     }
-    
+
     if (Platform.OS === 'android' && Platform.Version < 23) {
       return true;
     }
-    
+
     const hasPermission = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
-    
+
     if (hasPermission) {
       return true;
     }
-    
+
     const status = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
-    
+
     if (status === PermissionsAndroid.RESULTS.GRANTED) {
       return true;
     }
-    
+
     if (status === PermissionsAndroid.RESULTS.DENIED) {
       ToastAndroid.show(
         'Location permission denied by user.',
@@ -103,14 +103,14 @@ const Home = () => {
     }
     return false;
   });
-  
+
   const startLocationWatch = (async () => {
     const hasPermission = await hasLocationPermission();
-    
+
     if (!hasPermission) {
       return;
     }
-    
+
     watchId.current = Geolocation.getCurrentPosition((position) => {
         return position;
       },
@@ -121,20 +121,15 @@ const Home = () => {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   });
-  
-  useEffect(async () => {
-    // const resp = await startLocationWatch();
-    // console.log("@@@@@@@@", resp)
-  }, []);
-  
+
   useEffect(() => {
     dispatch(getRestaurantsData(searchText ? searchText  : null));
   }, [searchText]);
-  
+
   const onBlurSearch = () => {
-  
+
   };
-  
+
   const renderItems = (rest, i) => {
     const { photo, name, description, rating_count, } = rest || {}
     return(
@@ -203,18 +198,18 @@ const Home = () => {
     }
     return 'Chosen Address'
   }
-  
+
   const hideMenu = () => setVisible(false);
-  
+
   const showMenu = () => setVisible(true);
-  
+
   const setDefaultAddress = (id) => {
     hideMenu();
     let data = new FormData();
     data.append('default', true);
     dispatch(updateAddresses(id, data))
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <View style={styles.headerView}>
