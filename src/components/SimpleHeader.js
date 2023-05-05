@@ -1,11 +1,11 @@
-import { StyleSheet, View, Image, TouchableOpacity, Pressable, ActivityIndicator } from "react-native"
+import {StyleSheet, View, Image, TouchableOpacity, Pressable, ActivityIndicator} from "react-native"
 import React from "react"
-import { useNavigation } from "@react-navigation/native"
-import { color, scale, scaleVertical } from "utils";
+import {useNavigation} from "@react-navigation/native"
+import {color, scale, scaleVertical} from "utils";
 //Themes
 import Images from "../theme/Images"
 //Components
-import { Text } from "./text"
+import {Text} from "./text"
 
 const SimpleHeader = props => {
   const {
@@ -34,9 +34,9 @@ const SimpleHeader = props => {
       <View style={styles.imageView}>
         {showLeftButton && (
           <Pressable onPress={leftButtonPress} style={styles.editButton}>
-              <Text variant="caption" color="black">
-                {leftTitle}
-              </Text>
+            <Text variant="caption" color="black">
+              {leftTitle}
+            </Text>
           </Pressable>
         )}
         {showBackIcon && (
@@ -48,7 +48,7 @@ const SimpleHeader = props => {
           >
             <Image
               source={Images.Back}
-              style={{ width: 15, height: 15 }}
+              style={{width: 15, height: 15}}
             />
           </TouchableOpacity>
         )}
@@ -61,13 +61,13 @@ const SimpleHeader = props => {
           marginLeft: enterChallange ? 30 : 0,
         }}
       >
-        <Text style={{ color: color.black, fontSize: 14, fontWeight: "700" }}>
+        <Text variant={'h5'} color={'black'} fontSize={14}>
           {title}
         </Text>
       </View>
       {
         rightComponent ??
-        <View style={{ paddingHorizontal: 20, }}>
+        <View style={{paddingHorizontal: 20,}}>
           <TouchableOpacity
             // disabled={true}
             onPress={() => {
@@ -79,7 +79,7 @@ const SimpleHeader = props => {
             }}
           >
             {showRightIcon && (
-              <Image source={rightIconSource} style={rightIconStyle} />
+              <Image source={rightIconSource} style={rightIconStyle}/>
             )}
           </TouchableOpacity>
         </View>
@@ -88,12 +88,12 @@ const SimpleHeader = props => {
       <View style={styles.imageView}>
         {showRightButton && (
           <Pressable onPress={rightButtonPress} style={[styles.editButton, {width: 55}]}>
-              {rightLoader ?
-               <ActivityIndicator color={color.white} />
-                           :
-               <Text variant="caption" color="black">
-                 {rightTitle}
-               </Text>}
+            {rightLoader ?
+              <ActivityIndicator color={color.white}/>
+              :
+              <Text variant="caption" color="black">
+                {rightTitle}
+              </Text>}
           </Pressable>
         )}
       </View>
@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
     borderRadius: scaleVertical(15),
     backgroundColor: color.black,
     alignItems: 'center',
-    justifyContent: 'center' },
+    justifyContent: 'center'
+  },
 })
 
 export default SimpleHeader

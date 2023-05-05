@@ -29,6 +29,8 @@ import OrderAccepted from "src/assets/images/order_accepted.png"
 import OrderInProgress from "src/assets/images/order_inprogress.png"
 import OrderDelivered from "src/assets/images/order_delivered.png"
 import Down from "src/assets/images/down.png"
+import ThreeDots from "src/assets/images/three_dots.png"
+import Pencil from "src/assets/images/pencil.png"
 
 export default {
   HomeOn,
@@ -62,4 +64,6 @@ export default {
   OrderInProgress,
   OrderDelivered,
   Down,
+  ThreeDots,
+  Pencil,
 }

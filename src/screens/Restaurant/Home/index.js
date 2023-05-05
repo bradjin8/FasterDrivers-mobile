@@ -12,9 +12,10 @@ import OrderByCustomer from "../../../components/OrderByCustomer";
 
 const Home = () => {
   const dispatch = useDispatch()
-  const {user} = useSelector((state) => state.loginReducer)
-  const [loading, setLoading] = React.useState(false)
+  const {user, accessToken} = useSelector((state) => state.loginReducer)
   const [tab, setTab] = React.useState(0)
+
+  console.log('accessToken', accessToken)
 
   const {name, restaurant} = user
 
