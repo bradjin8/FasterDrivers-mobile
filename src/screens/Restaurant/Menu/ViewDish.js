@@ -13,8 +13,6 @@ import {getDishesRequest} from "../../../screenRedux/restaurantRedux";
 const ViewDish = ({route}) => {
   const {item} = route?.params;
 
-  console.log('dish', item)
-
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -23,7 +21,7 @@ const ViewDish = ({route}) => {
       />
       <View style={styles.container}>
         <View style={styles.image}>
-          <Image source={{uri: item?.image}} style={{width: '100%', height: '100%'}} resizeMode={'cover'}/>
+          <Image source={{uri: item?.image_1}} style={{width: '100%', height: '100%'}} resizeMode={'cover'}/>
           <Pressable style={styles.edit} onPress={() => {}}>
             <Image source={Images.Pencil} style={{width: '50%', height: '50%'}} resizeMode={'contain'}/>
           </Pressable>

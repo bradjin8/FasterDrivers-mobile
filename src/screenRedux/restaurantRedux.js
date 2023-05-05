@@ -13,7 +13,7 @@ import {goBack, navigate} from "navigation/NavigationService";
 const GET_DISHES_REQUEST_STARTED = "GET_DISHES_REQUEST_STARTED"
 const GET_DISHES_REQUEST_COMPLETED = "GET_DISHES_REQUEST_COMPLETED"
 const ADD_NEW_DISH_REQUEST_STARTED = "ADD_NEW_DISH_REQUEST_STARTED"
-const ADD_NEW_DISH_REQUEST_COMPLETED = "ADD_NEW_DISH_REQUEST_STARTED"
+const ADD_NEW_DISH_REQUEST_COMPLETED = "ADD_NEW_DISH_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 
 const initialState = {
@@ -65,7 +65,6 @@ export const restaurantReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        dishes: [...state.dishes, action.payload],
       }
     case REQUEST_FAILED:
       return {

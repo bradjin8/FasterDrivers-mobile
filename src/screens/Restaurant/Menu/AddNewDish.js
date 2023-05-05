@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View, Text, Image, Pressable, ScrollView, Platform } from "react-native";
+import { StyleSheet, View, Image, Pressable, ScrollView, Platform } from "react-native";
 import { color, scale, scaleVertical } from "utils";
 import { Images } from "src/theme"
-import { Button, CustomTextInput, CustomDropDown } from "../../../components/index";
+import { Button, Text, CustomTextInput, CustomDropDown } from "../../../components/index";
 import { navigate } from "navigation/NavigationService";
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
@@ -27,13 +27,14 @@ const AddNewDish = ({}) => {
     {label: 'Salads', value: 'Salads'},
     {label: 'Soups', value: 'Soups'},
   ])
-  
+  const [addons, setAddons] = useState([])
+
   const { name, description, price, sku_number } = newDish
-  
+
   const onChangeText = (key, text) => {
     setNewDish(prevState => ({ ...prevState, [key]: text }));
   }
-  
+
   const onSave = () => {
     let data = new FormData();
     if(changeImage) {
@@ -51,10 +52,11 @@ const AddNewDish = ({}) => {
     data.append("description", description);
     data.append("price", price);
     data.append("sku_number", sku_number);
-    
+    data.append("addons", addons)
+
     dispatch(addNewDishRequest(data));
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -62,7 +64,7 @@ const AddNewDish = ({}) => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-        
+
         <ScrollView horizontal={true} style={styles.scrollContain}>
           {uploadImage.map((image, index) => {
             return(
@@ -75,11 +77,42 @@ const AddNewDish = ({}) => {
             <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon} />
           </Pressable>
         </ScrollView>
-        
-        <View>
+
+        <View style={{flexDirection: 'column-reverse'}}>
+          <CustomTextInput
+            value={sku_number}
+            onChangeText={(text) => onChangeText("sku_number", text)}
+          />
           <Text variant="text" color="black" style={styles.inputTitle}>
-            Category
+            SKU NUMBER
           </Text>
+
+          <CustomTextInput
+            value={price}
+            onChangeText={(text) => onChangeText("price", text)}
+          />
+          <Text variant="text" color="black" style={styles.inputTitle}>
+            PRICE
+          </Text>
+
+          <CustomTextInput
+            value={description}
+            onChangeText={(text) => onChangeText("description", text)}
+            multiline={true}
+            style={{textAlignVertical: 'top'}}
+          />
+          <Text variant="text" color="black" style={styles.inputTitle}>
+            DESCRIPTION
+          </Text>
+
+          <CustomTextInput
+            value={name}
+            onChangeText={(text) => onChangeText("name", text)}
+          />
+          <Text variant="text" color="black" style={styles.inputTitle}>
+            NAME OF DISH
+          </Text>
+
           <CustomDropDown
             openCategory={openCategory}
             category={category}
@@ -88,48 +121,25 @@ const AddNewDish = ({}) => {
             setCategory={setCategory}
             setCategoryOptions={setCategoryOptions}
           />
-          
           <Text variant="text" color="black" style={styles.inputTitle}>
-            Name of the dish
+            CATEGORY
           </Text>
-          <CustomTextInput
-            value={name}
-            onChangeText={(text) => onChangeText("name", text)}
-          />
-          
-          <Text variant="text" color="black" style={styles.inputTitle}>
-            Description
-          </Text>
-          <CustomTextInput
-            value={description}
-            onChangeText={(text) => onChangeText("description", text)}
-            multiline={true}
-            style={{textAlignVertical: 'top'}}
-          />
-          
-          <Text variant="text" color="black" style={styles.inputTitle}>
-            Price
-          </Text>
-          <CustomTextInput
-            value={price}
-            onChangeText={(text) => onChangeText("price", text)}
-          />
-          
-          <Text variant="text" color="black" style={styles.inputTitle}>
-            SKU Number
-          </Text>
-          <CustomTextInput
-            value={sku_number}
-            onChangeText={(text) => onChangeText("sku_number", text)}
-          />
         </View>
-        
+
+        <View>
+          <Pressable>
+            <Text variant={'strong'} color={'primary'} fontWeight={'400'}>
+              Add Ons +
+            </Text>
+          </Pressable>
+        </View>
+
         <View style={styles.btnView}>
           <Button loading={loading} text='Save' fontSize={16} onPress={() => onSave()} />
-          <Button isSecondary noBG text='Cancel' fontSize={16} mt={10} onPress={() => navigate("AddNewDish")} />
+          <Button textColor={'black'} noBG text='Cancel' fontSize={16} mt={10} onPress={() => navigate("AddNewDish")} />
         </View>
       </View>
-      
+
       <ActionSheet
         ref={actionSheet}
         title={"Select Image"}

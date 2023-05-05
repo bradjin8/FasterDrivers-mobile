@@ -76,5 +76,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: scale(12),
     paddingHorizontal: scale(15),
+    fontFamily: 'Lato-Light',
   },
 });

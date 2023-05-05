@@ -25,7 +25,11 @@ export const getStore = (globalState) => {
   return configureStore({
     reducer: rootReducer,
     middleware: getDefaultMiddleware => getDefaultMiddleware({
-      serializableCheck: false
+      serializableCheck: {
+        ignoredActions: ['*/fulfilled', '*/rejected', '*/pending'],
+        ignoredPaths: [''],
+        ignoredActionPaths: ['payload'],
+      }
     })
   })
 }

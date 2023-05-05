@@ -7,11 +7,9 @@ const global = getGlobalOptions();
 async function askPermission(permission) {
   try {
     let status = await Permissions.check(permission);
-    console.log('check permission', permission, 'status', status)
     if (status !== Permissions.RESULTS.GRANTED) {
       // if not already granted then ask
       status = await Permissions.request(permission);
-      console.log('request permission', permission, 'status', status)
       if (status !== Permissions.RESULTS.GRANTED) {
         // user denied on ask
         return false;

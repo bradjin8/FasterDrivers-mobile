@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical, restaurantSettingData} from "utils";
 import {Images} from "src/theme"
+import {truncateString} from "utils/utils";
 import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import {navigate} from "navigation/NavigationService";
 import {getDishesRequest} from "../../../screenRedux/restaurantRedux";
 
-const Menu = ({navigation}) => {
+const Menu = ({navigation, route}) => {
   const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState(null);
   const {loading, dishes} = useSelector(state => state.restaurantReducer)
@@ -22,8 +24,16 @@ const Menu = ({navigation}) => {
     return unsubscribe;
   }, [])
 
-  if (loading)
-    return <ActivityIndicators/>
+  const filterDishes = () => {
+    if (searchValue) {
+      return dishes.filter(item =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase())
+        || item.description.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    } else {
+      return dishes
+    }
+  }
 
   return (
     <BaseScreen style={styles.mainWrapper}>
@@ -41,27 +51,30 @@ const Menu = ({navigation}) => {
         </View>
 
         <View style={styles.titleView}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="600">
+          <Text variant="strong" color="black" fontSize={14} fontWeight="600">
             Dishes
           </Text>
           <View style={styles.btnView}>
             <Button loading={false} text='Add New' fontSize={16} height={30} onPress={() => navigate("AddNewDish")}/>
           </View>
         </View>
+      </View>
 
-        <ScrollView style={styles.scrollContainer}>
-          {dishes && dishes.map((item, index) => (
+      {loading ?
+        <ActivityIndicator/>
+        : <ScrollView style={styles.scrollContainer}>
+          {filterDishes().map((item, index) => (
             <View key={index} style={styles.listContain}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{width: 50, height: 50, backgroundColor: color.lightGray}}>
-                  <Image source={{uri: item.image_1}} style={{width: 50, height: 50}}/>
+                <View style={styles.image}>
+                  <Image source={{uri: item.image_1}} style={styles.image}/>
                 </View>
                 <View style={styles.inputTitle}>
-                  <Text variant="h5" color="black" fontSize={14} fontWeight="600">
+                  <Text variant="h5" color="black" fontSize={12} fontWeight="600">
                     {item.name}
                   </Text>
-                  <Text variant="text" color="black" fontSize={12} fontWeight="400">
-                    {item.description}
+                  <Text variant="text" color="black" fontSize={10} lineHeight={12} fontWeight="400">
+                    {truncateString(item.description, 100)}
                   </Text>
                 </View>
               </View>
@@ -75,9 +88,8 @@ const Menu = ({navigation}) => {
               </View>
             </View>
           ))}
-        </ScrollView>
+        </ScrollView>}
 
-      </View>
     </BaseScreen>
   )
 }
@@ -90,14 +102,19 @@ const styles = StyleSheet.create({
   btnView: {width: scale(100)},
   titleView: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
 
-  scrollContainer: {flex: 1, paddingVertical: scaleVertical(10)},
+  scrollContainer: {
+    flex: 1, paddingVertical: scaleVertical(10),
+    paddingRight: scaleVertical(25),
+  },
   listContain: {
     flexDirection: 'row',
-    paddingVertical: scaleVertical(16),
+    paddingVertical: scaleVertical(2),
     justifyContent: 'space-between'
   },
+  image: {width: widthPercentageToDP(14), height: widthPercentageToDP(14), backgroundColor: color.lightGray},
   inputTitle: {
-    paddingHorizontal: scaleVertical(20)
+    paddingHorizontal: scaleVertical(10),
+    width: widthPercentageToDP(65),
   },
   nextArrow: {width: 10, height: 10},
 })
