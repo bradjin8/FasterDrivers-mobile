@@ -15,10 +15,13 @@ const GET_DISHES_REQUEST_COMPLETED = "GET_DISHES_REQUEST_COMPLETED"
 const ADD_NEW_DISH_REQUEST_STARTED = "ADD_NEW_DISH_REQUEST_STARTED"
 const ADD_NEW_DISH_REQUEST_COMPLETED = "ADD_NEW_DISH_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
+const VIEW_MY_ORDERS_REQUEST_STARTED = "VIEW_MY_ORDERS_REQUEST_STARTED"
+const VIEW_MY_ORDERS_REQUEST_COMPLETED = "VIEW_MY_ORDERS_REQUEST_COMPLETED"
 
 const initialState = {
   loading: false,
-  dishes: []
+  dishes: [],
+  myOrders: [],
 }
 
 //Actions
@@ -37,6 +40,15 @@ export const setDishData = (data) => ({
   type: ADD_NEW_DISH_REQUEST_COMPLETED,
   payload: data,
 })
+export const viewMyOrdersRequest = (data) => ({
+  type: VIEW_MY_ORDERS_REQUEST_STARTED,
+  payload: data,
+})
+export const setMyOrdersData = (data) => ({
+  type: VIEW_MY_ORDERS_REQUEST_COMPLETED,
+  payload: data,
+})
+
 
 export const requestFailed = () => ({
   type: REQUEST_FAILED,
@@ -66,6 +78,17 @@ export const restaurantReducer = (state = initialState, action) => {
         ...state,
         loading: false,
       }
+    case VIEW_MY_ORDERS_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case VIEW_MY_ORDERS_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        myOrders: action.payload,
+      }
     case REQUEST_FAILED:
       return {
         ...state,
@@ -87,6 +110,17 @@ function getDishesAPI() {
   return XHR(URL, options)
 }
 
+export function getDishAPI(id) {
+  const URL = `${appConfig.backendServerURL}/dishes/${id}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 function addNewDishAPI(data) {
   const URL = `${appConfig.backendServerURL}/dishes/`
   const options = {
@@ -95,6 +129,17 @@ function addNewDishAPI(data) {
     },
     method: "POST",
     data: data
+  }
+  return XHR(URL, options)
+}
+
+function viewMyOrdersAPI(data) {
+  const URL = `${appConfig.backendServerURL}/orders/?user=${data?.user}&status=${data?.status || ''}`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
   }
   return XHR(URL, options)
 }
@@ -130,7 +175,23 @@ function* addNewDishAction(data) {
     const {response} = e
     yield put(requestFailed())
     showMessage({
-      message: response?.data?.detail[0] ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* viewMyOrdersAction(data) {
+  try {
+    const resp = yield call(viewMyOrdersAPI, data.payload)
+    if (resp?.data) {
+      yield put(setMyOrdersData(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
@@ -139,4 +200,5 @@ function* addNewDishAction(data) {
 export default all([
   takeLatest(ADD_NEW_DISH_REQUEST_STARTED, addNewDishAction),
   takeLatest(GET_DISHES_REQUEST_STARTED, getDishesAction),
+  takeLatest(VIEW_MY_ORDERS_REQUEST_STARTED, viewMyOrdersAction),
 ])

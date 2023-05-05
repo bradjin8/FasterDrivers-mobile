@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator} from "react-native";
-import {widthPercentageToDP} from "react-native-responsive-screen";
+import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator, FlatList} from "react-native";
+import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical, restaurantSettingData} from "utils";
 import {Images} from "src/theme"
@@ -16,9 +16,15 @@ const Menu = ({navigation, route}) => {
   const [searchValue, setSearchValue] = useState(null);
   const {loading, dishes} = useSelector(state => state.restaurantReducer)
 
+  // console.log('dishes', dishes)
+
+  const fetchDishes = () => {
+    dispatch(getDishesRequest())
+  }
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(getDishesRequest())
+      fetchDishes()
     });
     // dispatch(getDishesRequest())
     return unsubscribe;
@@ -60,11 +66,11 @@ const Menu = ({navigation, route}) => {
         </View>
       </View>
 
-      {loading ?
-        <ActivityIndicator/>
-        : <ScrollView style={styles.scrollContainer}>
-          {filterDishes().map((item, index) => (
-            <View key={index} style={styles.listContain}>
+      <View style={styles.scrollContainer}>
+        <FlatList
+          data={filterDishes()}
+          renderItem={({item, index}) => {
+            return (<View key={index} style={styles.listContain}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={styles.image}>
                   <Image source={{uri: item.image_1}} style={styles.image}/>
@@ -86,9 +92,17 @@ const Menu = ({navigation, route}) => {
                   ${item.price}
                 </Text>
               </View>
-            </View>
-          ))}
-        </ScrollView>}
+            </View>)
+          }}
+          refreshing={loading}
+          onRefresh={fetchDishes}
+          ListEmptyComponent={() => <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text variant="h5" color="black" fontSize={14} fontWeight="400">
+              No dishes found
+            </Text>
+          </View>}
+        />
+      </View>
 
     </BaseScreen>
   )
@@ -103,13 +117,15 @@ const styles = StyleSheet.create({
   titleView: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
 
   scrollContainer: {
-    flex: 1, paddingVertical: scaleVertical(10),
-    paddingRight: scaleVertical(25),
+    minHeight: heightPercentageToDP(50),
+    paddingVertical: scaleVertical(10),
   },
   listContain: {
     flexDirection: 'row',
     paddingVertical: scaleVertical(2),
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingRight: scaleVertical(25),
+
   },
   image: {width: widthPercentageToDP(14), height: widthPercentageToDP(14), backgroundColor: color.lightGray},
   inputTitle: {
