@@ -5,6 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.gis.measure import Distance  
+from django.utils import timezone
 
 from users.serializers import UserProfileSerializer
 from users.models import User
@@ -78,6 +79,7 @@ class RestaurantViewSet(ModelViewSet):
         order = Order.objects.get(id=request.data.get('order'))
         driver_user = User.objects.get(id=request.data.get('driver'))
         order.driver = driver_user
-        order.status = "Pending"
+        order.driver_assigned_at = timezone.now()
+        order.status = "Driver Assigned"
         order.save()
         return Response("Driver requested successfully")

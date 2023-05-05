@@ -4,6 +4,7 @@ ORDER_STATUS = (
     ('Accepted', 'Accepted'),
     ('Rejected', 'Rejected'),
     ('In Progress', 'In Progress'),
+    ('Driver Assigned', 'Driver Assigned'),
     ('In Transit', 'In Transit'),
     ('Delivered', 'Delivered')
 )
