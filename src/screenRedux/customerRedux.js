@@ -24,6 +24,16 @@ const GET_ADDRESSES_REQUEST_COMPLETED = "GET_ADDRESSES_REQUEST_COMPLETED"
 const SET_CART_ITEMS = "SET_CART_ITEMS"
 const GET_RESTAURANT_DETAILS_REQUEST_STARTED = "GET_RESTAURANT_DETAILS_REQUEST_STARTED"
 const GET_RESTAURANT_DETAILS_REQUEST_COMPLETED = "GET_RESTAURANT_DETAILS_REQUEST_COMPLETED"
+const GET_PAYMENTS_REQUEST_STARTED = "GET_PAYMENTS_REQUEST_STARTED"
+const GET_PAYMENTS_REQUEST_COMPLETED = "GET_PAYMENTS_REQUEST_COMPLETED"
+const ADD_PAYMENT_REQUEST_STARTED = "ADD_PAYMENT_REQUEST_STARTED"
+const ADD_PAYMENT_REQUEST_COMPLETED = "ADD_PAYMENT_REQUEST_COMPLETED"
+const DELETE_PAYMENT_REQUEST_STARTED = "DELETE_PAYMENT_REQUEST_STARTED"
+const DELETE_PAYMENT_REQUEST_COMPLETED = "DELETE_PAYMENT_REQUEST_COMPLETED"
+const PAY_ORDER_REQUEST_STARTED = "PAY_ORDER_REQUEST_STARTED"
+const PAY_ORDER_REQUEST_COMPLETED = "PAY_ORDER_REQUEST_COMPLETED"
+const GENERATE_TEST_PAYMENT_REQUEST_STARTED = "GENERATE_TEST_PAYMENT_REQUEST_STARTED"
+const GENERATE_TEST_PAYMENT_REQUEST_COMPLETED = "GENERATE_TEST_PAYMENT_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 
 const initialState = {
@@ -34,6 +44,8 @@ const initialState = {
   carts: [],
   restaurantDetails: null,
   orders: [],
+  payments: [],
+  testPayment: null,
 }
 
 //Actions
@@ -83,6 +95,46 @@ export const getMyOrders = (data) => ({
 })
 export const getMyOrdersFinished = (data) => ({
   type: GET_MY_ORDERS_REQUEST_COMPLETED,
+  payload: data,
+})
+export const getPaymentsRequest = (data) => ({
+  type: GET_PAYMENTS_REQUEST_STARTED,
+  payload: data,
+})
+export const getPaymentsRequestFinished = (data) => ({
+  type: GET_PAYMENTS_REQUEST_COMPLETED,
+  payload: data,
+})
+export const addPaymentRequest = (data) => ({
+  type: ADD_PAYMENT_REQUEST_STARTED,
+  payload: data,
+})
+export const addPaymentRequestFinished = (data) => ({
+  type: ADD_PAYMENT_REQUEST_COMPLETED,
+  payload: data,
+})
+export const deletePaymentRequest = (data) => ({
+  type: DELETE_PAYMENT_REQUEST_STARTED,
+  payload: data,
+})
+export const deletePaymentRequestFinished = (data) => ({
+  type: DELETE_PAYMENT_REQUEST_COMPLETED,
+  payload: data,
+})
+export const payOrderRequest = (data) => ({
+  type: PAY_ORDER_REQUEST_STARTED,
+  payload: data,
+})
+export const payOrderRequestFinished = (data) => ({
+  type: PAY_ORDER_REQUEST_COMPLETED,
+  payload: data,
+})
+export const generateTestPaymentRequest = (data) => ({
+  type: GENERATE_TEST_PAYMENT_REQUEST_STARTED,
+  payload: data,
+})
+export const generateTestPaymentRequestFinished = (data) => ({
+  type: GENERATE_TEST_PAYMENT_REQUEST_COMPLETED,
   payload: data,
 })
 export const requestFailed = () => ({
@@ -161,6 +213,58 @@ export const customerReducer = (state = initialState, action) => {
         loading: false,
         orders: action.payload,
       }
+    case GET_PAYMENTS_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case GET_PAYMENTS_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        payments: action.payload.data,
+      }
+    case ADD_PAYMENT_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case ADD_PAYMENT_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+      }
+    case DELETE_PAYMENT_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case DELETE_PAYMENT_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+      }
+    case PAY_ORDER_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case PAY_ORDER_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+      }
+    case GENERATE_TEST_PAYMENT_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case GENERATE_TEST_PAYMENT_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        testPayment: action.payload,
+      }
     case REQUEST_FAILED:
       return {
         ...state,
@@ -209,7 +313,8 @@ function updateAddressesAPI(id, data) {
   return XHR(URL, options)
 }
 
-function createNewOrderAPI(data) {
+export function createNewOrderAPI(data) {
+  console.log('create-new-order-api', data)
   const URL = `${appConfig.backendServerURL}/orders/`
   const options = {
     headers: {
@@ -250,6 +355,54 @@ export function getDishById(id) {
       Accept: "application/json",
     },
     method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+function getPaymentsAPI() {
+  const URL = `${appConfig.backendServerURL}/payments/my_cards/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+function addPaymentAPI(data) {
+  console.log('add-payment-api', data)
+  const URL = `${appConfig.backendServerURL}/payments/add_payment_method/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
+function deletePaymentAPI(data) {
+  const URL = `${appConfig.backendServerURL}/payments/revoke_payment_method/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
+export function payOrderAPI(data) {
+  const URL = `${appConfig.backendServerURL}/payments/process/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
   }
   return XHR(URL, options)
 }
@@ -309,14 +462,16 @@ function* createNewOrderAction(data) {
     if (resp?.data) {
       yield put(createNewOrderFinished(resp.data))
     }
+    navigate("Orders")
   } catch (e) {
     const {response} = e
     yield put(requestFailed())
     debugger
     showMessage({
-      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail?.[0] ?? response?.data ?? "Something went wrong, Please try again!",
       type: "danger"
     })
+    navigate("Orders")
   }
 }
 
@@ -354,6 +509,88 @@ function* getRestaurantDetailsAction(data) {
   }
 }
 
+function* getPaymentsAction() {
+  try {
+    const resp = yield call(getPaymentsAPI)
+    if (resp?.data) {
+      yield put(getPaymentsRequestFinished(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* addPaymentAction(data) {
+  try {
+    const resp = yield call(addPaymentAPI, data.payload)
+    if (resp?.data) {
+      yield put(addPaymentRequestFinished(resp.data))
+    }
+    goBack();
+  } catch (e) {
+    const {response} = e
+    console.log('add-payment-api-res', response)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* deletePaymentAction(data) {
+  try {
+    const resp = yield call(deletePaymentAPI, data.payload)
+    if (resp?.data) {
+      yield put(deletePaymentRequestFinished(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* payOrderAction(data) {
+  try {
+    const resp = yield call(payOrderAPI, data.payload)
+    if (resp?.data) {
+      yield put(payOrderRequestFinished(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* generateTestPaymentAction(data) {
+  try {
+    const resp = yield call(generateTestPaymentRequest, data.payload)
+    if (resp?.data) {
+      yield put(generateTestPaymentRequestFinished(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(GET_RESTAURANT_DETAILS_REQUEST_STARTED, getRestaurantDetailsAction),
   takeLatest(GET_RESTAURANTS_REQUEST_STARTED, getRestaurantsAction),
@@ -361,4 +598,9 @@ export default all([
   takeLatest(UPDATE_ADDRESSES_REQUEST_STARTED, updateAddressesAction),
   takeLatest(CREATE_NEW_ORDER_REQUEST_STARTED, createNewOrderAction),
   takeLatest(GET_MY_ORDERS_REQUEST_STARTED, getMyOrdersAction),
+  takeLatest(GET_PAYMENTS_REQUEST_STARTED, getPaymentsAction),
+  takeLatest(ADD_PAYMENT_REQUEST_STARTED, addPaymentAction),
+  takeLatest(DELETE_PAYMENT_REQUEST_STARTED, deletePaymentAction),
+  takeLatest(PAY_ORDER_REQUEST_STARTED, payOrderAction),
+  takeLatest(GENERATE_TEST_PAYMENT_REQUEST_STARTED, generateTestPaymentAction),
 ])

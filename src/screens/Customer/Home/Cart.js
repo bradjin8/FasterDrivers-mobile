@@ -1,40 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme";
-import { ActivityIndicators, Button, CustomTextInput, Text } from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
-import BaseScreen from "../../../components/BaseScreen";
-import { useDispatch, useSelector } from "react-redux";
-import { navigate } from "navigation/NavigationService";
+import React, {useState} from "react";
+import {Image, ScrollView, StyleSheet, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme";
+import {color, scale, scaleVertical} from "utils";
+import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
+import {createNewOrder} from "../../../screenRedux/customerRedux";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.customerReducer.loading);
-  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
-  const [cartItems, setCartItems] = useState(cartItemsReducer)
+  const {loading, carts, addresses,} = useSelector(state => state.customerReducer);
   const [searchText, setSearchText] = useState(null);
-  const addresses = useSelector(state => state.customerReducer.addresses);
   const defaultAddress = addresses?.find(o => o.default)
-  const { street, state, zip_code } = defaultAddress || {}
+  const {street, state, zip_code} = defaultAddress || {}
 
-  useEffect(() => {
-    setCartItems(cartItemsReducer)
-  }, [cartItemsReducer]);
+  const createOrder = () => {
+    if (!defaultAddress)
+      return showMessage({
+        message: "Please set default address",
+        type: "danger",
+      });
+
+    let data = new FormData();
+    data.append('restaurant', carts[0].restaurant);
+
+    if (defaultAddress) {
+      data.append('address', defaultAddress.id);
+    }
+    carts.map((item, index) => {
+      data.append(`dishes[${index}]dish`, item.id);
+      data.append(`dishes[${index}]quantity`, item.quantity);
+      // item.addons?.map((addon, idx) => {
+      //   data.append(`dishes[${index}]dish_addons[${idx}]item`, addon.id);
+      //   data.append(`dishes[${index}]dish_addons[${idx}]quantity`, addon.quantity);
+      // })
+    })
+
+    dispatch(createNewOrder(data))
+  }
 
   const renderFinalTotal = () => {
-    return  cartItems.length && cartItems.reduce((prev,curr) => {
+    return carts.length && carts.reduce((prev, curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
 
   const renderHeader = (cart, index) => {
-    const { image_1, quantity, name, description, price } = cart
+    const {image_1, quantity, name, description, price} = cart
     return (
       <View style={styles.itemContain} key={index.toString()}>
         <View style={styles.flexRow}>
-          <Image source={image_1 ? {uri: image_1} : Images.item} style={styles.downIcon} />
-          <View style={{ width: "72%" }}>
+          <Image source={image_1 ? {uri: image_1} : Images.item} style={styles.downIcon}/>
+          <View style={{width: "72%"}}>
             <Text variant="text" color="black" fontSize={12} fontWeight="500">
               <Text variant="text" color="primary" fontSize={12} fontWeight="500">
                 {quantity > 1 && quantity + "x "}
@@ -46,7 +64,7 @@ const Cart = () => {
             </Text>
           </View>
         </View>
-        <View style={{ width: "20%", alignItems: "center" }}>
+        <View style={{width: "20%", alignItems: "center"}}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
             ${(price * quantity).toFixed(2)}
           </Text>
@@ -76,8 +94,8 @@ const Cart = () => {
           </Text>
         </View>
 
-        <View style={[styles.instructionView, { flexDirection: "row", justifyContent: "space-between" }]}>
-          <View style={{ width: "60%" }}>
+        <View style={[styles.instructionView, {flexDirection: "row", justifyContent: "space-between"}]}>
+          <View style={{width: "60%"}}>
             <Text variant="text" color="black" fontSize={12} fontWeight="400" numberOfLines={2} ellipsizeMode="tail">
               {street}, {state} - {zip_code}
             </Text>
@@ -85,7 +103,7 @@ const Cart = () => {
           <Button loading={false} text="Other"
                   style={styles.btnOther} fontSize={16}
                   onPress={() => {
-                  }} />
+                  }}/>
         </View>
 
         <View style={styles.instructionView}>
@@ -97,15 +115,11 @@ const Cart = () => {
             onChangeText={(text) => setSearchText(text)}
             multiline={true}
           />
-          <Button loading={false} text="Confirm" onPress={() => navigate("Payment")} />
+          <Button loading={loading} text="Confirm" fontSize={18} fontWeight={'600'} onPress={createOrder}/>
         </View>
       </View>
     );
   };
-
-  if(loading) {
-    return (<ActivityIndicators />)
-  }
 
   return (
     <View style={styles.mainWrapper}>
@@ -121,7 +135,7 @@ const Cart = () => {
         </View>
 
         <View style={styles.itemContainer}>
-          {cartItems?.map((cart, index) => renderHeader(cart, index))}
+          {carts?.map((cart, index) => renderHeader(cart, index))}
           {renderContent()}
         </View>
       </ScrollView>
@@ -134,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white,
   },
-  container: { flex: 1, backgroundColor: color.white },
+  container: {flex: 1, backgroundColor: color.white},
   items: {
     backgroundColor: color.secondary,
     padding: scale(12),
@@ -171,7 +185,7 @@ const styles = StyleSheet.create({
     paddingVertical: scaleVertical(10),
     marginBottom: scale(10),
   },
-  btnOther: { width: "25%", backgroundColor: color.black, height: scaleVertical(45) },
+  btnOther: {width: "25%", backgroundColor: color.black, height: scaleVertical(45)},
 });
 
 export default Cart;

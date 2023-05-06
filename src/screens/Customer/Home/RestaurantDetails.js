@@ -1,23 +1,24 @@
- import React, { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, View } from "react-native";
-import { color, scale, scaleVertical, screenWidth } from "utils";
-import { Images } from "src/theme";
-import { ActivityIndicators, Button, Text } from "../../../components/index";
+import React, {useEffect, useState} from "react";
+import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
+import {color, scale, scaleVertical, screenWidth} from "utils";
+import {Images} from "src/theme";
+import {ActivityIndicators, Button, Text} from "../../../components/index";
 import Icon from "react-native-vector-icons/dist/Feather";
-import { useDispatch, useSelector } from "react-redux";
-import { getRestaurantDetails, setUserCartItems } from "../../../screenRedux/customerRedux";
-import { goBack, navigate } from "navigation/NavigationService";
+import {useDispatch, useSelector} from "react-redux";
+import {getRestaurantDetails, setUserCartItems} from "../../../screenRedux/customerRedux";
+import {goBack, navigate} from "navigation/NavigationService";
 import StarRating from "react-native-star-rating-new";
 import _ from 'lodash'
 
-const RestaurantDetails = ({ route }) => {
+const RestaurantDetails = ({route}) => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
   const restaurantDetails = useSelector(state => state.customerReducer.restaurantDetails);
   const selectedRestaurant = route?.params.restaurant;
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-  const { id, photo, name, street, city, zip_code, state, description, type, rating_count  } = selectedRestaurant
+  const {id, photo, name, street, city, zip_code, state, description, type, rating_count} = selectedRestaurant
   const [rating, setRating] = useState(rating_count)
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const RestaurantDetails = ({ route }) => {
     } else {
       dispatch(setUserCartItems([
         ...cartItems,
-        { ...product, quantity: 1 },
+        {...product, quantity: 1},
       ]))
     }
   };
@@ -50,7 +51,7 @@ const RestaurantDetails = ({ route }) => {
     const index = cartItems.findIndex((item) => item.id === product.id);
     if (index > -1) {
       let _cartItems = _.cloneDeep(cartItems);
-      if(_cartItems[index].quantity === 1) {
+      if (_cartItems[index].quantity === 1) {
         _cartItems.splice(index, 1);
         dispatch(setUserCartItems(_cartItems))
         return
@@ -61,8 +62,8 @@ const RestaurantDetails = ({ route }) => {
   };
 
   const renderPrice = (item, findIndex) => {
-    if(findIndex > -1) {
-      if(cartItems[findIndex].quantity === 0) return `$ ${item.price}`
+    if (findIndex > -1) {
+      if (cartItems[findIndex].quantity === 0) return `$ ${item.price}`
       return cartItems[findIndex].quantity
     } else {
       return `$ ${item.price}`
@@ -70,7 +71,7 @@ const RestaurantDetails = ({ route }) => {
   }
 
   const renderFinalTotal = () => {
-    return  cartItems.length && cartItems.reduce((prev,curr) => {
+    return cartItems.length && cartItems.reduce((prev, curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
@@ -78,28 +79,28 @@ const RestaurantDetails = ({ route }) => {
   const renderItems = (item, i) => {
     const findIndex = cartItems.findIndex((product) => product.id === item.id);
     return (
-      <View style={styles.flex} key={i.toString()}>
-        <View>
+      <View style={styles.flex} key={"item-" + i.toString()}>
+        <View style={styles.itemDetails}>
           <Text variant="text" color="black" fontSize={12} fontWeight="500">
             {item?.name}
           </Text>
           <Text variant="text" color="black" fontSize={12} fontWeight="300">
             {item?.description}
           </Text>
-          <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <Pressable onPress={() => onRemove(item)} style={styles.priceButton}>
-              <Icon name="minus" size={15} color={color.black} />
+              <Icon name="minus" size={15} color={color.black}/>
             </Pressable>
             <Text variant="text" color="priceText" fontSize={14} fontWeight="400">
               {renderPrice(item, findIndex)}
             </Text>
             <Pressable onPress={() => onAdd(item)} style={[styles.priceButton, {marginLeft: scale(15)}]}>
-              <Icon name="plus" size={15} color={color.black} />
+              <Icon name="plus" size={15} color={color.black}/>
             </Pressable>
           </View>
         </View>
-        <Image source={item?.image_1 ? { uri: item.image_1 } : Images.item}
-               style={styles.itemImageContain} />
+        <Image source={item?.image_1 ? {uri: item.image_1} : Images.item}
+               style={styles.itemImageContain}/>
       </View>
     )
   }
@@ -116,32 +117,36 @@ const RestaurantDetails = ({ route }) => {
 
     return (
       keys.map((type, index) => {
-        return(
-          <>
+        return (
+          <View key={'dish-' + index}>
             <View style={styles.itemTitle}>
               <Text variant="text" color="secondaryBtn" fontSize={14} fontWeight="600">
                 {type}
               </Text>
             </View>
             {restaurantDetails[type].map((item, i) => renderItems(item, i))}
-          </>
+          </View>
         )
       })
     )
   }
 
-  if(loading) {
-    return (<ActivityIndicators />)
+  if (loading) {
+    return (<ActivityIndicators/>)
   }
   return (
-    <>
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, flex: 1, marginBottom: -65 }}>
+    <View style={styles.mainWrapper}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{
+          paddingBottom: heightPercentageToDP(10),
+        }}>
         <View>
           <Pressable onPress={() => goBack()} style={styles.backView}>
-            <Icon name="arrow-left" size={20} color={color.black} />
+            <Icon name="arrow-left" size={20} color={color.black}/>
           </Pressable>
-          <Image source={photo ? { uri: photo } : Images.item}
-                 style={styles.itemImage} />
+          <Image source={photo ? {uri: photo} : Images.item}
+                 style={styles.itemImage}/>
         </View>
 
         <View style={styles.content}>
@@ -160,7 +165,7 @@ const RestaurantDetails = ({ route }) => {
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
             {type}
           </Text>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{flexDirection: "row", alignItems: "center"}}>
             <StarRating
               disabled={false}
               halfStarEnabled={true}
@@ -173,17 +178,17 @@ const RestaurantDetails = ({ route }) => {
               starStyle={styles.starStyle}
               selectedStar={(rating) => handleRating(rating)}
             />
-            <Text variant="text" color="item" fontSize={14} fontWeight="600" style={{ marginLeft: scaleVertical(5) }}>
+            <Text variant="text" color="item" fontSize={14} fontWeight="600" style={{marginLeft: scaleVertical(5)}}>
               {rating}
             </Text>
           </View>
-          <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12} />
+          <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {
+          }} fontSize={12}/>
         </View>
 
         <View style={styles.itemContainer}>
           {renderDishes()}
         </View>
-
       </ScrollView>
       <View style={styles.cartView}>
         <View style={styles.cartContain}>
@@ -193,9 +198,9 @@ const RestaurantDetails = ({ route }) => {
                 {cartItems.length}
               </Text>
             </View> : null}
-            <Icon name="shopping-cart" size={20} color={color.white} />
+            <Icon name="shopping-cart" size={20} color={color.white}/>
           </View>
-          <Pressable onPress={() => navigate("Orders")}>
+          <Pressable onPress={() => navigate("Cart")}>
             <Text variant="text" color="white" fontSize={14} fontWeight="600">
               View cart
             </Text>
@@ -205,7 +210,7 @@ const RestaurantDetails = ({ route }) => {
           </Text>
         </View>
       </View>
-    </>
+    </View>
   );
 };
 
@@ -214,7 +219,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white,
   },
-  container: { backgroundColor: color.white },
+  container: {backgroundColor: color.white},
   backView: {
     height: scale(25),
     width: scale(25),
@@ -282,10 +287,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: color.angry
   },
-  itemTitle: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
+  itemTitle: {flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
+  itemDetails: {
+    width: widthPercentageToDP(60),
+  },
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
-  starContainer: { width: 100, justifyContent: "space-evenly" },
-  starStyle: { marginRight: scaleVertical(3), margin: 3 }
+  starContainer: {width: 100, justifyContent: "space-evenly"},
+  starStyle: {marginRight: scaleVertical(3), margin: 3}
 });
 
 export default RestaurantDetails;

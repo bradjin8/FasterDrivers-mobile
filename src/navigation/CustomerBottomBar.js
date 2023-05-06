@@ -15,10 +15,10 @@ import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
 
 import Home from "screens/Customer/Home"
 import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
+import Cart from "screens/Customer/Home/Cart"
 
 import Orders from "screens/Customer/Orders/Orders"
 import OrderDetails from "screens/Customer/Orders/OrderDetails"
-import Cart from "screens/Customer/Orders/Cart"
 import Payment from "screens/Customer/Orders/Payment"
 import AddCard from "screens/Customer/Orders/AddCard"
 
@@ -39,6 +39,7 @@ const CustomerBottomBar = props => {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
+        animationEnabled: true,
         tabBarStyle: {
           backgroundColor: color.white,
           // height: scaleVertical(65),
@@ -152,6 +153,7 @@ const HomeTab = () => {
         initialRouteName="Home"
       >
         <settingStack.Screen name="Home" component={Home} />
+        <settingStack.Screen name="Cart" component={Cart} />
         <settingStack.Screen name="RestaurantDetails" component={RestaurantDetails} />
       </settingStack.Navigator>
     </>
@@ -167,7 +169,6 @@ const OrderTab = () => {
       >
         <settingStack.Screen name="Orders" component={Orders} />
         <settingStack.Screen name="OrderDetails" component={OrderDetails} />
-        <settingStack.Screen name="Cart" component={Cart} />
         <settingStack.Screen name="Payment" component={Payment} />
         <settingStack.Screen name="AddCard" component={AddCard} />
       </settingStack.Navigator>

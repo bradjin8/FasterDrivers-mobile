@@ -19,7 +19,7 @@ const AccountInformation = () => {
   const [changeImage, setChangeImage] = useState(null)
   const { name, customer: { phone, addresses, photo } } = user
   const [pickImage, setPickImage] = useState(photo)
-  
+
   const [customerDetails, setCustomerDetails] = useState({
     "name": name,
     "customer.phone": phone,
@@ -28,30 +28,32 @@ const AccountInformation = () => {
     "customer.addresses[0]state": addresses[0]?.state,
     "customer.addresses[0]zip_code": addresses[0]?.zip_code,
   })
-  
+
   const onChangeText = (key, text) => {
     setCustomerDetails(prevState => ({ ...prevState, [key]: text }));
   }
-  
+
   const onSave = () => {
+    // console.log('image', pickImage)
     let data = new FormData();
     if(changeImage) {
       data.append('customer.photo', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
-        uri: Platform.OS === 'ios' ? pickImage.sourceURL.replace('file://', '') : pickImage.path,
+        uri: Platform.OS === 'ios' ? pickImage.sourceURL?.replace('file://', '') || pickImage.path : pickImage.path,
         data: pickImage.data
       });
     }
     data.append("name", customerDetails.name);
+    data.append("customer.phone", customerDetails["customer.phone"]);
     data.append("customer.addresses[0]street", customerDetails["customer.addresses[0]street"]);
     data.append("customer.addresses[0]city", customerDetails["customer.addresses[0]city"]);
     data.append("customer.addresses[0]state", customerDetails["customer.addresses[0]state"]);
     data.append("customer.addresses[0]zip_code", customerDetails["customer.addresses[0]zip_code"]);
-    
+
     dispatch(updateRestaurant(data))
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -71,7 +73,7 @@ const AccountInformation = () => {
             }
           </Pressable>
         </View>
-        
+
         <View>
           <Text variant="text" color="black" >
             Full Name
@@ -93,6 +95,13 @@ const AccountInformation = () => {
           <CustomTextInput
             value={customerDetails["customer.addresses[0]street"]}
             onChangeText={(text) => onChangeText("customer.addresses[0]street", text)}
+          />
+          <Text variant="text" color="black" >
+            City
+          </Text>
+          <CustomTextInput
+            value={customerDetails["customer.addresses[0]city"]}
+            onChangeText={(text) => onChangeText("customer.addresses[0]city", text)}
           />
           <View style={styles.stateView}>
             <View style={{width: '47%'}}>

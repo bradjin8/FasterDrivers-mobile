@@ -378,6 +378,42 @@ PODS:
     - Yoga
   - RNScreens (2.18.1):
     - React-Core
+  - Stripe (23.7.0):
+    - StripeApplePay (= 23.7.0)
+    - StripeCore (= 23.7.0)
+    - StripePayments (= 23.7.0)
+    - StripePaymentsUI (= 23.7.0)
+    - StripeUICore (= 23.7.0)
+  - stripe-react-native (0.27.1):
+    - React-Core
+    - Stripe (~> 23.7.0)
+    - StripeApplePay (~> 23.7.0)
+    - StripeFinancialConnections (~> 23.7.0)
+    - StripePayments (~> 23.7.0)
+    - StripePaymentSheet (~> 23.7.0)
+    - StripePaymentsUI (~> 23.7.0)
+  - StripeApplePay (23.7.0):
+    - StripeCore (= 23.7.0)
+  - StripeCore (23.7.0)
+  - StripeFinancialConnections (23.7.0):
+    - StripeCore (= 23.7.0)
+    - StripeUICore (= 23.7.0)
+  - StripePayments (23.7.0):
+    - StripeCore (= 23.7.0)
+    - StripePayments/Stripe3DS2 (= 23.7.0)
+  - StripePayments/Stripe3DS2 (23.7.0):
+    - StripeCore (= 23.7.0)
+  - StripePaymentSheet (23.7.0):
+    - StripeApplePay (= 23.7.0)
+    - StripeCore (= 23.7.0)
+    - StripePayments (= 23.7.0)
+    - StripePaymentsUI (= 23.7.0)
+  - StripePaymentsUI (23.7.0):
+    - StripeCore (= 23.7.0)
+    - StripePayments (= 23.7.0)
+    - StripeUICore (= 23.7.0)
+  - StripeUICore (23.7.0):
+    - StripeCore (= 23.7.0)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
 
@@ -432,6 +468,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -439,6 +476,14 @@ SPEC REPOS:
     - fmt
     - Google-Maps-iOS-Utils
     - GoogleMaps
+    - Stripe
+    - StripeApplePay
+    - StripeCore
+    - StripeFinancialConnections
+    - StripePayments
+    - StripePaymentSheet
+    - StripePaymentsUI
+    - StripeUICore
     - TOCropViewController
 
 EXTERNAL SOURCES:
@@ -538,6 +583,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  stripe-react-native:
+    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -593,6 +640,15 @@ SPEC CHECKSUMS:
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: 3d1432ce7b6b7fc31f375dcabe5b4585e0634a43
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
+  Stripe: 1412a8389885cbeebd752de574419122d52957a9
+  stripe-react-native: 2bde12b90d52ef4a25830a38f28df1ad2e432d09
+  StripeApplePay: b05917d11c0846ca3e2f67e59bf027efd1fe2195
+  StripeCore: bec0c90f6e153abeba70f015be25e17fada10084
+  StripeFinancialConnections: 2ba1ad658b7ccf7b5f5685f32ce9fef5ae3fe197
+  StripePayments: faafc7e868e224aba8ff9d9c3833c17dde909f42
+  StripePaymentSheet: 4ae8d6337c2df98396761fd34b5cb20ebd564b45
+  StripePaymentsUI: bed5acf82eaa9375553555087bfedc082f43c135
+  StripeUICore: f940d7e6908ba241380f25bf7062919890dd81e2
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 0bc4b37c3b8a345336ff601e2cf7d9704bab7e93
 

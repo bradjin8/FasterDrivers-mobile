@@ -50,6 +50,7 @@ const Menu = ({navigation, route}) => {
       <View style={styles.container}>
         <View style={{paddingBottom: scaleVertical(10)}}>
           <CustomTextInput
+            isImages={true}
             value={searchValue}
             placeholder="Search dishes"
             onChangeText={(text) => setSearchValue(text)}
