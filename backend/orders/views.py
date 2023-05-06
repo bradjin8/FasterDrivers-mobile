@@ -4,10 +4,13 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from users.authentication import ExpiringTokenAuthentication
 
 from payments.models import Payment
 
+from .filters import OrderFilter
 from .serializers import OrderSerializer
 from .models import Order
 
@@ -30,7 +33,8 @@ class OrderViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Order.objects.all()
-    filterset_fields = ['user', 'driver', 'status', 'restaurant']
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OrderFilter
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
