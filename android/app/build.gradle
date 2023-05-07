@@ -207,6 +207,7 @@ dependencies {
   implementation 'com.google.android.gms:play-services-base:18.0.1'
   implementation 'com.google.android.gms:play-services-location:19.0.1'
   implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.material:material:1.9.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
@@ -232,13 +233,13 @@ dependencies {
 
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use
-task copyDownloadableDepsToLibs(type: Copy) {
-    from configurations.compile
-    into 'libs'
-}
+//task copyDownloadableDepsToLibs(type: Copy) {
+//    from configurations.compile
+//    into 'libs'
+//}
 
 project.ext.vectoricons = [
-    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf', 'AntDesign.ttf', 'Entypo.ttf', 'EvilIcons.ttf', 'Feather.ttf',
+    iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf', 'AntDesign.ttf', 'Entypo.ttf', 'Feather.ttf',
     'FontAwesome.ttf', 'FontAwesome5.ttf', 'FontAwesome5Brands.ttf', 'Fontisto.ttf', 'Foundation.ttf', 'MaterialCommunityIcons.ttf',
      'Octicons.ttf', 'SimpleLineIcons.ttf', 'Zocial.ttf'] // Name of the font files you want to copy
 ]

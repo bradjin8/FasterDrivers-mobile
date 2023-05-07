@@ -169,7 +169,7 @@ const Home = ({navigation}) => {
                   <Text variant="text" color="gray" fontSize={10} fontWeight="400">
                     {renderLocation()}
                   </Text>
-                  <Image source={Images.downArrow} style={styles.downIcon}/>
+                  <Image source={Images.downArrow} style={styles.downIcon} resizeMode={'contain'}/>
                 </View>
               }
               onRequestClose={() => hideMenu()}

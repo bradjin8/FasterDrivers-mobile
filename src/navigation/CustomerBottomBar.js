@@ -102,6 +102,7 @@ const CustomerBottomBar = props => {
               <Image
                 source={Images.orders}
                 style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+                resizeMode={'contain'}
               />
             </View>
           ),
@@ -119,6 +120,7 @@ const CustomerBottomBar = props => {
             <Image
               source={Images.Settings}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
