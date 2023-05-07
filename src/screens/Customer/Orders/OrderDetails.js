@@ -6,6 +6,7 @@ import {Images} from "src/theme";
 import {ActivityIndicators, Button, Text} from "../../../components/index";
 import Icon from "react-native-vector-icons/dist/Feather";
 import {useDispatch, useSelector} from "react-redux";
+import {ORDER_STATUS} from "../../../consts/orders";
 import {getDishById, getRestaurantDetails, setUserCartItems} from "../../../screenRedux/customerRedux";
 import {goBack, navigate} from "navigation/NavigationService";
 import StarRating from "react-native-star-rating-new";
@@ -13,7 +14,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-nativ
 
 const OrderDetails = ({route}) => {
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.customerReducer.loading);
+  const {loading, payment} = useSelector(state => state.customerReducer);
   const order = route?.params?.order;
   const {id, photo, name, street, city, zip_code, state, description, type, rating, rating_count} = order.restaurant
   const [orderedDishes, setOrderedDishes] = useState([])
@@ -35,6 +36,9 @@ const OrderDetails = ({route}) => {
   if (loading) {
     return (<ActivityIndicators/>)
   }
+
+  console.log('pay')
+
   return (
     <>
       <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, flex: 1, marginBottom: -65}}>
@@ -48,12 +52,12 @@ const OrderDetails = ({route}) => {
 
         <View style={styles.content}>
           <View style={styles.flex}>
-            <Text variant="text" color="item" fontSize={14} fontWeight="600">
+            <Text variant="h5" color="item" fontSize={14} fontWeight="600">
               {name}
             </Text>
-            <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400" numberOfLines={2}
+            <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400"
                   ellipsizeMode="tail">
-              {street}, {city} - {zip_code}, {state}
+              {street}, {city}, {state} - {zip_code}
             </Text>
           </View>
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
@@ -127,10 +131,17 @@ const OrderDetails = ({route}) => {
               <Text color={'item'} fontSize={16} >${order?.total}</Text>
             </View>
           </View>
+
+          {order?.status === ORDER_STATUS.Unpaid && <View>
+            <Button
+              onPress={() => {
+                navigate('Payment', {order})
+              }}
+              text="Pay Now"
+              style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10)}}
+            />
+          </View>}
         </View>
-
-
-
       </ScrollView>
     </>
   );
@@ -183,7 +194,7 @@ const styles = StyleSheet.create({
   itemTitle: {flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
   starContainer: {justifyContent: "flex-start"},
-  starStyle: {fontWeight: "bold", marginRight: scaleVertical(1)},
+  starStyle: {marginRight: scaleVertical(1)},
   dishContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: hp(0.2)},
   priceContainer: {
     marginTop: hp(1),

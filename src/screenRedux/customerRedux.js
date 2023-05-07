@@ -327,7 +327,7 @@ export function createNewOrderAPI(data) {
 }
 
 function getMyOrdersAPI(data) {
-  const URL = `${appConfig.backendServerURL}/orders/?user=${data}&status=Pending`
+  const URL = `${appConfig.backendServerURL}/orders/?user=${data.user}&status=${data.status?.join(',')}`
   const options = {
     headers: {
       Accept: "application/json",
@@ -396,6 +396,7 @@ function deletePaymentAPI(data) {
 }
 
 export function payOrderAPI(data) {
+  console.log('pay-order-api', data)
   const URL = `${appConfig.backendServerURL}/payments/process/`
   const options = {
     headers: {
@@ -485,9 +486,8 @@ function* getMyOrdersAction(data) {
   } catch (e) {
     const {response} = e
     yield put(requestFailed())
-    debugger
     showMessage({
-      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail?.[0] ?? response?.data ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
@@ -503,7 +503,7 @@ function* getRestaurantDetailsAction(data) {
     const {response} = e
     yield put(requestFailed())
     showMessage({
-      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
@@ -567,9 +567,10 @@ function* payOrderAction(data) {
     }
   } catch (e) {
     const {response} = e
+    console.log('pay-order-api-res', response, e.message)
     yield put(requestFailed())
     showMessage({
-      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail?.[0] ?? response?.data ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }

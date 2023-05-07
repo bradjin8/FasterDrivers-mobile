@@ -13,15 +13,18 @@ import moment from 'moment'
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const loading = useSelector(state => state.customerReducer.loading);
+  const {loading, orders} = useSelector(state => state.customerReducer);
   const {user, accessToken} = useSelector(state => state.loginReducer);
-  const orderItems = useSelector(state => state.customerReducer.orders)
 
   console.log('user', user.id, accessToken)
-  console.log('orderItems', orderItems)
+  console.log('orders', orders)
 
   useEffect(() => {
-    dispatch(getMyOrders(user.id))
+    dispatch(getMyOrders({
+      user: user.id,
+      status: [
+      ]
+    }))
   }, []);
 
   if (loading) {
@@ -55,7 +58,7 @@ const Orders = () => {
 
   const renderOrders = () => {
     return <View style={styles.items}>
-      {orderItems.map((item, index) => {
+      {orders.map((item, index) => {
         return <View style={styles.orderContainer} key={index}>
           <Image source={{uri: item.restaurant.photo}} style={styles.resIcon}/>
           <View style={styles.details}>

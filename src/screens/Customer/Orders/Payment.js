@@ -7,33 +7,28 @@ import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {Button, Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import {createNewOrder, createNewOrderAPI, getPaymentsRequest, payOrderAPI} from "../../../screenRedux/customerRedux";
+import {createNewOrder, createNewOrderAPI, getPaymentsRequest, payOrderAPI, payOrderRequest} from "../../../screenRedux/customerRedux";
 import {Images} from "../../../theme";
 
-const Payment = ({}) => {
+const Payment = ({route}) => {
   const dispatch = useDispatch()
-  const {addresses, payments, carts} = useSelector(state => state.customerReducer);
+  const {addresses, payments, loading} = useSelector(state => state.customerReducer);
   const defaultAddress = addresses?.find(o => o.default)
   const [paymentId, setPaymentId] = React.useState(null)
-  const [loading, setLoading] = React.useState(false)
 
-  // console.log('defaultAddress', defaultAddress)
-  // console.log('payments', payments)
+  const order = route?.params?.order
+
+  // console.log('order', order)
 
   const pay = async (orderId) => {
-    if (!defaultAddress)
-      return showMessage({
-        message: "Please set default address",
-        type: "danger",
-      });
-
-
+    dispatch(payOrderRequest({
+      payment_method: paymentId,
+      order: order.id
+    }))
   }
 
   const renderFinalTotal = () => {
-    return carts.length && carts.reduce((prev, curr) => {
-      return prev + (curr.quantity * curr.price)
-    }, 0).toFixed(2)
+    return order.total
   }
 
   useEffect(() => {
