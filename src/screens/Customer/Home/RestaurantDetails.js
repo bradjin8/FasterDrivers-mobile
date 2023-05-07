@@ -235,7 +235,8 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: "100%",
-    height: screenWidth / 2.5,
+    height: screenWidth / 2,
+    resizeMode: 'stretch'
   },
   itemImageContain: {
     width: scaleVertical(80),

@@ -72,6 +72,7 @@ const Menu = ({navigation, route}) => {
       </View>
       <FlatList
         data={filterDishes()}
+        style={styles.list}
         renderItem={({item, index}) => {
           return (<View key={index} style={styles.listContain}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -118,6 +119,10 @@ const styles = StyleSheet.create({
   titleView: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingHorizontal: scale(25),
+  },
+  list: {
+    minHeight: heightPercentageToDP(50),
+    flexGrow: 0,
   },
   listContain: {
     flexDirection: 'row',

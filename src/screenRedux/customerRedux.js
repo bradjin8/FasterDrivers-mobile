@@ -451,7 +451,7 @@ function* updateCustomerAction(data) {
         message: "Profile updated successfully!",
         type: "success"
       })
-      navigate(-1)
+      goBack()
     }
   } catch (e) {
     const {response} = e

@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, Pressable, ScrollView, Platform } from "react-
 import { color, scale, scaleVertical } from "utils";
 import { Images } from "src/theme"
 import { Button, Text, CustomTextInput, CustomDropDown } from "../../../components/index";
-import { navigate } from "navigation/NavigationService";
+import {goBack, navigate} from "navigation/NavigationService";
 import SimpleHeader from "components/SimpleHeader";
 import BaseScreen from "../../../components/BaseScreen";
 import { pickFromCamera, pickFromGallery } from "utils/Camera";
@@ -136,7 +136,7 @@ const AddNewDish = ({}) => {
 
         <View style={styles.btnView}>
           <Button loading={loading} text='Save' fontSize={16} onPress={() => onSave()} />
-          <Button textColor={'black'} noBG text='Cancel' fontSize={16} mt={10} onPress={() => navigate("AddNewDish")} />
+          <Button textColor={'black'} noBG text='Cancel' fontSize={16} mt={10} onPress={() => goBack()} />
         </View>
       </View>
 
