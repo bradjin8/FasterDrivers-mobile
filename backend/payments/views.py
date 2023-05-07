@@ -53,7 +53,7 @@ class PaymentViewSet(ModelViewSet):
     def process(self, request):
         order = request.data.get('order')
         payment_method = request.data.get('payment_method')
-        billing_details = request.data.get('billing_details')
+        # billing_details = request.data.get('billing_details', None)
         try:
             order = Order.objects.get(id=order)
         except Order.DoesNotExist:
@@ -71,18 +71,18 @@ class PaymentViewSet(ModelViewSet):
             customer = stripe.Customer.create(email=request.user.email)
         djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
         payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
-        payment_method = stripe.PaymentMethod.modify(
-            payment_method['id'],
-            billing_details={
-                "address": {
-                    "city": billing_details["address"]["city"],
-                    "country": billing_details["address"]["country"],
-                    "line1": billing_details["address"]["line1"],
-                    "postal_code": billing_details["address"]["postal_code"],
-                },
-                "name": billing_details["name"],
-            }
-        )
+        # payment_method = stripe.PaymentMethod.modify(
+        #     payment_method['id'],
+        #     billing_details={
+        #         "address": {
+        #             "city": billing_details["address"]["city"],
+        #             "country": billing_details["address"]["country"],
+        #             "line1": billing_details["address"]["line1"],
+        #             "postal_code": billing_details["address"]["postal_code"],
+        #         },
+        #         "name": billing_details["name"],
+        #     }
+        # )
         djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
         request.user.customer.stripe_account = djstripe_customer
         request.user.customer.stripe_account.save()

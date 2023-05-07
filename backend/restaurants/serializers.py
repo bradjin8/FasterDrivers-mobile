@@ -6,8 +6,15 @@ from rest_framework import serializers
 from .models import Restaurant, Dish, AddOn, Item
 
 from fancy_cherry_36842.settings import GOOGLE_API_KEY
+from djstripe.models import Account
 
 import requests
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -101,6 +108,7 @@ class DishSerializer(serializers.ModelSerializer):
 
 class RestaurantSerializer(serializers.ModelSerializer):
     dishes = DishSerializer(required=False, many=True)
+    connect_account = AccountSerializer(required=False)
 
     class Meta:
         model = Restaurant

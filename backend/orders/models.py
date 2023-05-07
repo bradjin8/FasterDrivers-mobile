@@ -81,6 +81,10 @@ class Order(UUIDModel):
         blank=True,
         null=True
     )
+    driver_assigned_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
     in_transit_at = models.DateTimeField(
         blank=True,
         null=True

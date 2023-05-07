@@ -4,10 +4,28 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from users.authentication import ExpiringTokenAuthentication
 
+from payments.models import Payment
+
+from .filters import OrderFilter
 from .serializers import OrderSerializer
 from .models import Order
+
+import stripe
+import djstripe
+
+from django.utils import timezone
+
+from fancy_cherry_36842.settings import STRIPE_LIVE_MODE, STRIPE_LIVE_SECRET_KEY, STRIPE_TEST_SECRET_KEY, CONNECTED_SECRET
+
+
+if STRIPE_LIVE_MODE == True:
+    stripe.api_key = STRIPE_LIVE_SECRET_KEY
+else:
+    stripe.api_key = STRIPE_TEST_SECRET_KEY
 
 
 class OrderViewSet(ModelViewSet):
@@ -15,7 +33,8 @@ class OrderViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Order.objects.all()
-    filterset_fields = ['user', 'driver', 'status']
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OrderFilter
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -27,3 +46,58 @@ class OrderViewSet(ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         return super().create(request, *args, **kwargs)
+
+    @action(detail=False, methods=['get'])
+    def accept(self, request):
+        order = Order.objects.get(id=request.query_params.get('order'))
+        order.status = "Accepted"
+        order.accepted_at = timezone.now()
+        order.save()
+        serializer = OrderSerializer(order).data
+        return Response(serializer)
+
+    @action(detail=False, methods=['get'])
+    def reject(self, request):
+        order = Order.objects.get(id=request.query_params.get('order'))
+        order.status = "Rejected"
+        order.rejected_at = timezone.now()
+        order.save()
+
+        payments = Payment.objects.filter(order=order)
+        for payment in payments:
+            payment_intent = payment.payment_intent.id
+            stripe.Refund.create(
+                payment_intent=payment_intent,
+            )
+            payment.refunded = True
+            payment.save()
+
+        serializer = OrderSerializer(order).data
+        return Response(serializer)
+
+    @action(detail=False, methods=['get'])
+    def in_progress(self, request):
+        order = Order.objects.get(id=request.query_params.get('order'))
+        order.status = "In Progress"
+        order.in_progress_at = timezone.now()
+        order.save()
+        serializer = OrderSerializer(order).data
+        return Response(serializer)
+
+    @action(detail=False, methods=['get'])
+    def in_transit(self, request):
+        order = Order.objects.get(id=request.query_params.get('order'))
+        order.status = "In Transit"
+        order.in_transit_at = timezone.now()
+        order.save()
+        serializer = OrderSerializer(order).data
+        return Response(serializer)
+
+    @action(detail=False, methods=['get'])
+    def deliver(self, request):
+        order = Order.objects.get(id=request.query_params.get('order'))
+        order.status = "Delivered"
+        order.delivered_at = timezone.now()
+        order.save()
+        serializer = OrderSerializer(order).data
+        return Response(serializer)
