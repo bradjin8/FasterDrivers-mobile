@@ -34,6 +34,8 @@ const PAY_ORDER_REQUEST_STARTED = "PAY_ORDER_REQUEST_STARTED"
 const PAY_ORDER_REQUEST_COMPLETED = "PAY_ORDER_REQUEST_COMPLETED"
 const GENERATE_TEST_PAYMENT_REQUEST_STARTED = "GENERATE_TEST_PAYMENT_REQUEST_STARTED"
 const GENERATE_TEST_PAYMENT_REQUEST_COMPLETED = "GENERATE_TEST_PAYMENT_REQUEST_COMPLETED"
+const UPDATE_CUSTOMER_REQUEST_STARTED = "UPDATE_CUSTOMER_REQUEST_STARTED"
+const UPDATE_CUSTOMER_REQUEST_COMPLETED = "UPDATE_CUSTOMER_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 
 const initialState = {
@@ -135,6 +137,15 @@ export const generateTestPaymentRequest = (data) => ({
 })
 export const generateTestPaymentRequestFinished = (data) => ({
   type: GENERATE_TEST_PAYMENT_REQUEST_COMPLETED,
+  payload: data,
+})
+
+export const updateCustomerRequest = (data) => ({
+  type: UPDATE_CUSTOMER_REQUEST_STARTED,
+  payload: data,
+})
+export const updateCustomerRequestFinished = (data) => ({
+  type: UPDATE_CUSTOMER_REQUEST_COMPLETED,
   payload: data,
 })
 export const requestFailed = () => ({
@@ -264,6 +275,16 @@ export const customerReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         testPayment: action.payload,
+      }
+    case UPDATE_CUSTOMER_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true,
+      }
+    case UPDATE_CUSTOMER_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
       }
     case REQUEST_FAILED:
       return {
@@ -406,6 +427,40 @@ export function payOrderAPI(data) {
     data: data
   }
   return XHR(URL, options)
+}
+
+export function updateCustomerAPI(data) {
+  console.log('update-customer-api', data)
+  const URL = `${appConfig.backendServerURL}/users/${data}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "PATCH",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
+function* updateCustomerAction(data) {
+  try {
+    const resp = yield call(updateCustomerAPI, data.payload)
+    if (resp?.data) {
+      yield put(updateCustomerRequestFinished(resp.data))
+      showMessage({
+        message: "Profile updated successfully!",
+        type: "success"
+      })
+      navigate(-1)
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
 }
 
 function* getRestaurantsAction(data) {
@@ -565,6 +620,7 @@ function* payOrderAction(data) {
     if (resp?.data) {
       yield put(payOrderRequestFinished(resp.data))
     }
+    navigate("Orders")
   } catch (e) {
     const {response} = e
     yield put(requestFailed())
@@ -603,4 +659,5 @@ export default all([
   takeLatest(DELETE_PAYMENT_REQUEST_STARTED, deletePaymentAction),
   takeLatest(PAY_ORDER_REQUEST_STARTED, payOrderAction),
   takeLatest(GENERATE_TEST_PAYMENT_REQUEST_STARTED, generateTestPaymentAction),
+  takeLatest(UPDATE_CUSTOMER_REQUEST_STARTED, updateCustomerAction),
 ])

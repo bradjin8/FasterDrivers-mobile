@@ -9,12 +9,12 @@ import {color} from "../utils/color";
 const OrderStatusIndicator = ({status}) => {
   let idx = -1
   switch (status.toLowerCase()) {
-    case 'pending':
     case 'in progress':
     case 'in transit':
       idx = 1
       break;
     case 'accepted':
+    // case 'pending':
       idx = 0
       break;
     case 'delivered':

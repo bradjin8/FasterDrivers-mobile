@@ -27,6 +27,14 @@ import { useSelector } from "react-redux";
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
 
+const tabBarStyle = {
+  backgroundColor: color.white,
+  height: scaleVertical(60),
+  tabBarActiveTintColor: color.black,
+  tabBarInactiveTintColor: color.gray,
+  paddingTop: scaleVertical(5)
+}
+
 const CustomerBottomBar = props => {
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
@@ -40,14 +48,7 @@ const CustomerBottomBar = props => {
       initialRouteName="Home"
       screenOptions={{
         animationEnabled: true,
-        tabBarStyle: {
-          backgroundColor: color.white,
-          // height: scaleVertical(65),
-          tabBarActiveTintColor: color.black,
-          tabBarInactiveTintColor: color.gray,
-          paddingTop: scaleVertical(10),
-          boxShadow: '0px -40px 40px rgba(0, 0, 0, 0.4)',
-        }
+        tabBarStyle: tabBarStyle,
       }}
     >
       <Tab.Screen
@@ -55,7 +56,8 @@ const CustomerBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarStyle: {
-            display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex'
+            ...tabBarStyle,
+            display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex',
           },
           tabBarLabel: ({ focused }) => (
             <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
@@ -64,6 +66,7 @@ const CustomerBottomBar = props => {
             <Image
               source={Images.Home}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              resizeMode={'contain'}
             />
           ),
           header: () => null,
@@ -78,7 +81,7 @@ const CustomerBottomBar = props => {
           ),
           tabBarIcon: ({ focused }) => (
             <View>
-              {cartItems.length ? <View style={{
+              {false && cartItems.length ? <View style={{
                 position: 'absolute',
                 right: -20,
                 top: -8,

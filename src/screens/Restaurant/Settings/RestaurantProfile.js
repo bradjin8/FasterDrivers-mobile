@@ -19,7 +19,7 @@ const RestaurantProfile = () => {
   const [pickImage, setPickImage] = useState(user?.restaurant?.photo)
   const [changeImage, setChangeImage] = useState(null)
   const [restaurantDetails, setRestaurantDetails] = useState({
-    "name": user.name,
+    "restaurant.name": user.restaurant.name,
     "restaurant.phone": user.restaurant.phone,
     "restaurant.street": user.restaurant.street,
     "restaurant.city": user.restaurant.city,
@@ -30,11 +30,11 @@ const RestaurantProfile = () => {
     "restaurant.description": user.restaurant.description,
     "restaurant.type": user.restaurant.type,
   })
-  
+
   const onChangeText = (key, text) => {
     setRestaurantDetails(prevState => ({ ...prevState, [key]: text }));
   }
-  
+
   const onSave = () => {
     let data = new FormData();
     if(changeImage) {
@@ -45,7 +45,7 @@ const RestaurantProfile = () => {
         data: pickImage.data
       });
     }
-    data.append("name", restaurantDetails.name);
+    data.append("restaurant.name", restaurantDetails["restaurant.name"]);
     data.append("restaurant.phone", restaurantDetails["restaurant.phone"]);
     data.append("restaurant.street", restaurantDetails["restaurant.street"]);
     data.append("restaurant.city", restaurantDetails["restaurant.city"]);
@@ -55,7 +55,7 @@ const RestaurantProfile = () => {
     data.append("restaurant.ein_number", restaurantDetails["restaurant.ein_number"]);
     data.append("restaurant.description", restaurantDetails["restaurant.description"]);
     data.append("restaurant.type", restaurantDetails["restaurant.type"]);
-    
+
     dispatch(updateRestaurant(data))
   }
 
@@ -66,7 +66,7 @@ const RestaurantProfile = () => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-        
+
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
@@ -79,14 +79,14 @@ const RestaurantProfile = () => {
             }
           </Pressable>
         </View>
-        
+
         <View>
           <Text variant="text" color="black" >
             Restaurant Name
           </Text>
           <CustomTextInput
-            value={restaurantDetails["name"]}
-            onChangeText={(text) => onChangeText("name", text)}
+            value={restaurantDetails["restaurant.name"]}
+            onChangeText={(text) => onChangeText("restaurant.name", text)}
           />
           <Text variant="text" color="black" >
             Street
@@ -102,7 +102,7 @@ const RestaurantProfile = () => {
             value={restaurantDetails["restaurant.city"]}
             onChangeText={(text) => onChangeText("restaurant.city", text)}
           />
-          
+
           <View style={styles.stateView}>
             <View style={{width: '47%'}}>
               <Text variant="text" color="black" >
@@ -123,7 +123,7 @@ const RestaurantProfile = () => {
               />
             </View>
           </View>
-          
+
           <Text variant="text" color="black" >
             Website
           </Text>

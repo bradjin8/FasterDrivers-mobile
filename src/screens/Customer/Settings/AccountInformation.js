@@ -1,14 +1,14 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, View, Image, TouchableHighlight, Platform, Pressable } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components";
+import React, {useRef, useState} from "react";
+import {StyleSheet, View, Image, TouchableHighlight, Platform, Pressable} from "react-native";
+import {color, scale, scaleVertical} from "utils";
+import {Images} from "src/theme"
+import {Button, CustomTextInput, Text} from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { updateRestaurant } from "../../../screenRedux/loginRedux";
-import { useDispatch, useSelector } from "react-redux";
-import { pickFromCamera, pickFromGallery } from "utils/Camera";
+import {useDispatch, useSelector} from "react-redux";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
 import ActionSheet from "react-native-actionsheet";
+import {updateRestaurant} from "../../../screenRedux/loginRedux";
 
 const AccountInformation = () => {
   const actionSheet = useRef(null);
@@ -17,26 +17,26 @@ const AccountInformation = () => {
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
   const [changeImage, setChangeImage] = useState(null)
-  const { name, customer: { phone, addresses, photo } } = user
+  const {name, customer: {phone, addresses, photo}} = user
   const [pickImage, setPickImage] = useState(photo)
 
   const [customerDetails, setCustomerDetails] = useState({
-    "name": name,
-    "customer.phone": phone,
-    "customer.addresses[0]street": addresses[0]?.street,
-    "customer.addresses[0]city": addresses[0]?.city,
-    "customer.addresses[0]state": addresses[0]?.state,
-    "customer.addresses[0]zip_code": addresses[0]?.zip_code,
+    "name": name || "",
+    "customer.phone": phone || "",
+    "customer.addresses[0]street": addresses[0]?.street || "",
+    "customer.addresses[0]city": addresses[0]?.city || "",
+    "customer.addresses[0]state": addresses[0]?.state || "",
+    "customer.addresses[0]zip_code": addresses[0]?.zip_code || "",
   })
 
   const onChangeText = (key, text) => {
-    setCustomerDetails(prevState => ({ ...prevState, [key]: text }));
+    setCustomerDetails(prevState => ({...prevState, [key]: text}));
   }
 
   const onSave = () => {
     // console.log('image', pickImage)
     let data = new FormData();
-    if(changeImage) {
+    if (changeImage) {
       data.append('customer.photo', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
@@ -50,7 +50,6 @@ const AccountInformation = () => {
     data.append("customer.addresses[0]city", customerDetails["customer.addresses[0]city"]);
     data.append("customer.addresses[0]state", customerDetails["customer.addresses[0]state"]);
     data.append("customer.addresses[0]zip_code", customerDetails["customer.addresses[0]zip_code"]);
-
     dispatch(updateRestaurant(data))
   }
 
@@ -64,39 +63,39 @@ const AccountInformation = () => {
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
+              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}}/>
             </View>
             {pickImage ?
-             <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />
-                       :
-             <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon} />
+              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture}/>
+              :
+              <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon}/>
             }
           </Pressable>
         </View>
 
         <View>
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             Full Name
           </Text>
           <CustomTextInput
             value={customerDetails["name"]}
             onChangeText={(text) => onChangeText("name", text)}
           />
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             Phone Number
           </Text>
           <CustomTextInput
             value={customerDetails["customer.phone"]}
             onChangeText={(text) => onChangeText("customer.phone", text)}
           />
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             Address
           </Text>
           <CustomTextInput
             value={customerDetails["customer.addresses[0]street"]}
             onChangeText={(text) => onChangeText("customer.addresses[0]street", text)}
           />
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             City
           </Text>
           <CustomTextInput
@@ -105,7 +104,7 @@ const AccountInformation = () => {
           />
           <View style={styles.stateView}>
             <View style={{width: '47%'}}>
-              <Text variant="text" color="black" >
+              <Text variant="text" color="black">
                 State
               </Text>
               <CustomTextInput
@@ -114,7 +113,7 @@ const AccountInformation = () => {
               />
             </View>
             <View style={{width: '47%'}}>
-              <Text variant="text" color="black" >
+              <Text variant="text" color="black">
                 Zip Code
               </Text>
               <CustomTextInput
@@ -125,7 +124,7 @@ const AccountInformation = () => {
           </View>
         </View>
         <View style={{marginTop: scaleVertical(50)}}>
-          <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()}  mt={30} fontWeight="700" />
+          <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()} mt={30} fontWeight="700"/>
         </View>
       </View>
       <ActionSheet
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white
   },
   container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
-  imageContain: {width: '100%', justifyContent: 'center',alignItems: 'center'},
+  imageContain: {width: '100%', justifyContent: 'center', alignItems: 'center'},
   imageButton: {
     width: scaleVertical(80),
     height: scaleVertical(80),

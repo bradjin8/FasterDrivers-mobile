@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {FlatList, Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import {color, scale, scaleVertical} from "utils";
 import {Images} from "src/theme";
 import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
@@ -11,25 +11,28 @@ import {getMyOrders} from "../../../screenRedux/customerRedux";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import moment from 'moment'
 
-const Orders = () => {
+const Orders = ({navigation}) => {
   const dispatch = useDispatch();
   const {loading, orders} = useSelector(state => state.customerReducer);
   const {user, accessToken} = useSelector(state => state.loginReducer);
 
   // console.log('user', user.id, accessToken)
-  // console.log('orders', orders)
+  console.log('orders', orders)
 
-  useEffect(() => {
+  const fetchOrders = () => {
     dispatch(getMyOrders({
       user: user.id,
-      status: [
-      ]
+      status: []
     }))
-  }, []);
-
-  if (loading) {
-    return (<ActivityIndicators/>)
   }
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchOrders()
+    })
+    fetchOrders()
+    return unsubscribe
+  }, []);
 
   const onPressOrder = (item) => {
     navigate('OrderDetails', {order: item})
@@ -56,30 +59,35 @@ const Orders = () => {
     }
   }
 
-  const renderOrders = () => {
-    return <View style={styles.items}>
-      {orders.map((item, index) => {
-        return <View style={styles.orderContainer} key={index}>
-          <Image source={{uri: item.restaurant.photo}} style={styles.resIcon}/>
-          <View style={styles.details}>
-            <View style={styles.detailsRow}>
-              <Text style={styles.title}>{item.restaurant.name}</Text>
-              <Pressable onPress={() => onPressOrder(item)}>
-                <Image source={Images.Next} style={styles.goIcon}/>
-              </Pressable>
-            </View>
-            <View style={styles.detailsRow}>
-              <Text style={styles.info}>{item.dishes.length} dish{item.dishes.length > 1 && 'es'}</Text>
-              <Text style={styles.info}>Total price: $ {item.total}</Text>
-            </View>
-            <View style={styles.detailsRow}>
-              <Text style={styles.info}>Updated at {moment(item.updated_at).format('h:mm A, ddd')}</Text>
-              <Text style={{...styles.info, ...{color: getStatusColor(item.status)}}}>{item.status}</Text>
-            </View>
-          </View>
+  const renderItem = ({item, index}) => {
+    return <View style={styles.orderContainer} key={index}>
+      <Image source={{uri: item.restaurant.photo}} style={styles.resIcon}/>
+      <View style={styles.details}>
+        <View style={styles.detailsRow}>
+          <Text style={styles.title}>{item.restaurant.name}</Text>
+          <Pressable onPress={() => onPressOrder(item)}>
+            <Image source={Images.Next} style={styles.goIcon}/>
+          </Pressable>
         </View>
-      })}
+        <View style={styles.detailsRow}>
+          <Text style={styles.info}>{item.dishes.length} dish{item.dishes.length > 1 && 'es'}</Text>
+          <Text style={styles.info}>Total price: $ {item.total}</Text>
+        </View>
+        <View style={styles.detailsRow}>
+          <Text style={styles.info}>Updated at {moment(item.updated_at).format('h:mm A, ddd')}</Text>
+          <Text style={{...styles.info, ...{color: getStatusColor(item.status)}}}>{item.status}</Text>
+        </View>
+      </View>
     </View>
+  }
+
+  const renderOrders = () => {
+    return <FlatList
+      data={orders}
+      renderItem={renderItem}
+      refreshing={loading}
+      onRefresh={fetchOrders}
+    />
   }
 
   return (
@@ -88,9 +96,7 @@ const Orders = () => {
         title="My Orders"
         showBackIcon={true}
       />
-      <ScrollView style={styles.container}>
-        {renderOrders()}
-      </ScrollView>
+      {renderOrders()}
     </View>
   );
 };

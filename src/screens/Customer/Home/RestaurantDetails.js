@@ -15,10 +15,10 @@ const RestaurantDetails = ({route}) => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.customerReducer.loading);
   const restaurantDetails = useSelector(state => state.customerReducer.restaurantDetails);
-  const selectedRestaurant = route?.params.restaurant;
+  const {restaurant, address} = route?.params;
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-  const {id, photo, name, street, city, zip_code, state, description, type, rating_count} = selectedRestaurant
+  const {id, photo, name, street, city, zip_code, state, description, type, rating_count} = restaurant
   const [rating, setRating] = useState(rating_count)
 
   useEffect(() => {
@@ -200,7 +200,7 @@ const RestaurantDetails = ({route}) => {
             </View> : null}
             <Icon name="shopping-cart" size={20} color={color.white}/>
           </View>
-          <Pressable onPress={() => navigate("Cart")}>
+          <Pressable onPress={() => navigate("Cart", {address: address})}>
             <Text variant="text" color="white" fontSize={14} fontWeight="600">
               View cart
             </Text>

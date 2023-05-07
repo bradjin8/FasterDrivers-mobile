@@ -8,25 +8,26 @@ import {color, scale, scaleVertical} from "utils";
 import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
 import {createNewOrder} from "../../../screenRedux/customerRedux";
 
-const Cart = () => {
+const Cart = ({route}) => {
   const dispatch = useDispatch();
   const {loading, carts, addresses,} = useSelector(state => state.customerReducer);
   const [searchText, setSearchText] = useState(null);
-  const defaultAddress = addresses?.find(o => o.default)
-  const {street, state, zip_code} = defaultAddress || {}
+  const {address} = route.params
+  const [shippingAddress, setShippingAddress] = useState(address || {})
+  const {street, state, zip_code} = address || {}
 
   const createOrder = () => {
-    if (!defaultAddress)
+    if (!shippingAddress)
       return showMessage({
-        message: "Please set default address",
+        message: "Please set shipping address",
         type: "danger",
       });
 
     let data = new FormData();
     data.append('restaurant', carts[0].restaurant);
 
-    if (defaultAddress) {
-      data.append('address', defaultAddress.id);
+    if (shippingAddress) {
+      data.append('address', shippingAddress.id);
     }
     carts.map((item, index) => {
       data.append(`dishes[${index}]dish`, item.id);

@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {Text} from "../../../components/index";
 import BaseScreen from "../../../components/BaseScreen";
+import {ORDER_STATUS} from "../../../consts/orders";
 import {viewMyOrdersRequest} from "../../../screenRedux/restaurantRedux";
 import {Images} from "../../../theme";
 import OrderByCustomer from "../../../components/OrderByCustomer";
@@ -22,18 +23,32 @@ const Home = () => {
   const {name, restaurant} = user
 
   const fetchMyOrders = () => {
+    let status
+    switch (tab) {
+      case 0:
+        status = [ORDER_STATUS.Unpaid, ORDER_STATUS.Pending]
+        break
+      case 1:
+        status = [ORDER_STATUS.Accepted, ORDER_STATUS.InProgress, ORDER_STATUS.InTransit]
+        break
+      case 2:
+        status = [ORDER_STATUS.Delivered, ORDER_STATUS.Rejected]
+        break
+      default:
+        status = []
+    }
     dispatch(viewMyOrdersRequest({
       user: user.id,
-      // status: '',
+      status: status.join(','),
     }))
   }
 
   useEffect(() => {
     fetchMyOrders()
-  }, [])
+  }, [tab])
 
   return (
-    <BaseScreen style={styles.mainWrapper}>
+    <View style={styles.mainWrapper}>
       <View style={styles.header}>
         <View>
           <Text color='item' variant='h5'>{name}</Text>
@@ -45,26 +60,24 @@ const Home = () => {
         </Pressable>
       </View>
       <StatusFilter status={tab} changeStatus={setTab}/>
-      <View style={styles.container}>
-        <FlatList
-          data={myOrders}
-          renderItem={({item, index, separators}) => {
-            return <OrderByCustomer data={item} key={index} status={tab}/>
-          }}
-          ListEmptyComponent={() => {
-            return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Text color='darkGray' fontSize={14}>No orders</Text>
-            </View>
-          }}
-          onRefresh={fetchMyOrders}
-          refreshing={loading}
-          style={{
-            flex: 1,
-            minHeight: heightPercentageToDP(70),
-          }}
-        />
-      </View>
-    </BaseScreen>
+      <FlatList
+        data={myOrders}
+        renderItem={({item, index, separators}) => {
+          return <OrderByCustomer data={item} key={index} status={tab}/>
+        }}
+        ListEmptyComponent={() => {
+          return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text color='darkGray' fontSize={14}>No orders</Text>
+          </View>
+        }}
+        onRefresh={fetchMyOrders}
+        refreshing={loading}
+        style={{
+          backgroundColor: color.lightGray,
+          flex: 1,
+        }}
+      />
+    </View>
   )
 }
 

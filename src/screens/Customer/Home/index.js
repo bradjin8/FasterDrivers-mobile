@@ -26,6 +26,7 @@ const Home = ({navigation}) => {
   const [visible, setVisible] = useState(false);
   const {customer: {photo}, name} = user
   const [position, setPosition] = useState(null);
+  const [address, setAddress] = useState({})
 
   // console.log('addresses', addresses, position)
   useEffect(() => {
@@ -33,6 +34,7 @@ const Home = ({navigation}) => {
       dispatch(getAddressesData())
     });
     dispatch(requestFailed())
+    dispatch(getAddressesData())
     return unsubscribe;
   }, [])
 
@@ -47,7 +49,15 @@ const Home = ({navigation}) => {
   const renderItems = (rest, i) => {
     const {photo, name, description, rating_count,} = rest || {}
     return (
-      <Pressable key={"item-" + i.toString()} style={styles.itemContain} onPress={() => navigate("RestaurantDetails", {restaurant: rest})}>
+      <Pressable key={"item-" + i.toString()} style={styles.itemContain} onPress={() => {
+        if (address.id)
+          navigate("RestaurantDetails", {restaurant: rest, address: address})
+        else
+          showMessage({
+            message: 'Please select an address',
+            type: "danger",
+          })
+      }}>
         <Image source={photo ? {uri: photo} : Images.item} style={styles.itemImage}/>
         <View style={styles.textContain}>
           <Text variant="text" color="item" fontSize={14} fontWeight="400">
@@ -107,23 +117,20 @@ const Home = ({navigation}) => {
     )
   }
   const renderLocation = () => {
-    let defaultAddress = addresses?.find(o => o.default);
-    if (defaultAddress) {
-      const {street, zip_code} = defaultAddress || {}
-      return `${street} - ${zip_code}`
+    if (address.id) {
+      const {street, city, zip_code} = address
+      return `${street}, ${city} - ${zip_code}`
     }
-    return 'Chosen Address'
+    return 'Choose an Address'
   }
 
   const hideMenu = () => setVisible(false);
 
   const showMenu = () => setVisible(true);
 
-  const setDefaultAddress = (id) => {
+  const setDefaultAddress = (item) => {
     hideMenu();
-    let data = new FormData();
-    data.append('default', true);
-    dispatch(updateAddresses(id, data))
+    setAddress(item)
   }
 
   const pickCurrentLocation = () => {
@@ -159,7 +166,7 @@ const Home = ({navigation}) => {
               visible={visible}
               anchor={
                 <View style={styles.locationContain}>
-                  <Text variant="text" color="gray" fontSize={14} fontWeight="400">
+                  <Text variant="text" color="gray" fontSize={10} fontWeight="400">
                     {renderLocation()}
                   </Text>
                   <Image source={Images.downArrow} style={styles.downIcon}/>
@@ -180,7 +187,7 @@ const Home = ({navigation}) => {
                   <MenuItem
                     style={{justifyContent: 'center', height: 35}}
                     key={"menu-" + index.toString()}
-                    onPress={() => setDefaultAddress(address.id)}>
+                    onPress={() => setDefaultAddress(address)}>
                     <Text variant="text" color="gray" fontSize={12} fontWeight="400">
                       {address.street}, {address.state} - {address.zip_code}
                     </Text>

@@ -254,9 +254,10 @@ function* restaurantUpdateAction(data) {
     }
   } catch (e) {
     const { response } = e
+    console.log("update-profile", response.data)
     yield put(requestFailed())
     showMessage({
-      message: response?.data?.detail[0] ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
