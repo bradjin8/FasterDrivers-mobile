@@ -1,6 +1,7 @@
 import OrderStatusIndicator from "components/OrderStatusIndicator";
 import React, {useEffect, useState} from "react";
-import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {Image, Pressable, ScrollView, StyleSheet, TextInput, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
 import {color, scale, scaleVertical, screenWidth} from "utils";
 import {Images} from "src/theme";
 import {ActivityIndicators, Button, Text} from "../../../components/index";
@@ -11,6 +12,7 @@ import {getDishById, getRestaurantDetails, setUserCartItems} from "../../../scre
 import {goBack, navigate} from "navigation/NavigationService";
 import StarRating from "react-native-star-rating-new";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import {Linking} from "react-native";
 
 const OrderDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -18,6 +20,8 @@ const OrderDetails = ({route}) => {
   const order = route?.params?.order;
   const {id, photo, name, street, city, zip_code, state, description, type, rating, rating_count} = order.restaurant
   const [orderedDishes, setOrderedDishes] = useState([])
+  const [rate, setRate] = useState(0)
+  const [review, setReview] = useState('')
 
   const fetchDishes = () => {
     if (order?.dishes) {
@@ -37,11 +41,11 @@ const OrderDetails = ({route}) => {
     return (<ActivityIndicators/>)
   }
 
-  console.log('pay')
+  console.log('order', order)
 
   return (
     <>
-      <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1, flex: 1, marginBottom: -65}}>
+      <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 65}}>
         <View>
           <Pressable onPress={() => goBack()} style={styles.backView}>
             <Icon name="arrow-left" size={20} color={color.black}/>
@@ -120,15 +124,15 @@ const OrderDetails = ({route}) => {
           <View style={styles.priceContainer}>
             <View style={styles.priceRow}>
               <Text color={'item'} fontSize={16} fontWeight={'600'}>Price</Text>
-              <Text color={'item'} fontSize={16} >${order?.sub_total}</Text>
+              <Text color={'item'} fontSize={16}>${order?.sub_total}</Text>
             </View>
             <View style={styles.priceRow}>
               <Text color={'item'} fontSize={16} fontWeight={'600'}>Fee</Text>
-              <Text color={'item'} fontSize={16} >${order?.fees}</Text>
+              <Text color={'item'} fontSize={16}>${order?.fees}</Text>
             </View>
             <View style={styles.priceRow}>
               <Text color={'item'} fontSize={16} fontWeight={'600'}>Price</Text>
-              <Text color={'item'} fontSize={16} >${order?.total}</Text>
+              <Text color={'item'} fontSize={16}>${order?.total}</Text>
             </View>
           </View>
 
@@ -139,6 +143,61 @@ const OrderDetails = ({route}) => {
               }}
               text="Pay Now"
               style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10)}}
+            />
+          </View>}
+
+          {order?.driver && <View style={styles.driverContainer}>
+            <View style={styles.flex}>
+              <Image source={{uri: order?.driver?.photo || "https://fancy-cherry-36842.s3.amazonaws.com/media/restaurant/images/beafbe99-6412-41dd-b948-c8fb03be32c4.jpg"}} style={styles.avatar} resizeMode={'cover'}/>
+              <View style={styles.column}>
+                <Text color={'itemPrimary'} fontSize={10}>Courier</Text>
+                <Text variant={'strong'}>Wade Warren</Text>
+              </View>
+            </View>
+            <Pressable style={styles.phone} onPress={() => {
+              const url = `tel:${order?.driver?.phone}`
+              Linking.openURL(url)
+                .then((res) => {
+                  if (!res)
+                    showMessage({
+                      message: 'Driver does not have a phone number',
+                      type: 'danger',
+                    })
+                })
+            }}>
+              <Image source={Images.Phone} resizeMode={'contain'}/>
+            </Pressable>
+          </View>}
+          {order?.driver !== null && <Button
+            onPress={() => {
+              navigate('Map', {driver: order?.driver})
+            }}
+            text="Show on Map"
+            textColor={'item'}
+            noBG
+            style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10), borderColor: color.item, borderWidth: 1}}
+          />}
+          {order?.status === ORDER_STATUS.Delivered && <View style={styles.reviewContainer}>
+            <View style={styles.rateContainer}>
+              <Text variant={'strong'}>Tap to Rate</Text>
+              <StarRating
+                rating={rate}
+                starSize={20}
+                fullStarColor={color.primary}
+                containerStyle={styles.rateStar}
+                halfStarEnabled
+                selectedStar={(rating) => setRate(rating)}
+              />
+            </View>
+            <Text variant='strong'>Review the Restaurant:</Text>
+            <TextInput
+              style={styles.reviewText}
+              placeholder={'Write your review here'}
+              placeholderTextColor={color.darkGray}
+              multiline
+              numberOfLines={6}
+              value={review}
+              onChangeText={(text) => setReview(text)}
             />
           </View>}
         </View>
@@ -203,6 +262,56 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', width: wp(100),
     paddingHorizontal: wp(3),
     paddingVertical: scaleVertical(5),
+  },
+  driverContainer: {
+    width: wp(100),
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(1),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: wp(15),
+    height: wp(15),
+    borderRadius: wp(10),
+  },
+  column: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginLeft: wp(3),
+    // flex: 1,
+  },
+  phone: {
+    width: wp(13),
+    height: wp(13),
+    borderRadius: wp(6.5),
+    backgroundColor: color.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reviewContainer: {
+    marginHorizontal: scale(25),
+    marginVertical: scale(10),
+  },
+  rateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: hp(1),
+  },
+  rateStar: {
+    marginLeft: wp(2),
+    width: wp(30)
+  },
+  reviewText: {
+    marginTop: hp(1),
+    borderRadius: scale(15),
+    borderWidth: 1,
+    borderColor: color.black,
+    padding: scale(20),
+    lineHeight: scale(20),
+    minHeight: hp(15)
   }
 });
 

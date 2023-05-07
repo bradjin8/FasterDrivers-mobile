@@ -28,9 +28,11 @@ import ticks from "src/assets/images/ticks.png"
 import OrderAccepted from "src/assets/images/order_accepted.png"
 import OrderInProgress from "src/assets/images/order_inprogress.png"
 import OrderDelivered from "src/assets/images/order_delivered.png"
+import OrderRejected from "src/assets/images/order_rejected.png"
 import Down from "src/assets/images/down.png"
 import ThreeDots from "src/assets/images/three_dots.png"
 import Pencil from "src/assets/images/pencil.png"
+import Phone from "src/assets/images/phone.png"
 
 export default {
   HomeOn,
@@ -63,7 +65,9 @@ export default {
   OrderAccepted,
   OrderInProgress,
   OrderDelivered,
+  OrderRejected,
   Down,
   ThreeDots,
   Pencil,
+  Phone,
 }

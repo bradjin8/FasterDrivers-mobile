@@ -1,30 +1,28 @@
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect} from "react";
 import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
-import {showMessage} from "react-native-flash-message";
 import FontAwesomeIcons from 'react-native-vector-icons/dist/FontAwesome';
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {Button, Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import {createNewOrder, createNewOrderAPI, getPaymentsRequest, payOrderAPI, payOrderRequest} from "../../../screenRedux/customerRedux";
+import {getPaymentsRequest, payOrderRequest} from "../../../screenRedux/customerRedux";
 import {Images} from "../../../theme";
 
 const Payment = ({route}) => {
   const dispatch = useDispatch()
-  const {addresses, payments, loading} = useSelector(state => state.customerReducer);
-  const defaultAddress = addresses?.find(o => o.default)
+  const {payments, loading} = useSelector(state => state.customerReducer);
   const [paymentId, setPaymentId] = React.useState(null)
 
   const order = route?.params?.order
 
   // console.log('order', order)
 
-  const pay = async (orderId) => {
-    dispatch(payOrderRequest({
-      payment_method: paymentId,
-      order: order.id
-    }))
+  const pay = async () => {
+    let data = new FormData()
+    data.append('payment_method', paymentId)
+    data.append('order', order.id)
+    dispatch(payOrderRequest(data))
   }
 
   const renderFinalTotal = () => {

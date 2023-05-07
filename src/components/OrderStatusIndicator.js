@@ -1,9 +1,10 @@
 import React from "react";
 import {Text} from "components/text";
 import {View, StyleSheet, Image} from "react-native";
-import {colors} from "react-native-elements";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
+import {ORDER_STATUS} from "../consts/orders";
 import {Images} from "../theme";
+import {color} from "../utils/color";
 
 const OrderStatusIndicator = ({status}) => {
   let idx = -1
@@ -22,17 +23,34 @@ const OrderStatusIndicator = ({status}) => {
     default:
       idx = -1
   }
+
+  if (status === ORDER_STATUS.Rejected) {
+    return (<View style={styles.container}>
+      <View style={styles.item}>
+        <View style={{...styles.iconContainer, ...{
+            backgroundColor: color.error,
+            borderColor: color.black,
+          }}}>
+          <Image source={Images.OrderRejected} style={styles.icon} />
+        </View>
+        <Text variant="strong" color="item" fontSize={12} fontWeight="400" style={{ marginTop: hp(1) }}>
+          Order  Declined
+        </Text>
+      </View>
+    </View>)
+  }
+
   return <View style={styles.container}>
     {ORDER_INDICATORS.map((item, index) => {
         return (
           <View key={index} style={styles.item}>
             <View style={{...styles.iconContainer, ...{
-              backgroundColor: idx === index ? colors.primary : colors.white,
-              borderColor: idx === index ? colors.primary : colors.black,
+              backgroundColor: idx === index ? color.primary : color.white,
+              borderColor: idx === index ? color.primary : color.black,
             }}}>
               <Image source={item.icon} style={styles.icon} />
             </View>
-            <Text variant="text" color="item" fontSize={12} fontWeight="400" style={{ marginTop: hp(1) }}>
+            <Text variant="strong" color="item" fontSize={12} fontWeight="400" style={{ marginTop: hp(1) }}>
               {item.title}
             </Text>
           </View>
@@ -76,7 +94,7 @@ const styles = StyleSheet.create({
     right: wp(20),
     top: hp(1),
     height: 1,
-    backgroundColor: colors.grey4,
+    backgroundColor: color.lightGray,
     alignSelf: 'center',
     marginTop: hp(2)
   }

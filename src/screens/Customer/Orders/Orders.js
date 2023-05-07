@@ -16,8 +16,8 @@ const Orders = () => {
   const {loading, orders} = useSelector(state => state.customerReducer);
   const {user, accessToken} = useSelector(state => state.loginReducer);
 
-  console.log('user', user.id, accessToken)
-  console.log('orders', orders)
+  // console.log('user', user.id, accessToken)
+  // console.log('orders', orders)
 
   useEffect(() => {
     dispatch(getMyOrders({

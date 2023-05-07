@@ -8,7 +8,7 @@ import BaseScreen from "../../../components/BaseScreen";
 import {Button, CustomTextInput, Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
 import {CardField, useStripe} from "@stripe/stripe-react-native";
-import {addPaymentRequest} from "../../../screenRedux/customerRedux";
+import {addPaymentRequest, getAddressesData} from "../../../screenRedux/customerRedux";
 
 const AddCard = ({}) => {
   const dispatch = useDispatch()
@@ -66,6 +66,10 @@ const AddCard = ({}) => {
     })
   }
 
+  useEffect(() => {
+    dispatch(getAddressesData())
+  }, [])
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -73,7 +77,6 @@ const AddCard = ({}) => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-
         <View style={{width: '100%',}}>
           <Text variant="text" color="black" style={styles.inputTitle}>
             CARD HOLDER NAME

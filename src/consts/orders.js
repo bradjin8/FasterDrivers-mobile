@@ -25,4 +25,3 @@ export const ORDER_PENDING_STATUS = [
   ORDER_STATUS.DriverAssigned,
   ORDER_STATUS.InTransit,
 ]
-
