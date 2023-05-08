@@ -33,6 +33,8 @@ const OrderByCustomer = ({order, tab}) => {
     const ordered = new Date(order.created_at).getTime()
     const now = Date.now()
 
+    if (isNaN(ordered)) return '-'
+
     const diff = (now - ordered) / 1000
 
     if (diff < 60) {
@@ -109,7 +111,7 @@ const OrderByCustomer = ({order, tab}) => {
             <Text color={ORDER_STATUS_COLOR[order.status]}>{order.status}</Text>
           </View>
           <View style={styles.row}>
-            <Text color={'item'}>{order.dishes.length} Order</Text>
+            <Text color={'item'}>{order.dishes.length} dish{order.dishes.length > 1 ? 'es' : ''}</Text>
             <Text color='darkGray' fontSize={12}>{getOrderTime()}</Text>
           </View>
         </View>

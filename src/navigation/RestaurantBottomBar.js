@@ -3,6 +3,7 @@ import { Image } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
 import ViewDish from "screens/Restaurant/Menu/ViewDish";
+import Wallet from "screens/Restaurant/Settings/Wallet";
 import { Text } from "../components/index";
 import { color, scaleVertical, scale } from "utils";
 
@@ -124,6 +125,7 @@ const SettingTab = () => {
         <settingStack.Screen name="RestaurantProfile" component={RestaurantProfile} />
         <settingStack.Screen name="ChangePassword" component={ChangePassword} />
         <settingStack.Screen name="AccountInformation" component={AccountInformation} />
+        <settingStack.Screen name="Wallet" component={Wallet} />
         <settingStack.Screen name="OrderAcceptance" component={OrderAcceptance} />
         <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <settingStack.Screen name="TermCondition" component={TermCondition} />

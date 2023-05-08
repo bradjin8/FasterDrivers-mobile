@@ -313,6 +313,28 @@ function* rejectOrderAction(data) {
   }
 }
 
+export const checkStripeStatus = () => {
+  const URL = `${appConfig.backendServerURL}/payments/check/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+export const setUpStripeAccount = () => {
+  const URL = `${appConfig.backendServerURL}/payments/account/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 export default all([
   takeLatest(ADD_NEW_DISH_REQUEST_STARTED, addNewDishAction),
   takeLatest(GET_DISHES_REQUEST_STARTED, getDishesAction),

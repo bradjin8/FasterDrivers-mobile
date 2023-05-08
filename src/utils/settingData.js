@@ -42,7 +42,8 @@ export const restaurantSettingData = [
   },
   {
     title: "My Wallet",
-    icon: Images.OrderAcceptance
+    icon: Images.OrderAcceptance,
+    key: "Wallet"
   },
   {
     title: "Delete Account",
