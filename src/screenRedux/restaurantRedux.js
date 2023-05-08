@@ -17,11 +17,17 @@ const ADD_NEW_DISH_REQUEST_COMPLETED = "ADD_NEW_DISH_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 const VIEW_MY_ORDERS_REQUEST_STARTED = "VIEW_MY_ORDERS_REQUEST_STARTED"
 const VIEW_MY_ORDERS_REQUEST_COMPLETED = "VIEW_MY_ORDERS_REQUEST_COMPLETED"
+const ACCEPT_ORDER_REQUEST_STARTED = "ACCEPT_ORDER_REQUEST_STARTED"
+const ACCEPT_ORDER_REQUEST_COMPLETED = "ACCEPT_ORDER_REQUEST_COMPLETED"
+const REJECT_ORDER_REQUEST_STARTED = "REJECT_ORDER_REQUEST_STARTED"
+const REJECT_ORDER_REQUEST_COMPLETED = "REJECT_ORDER_REQUEST_COMPLETED"
+
 
 const initialState = {
   loading: false,
   dishes: [],
   myOrders: [],
+  needToRefreshOrders: false,
 }
 
 //Actions
@@ -48,7 +54,6 @@ export const setMyOrdersData = (data) => ({
   type: VIEW_MY_ORDERS_REQUEST_COMPLETED,
   payload: data,
 })
-
 
 export const requestFailed = () => ({
   type: REQUEST_FAILED,
@@ -88,6 +93,29 @@ export const restaurantReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         myOrders: action.payload,
+        needToRefreshOrders: false,
+      }
+    case ACCEPT_ORDER_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case ACCEPT_ORDER_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        needToRefreshOrders: true,
+      }
+    case REJECT_ORDER_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case REJECT_ORDER_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        needToRefreshOrders: true,
       }
     case REQUEST_FAILED:
       return {
@@ -134,7 +162,8 @@ function addNewDishAPI(data) {
 }
 
 function viewMyOrdersAPI(data) {
-  const URL = `${appConfig.backendServerURL}/orders/?user=${data?.user}&status=${data?.status || ''}`
+  // console.log('view-my-orders-api', data)
+  const URL = `${appConfig.backendServerURL}/orders/?restaurant=${data?.restaurant}&status=${data?.status || ''}`
   const options = {
     headers: {
       Accept: "application/json",
@@ -184,8 +213,95 @@ function* addNewDishAction(data) {
 function* viewMyOrdersAction(data) {
   try {
     const resp = yield call(viewMyOrdersAPI, data.payload)
+
     if (resp?.data) {
       yield put(setMyOrdersData(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+export const acceptOrderRequest = (data) => ({
+  type: ACCEPT_ORDER_REQUEST_STARTED,
+  payload: data,
+})
+
+export const acceptOrderRequestFinished = (data) => ({
+  type: ACCEPT_ORDER_REQUEST_COMPLETED,
+  payload: data,
+})
+
+export const acceptOrderAPI = (data) => {
+  const URL = `${appConfig.backendServerURL}/orders/accept/?order=${data}`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+function* acceptOrderAction(data) {
+  try {
+    console.log('accept-order-action', data)
+    const resp = yield call(acceptOrderAPI, data?.payload)
+    if (resp?.data) {
+      yield put(acceptOrderRequestFinished(resp.data))
+      showMessage({
+        message: "Order Accepted Successfully",
+        type: "success"
+      })
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    console.log('accept-order-action-error', response)
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+
+// Reject order
+export const rejectOrderRequest = (data) => ({
+  type: REJECT_ORDER_REQUEST_STARTED,
+  payload: data,
+})
+
+export const rejectOrderRequestFinished = (data) => ({
+  type: REJECT_ORDER_REQUEST_COMPLETED,
+  payload: data,
+})
+
+export const rejectOrderAPI = (data) => {
+  const URL = `${appConfig.backendServerURL}/orders/reject/?order=${data}`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+function* rejectOrderAction(data) {
+  try {
+    const resp = yield call(rejectOrderAPI, data?.payload)
+    if (resp?.data) {
+      yield put(rejectOrderRequestFinished(resp.data))
+      showMessage({
+        message: "Order Rejected Successfully",
+        type: "success"
+      })
     }
   } catch (e) {
     const {response} = e
@@ -201,4 +317,6 @@ export default all([
   takeLatest(ADD_NEW_DISH_REQUEST_STARTED, addNewDishAction),
   takeLatest(GET_DISHES_REQUEST_STARTED, getDishesAction),
   takeLatest(VIEW_MY_ORDERS_REQUEST_STARTED, viewMyOrdersAction),
+  takeLatest(ACCEPT_ORDER_REQUEST_STARTED, acceptOrderAction),
+  takeLatest(REJECT_ORDER_REQUEST_STARTED, rejectOrderAction),
 ])

@@ -14,6 +14,7 @@ export const palette = {
   priceText: '#2F2F37',
   slightGray: '#F3F3F3',
   dotColor: '#616A7D',
+  orange: 'orange',
   warn: '#FF5023',
   info: '#17A400',
   success: '#00B300',

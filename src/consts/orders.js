@@ -10,13 +10,13 @@ export const ORDER_STATUS = {
 }
 
 export const ORDER_STATUS_COLOR = {
-  Unpaid: "red",
-  Pending: "orange",
-  Accepted: "blue",
-  Rejected: "red",
-  InProgress: "blue",
-  InTransit: "blue",
-  Delivered: "green",
+  Unpaid: 'warn',
+  Pending: 'orange',
+  Accepted: 'primary',
+  Rejected: 'error',
+  InProgress: 'primary',
+  InTransit: 'primary',
+  Delivered: 'success',
 }
 
 export const ORDER_PENDING_STATUS = [

@@ -17,7 +17,7 @@ const Orders = ({navigation}) => {
   const {user, accessToken} = useSelector(state => state.loginReducer);
 
   // console.log('user', user.id, accessToken)
-  console.log('orders', orders)
+  // console.log('orders', orders)
 
   const fetchOrders = () => {
     dispatch(getMyOrders({
@@ -94,7 +94,7 @@ const Orders = ({navigation}) => {
     <View style={styles.mainWrapper}>
       <SimpleHeader
         title="My Orders"
-        showBackIcon={true}
+        showBackIcon={false}
       />
       {renderOrders()}
     </View>

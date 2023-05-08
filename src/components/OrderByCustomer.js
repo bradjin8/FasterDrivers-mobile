@@ -1,18 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Pressable, ActivityIndicator} from 'react-native';
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {truncateString} from "utils/utils";
 import {Text} from "../components/index";
-import {getDishAPI} from "../screenRedux/restaurantRedux";
+import {ORDER_STATUS, ORDER_STATUS_COLOR} from "../consts/orders";
+import {acceptOrderRequest, getDishAPI, rejectOrderRequest} from "../screenRedux/restaurantRedux";
 import {Images} from "../theme";
 
 
-const OrderByCustomer = ({data, status}) => {
+const OrderByCustomer = ({order, tab}) => {
   const [expanded, setExpanded] = useState(false)
+  const {loading} = useSelector(state => state.restaurantReducer)
+  const dispatch = useDispatch()
+
 
   const renderOrderStatus = () => {
-    switch (status) {
+    switch (tab) {
       case 0:
         return <Text color='primary'>New</Text>
       case 1:
@@ -25,7 +30,7 @@ const OrderByCustomer = ({data, status}) => {
   }
 
   const getOrderTime = () => {
-    const ordered = new Date(data.created_at).getTime()
+    const ordered = new Date(order.created_at).getTime()
     const now = Date.now()
 
     const diff = (now - ordered) / 1000
@@ -53,23 +58,31 @@ const OrderByCustomer = ({data, status}) => {
     }
   }
 
-  const getDishDetail = (id) => {
+  const acceptOrder = () => {
+    if (!loading) {
+      dispatch(acceptOrderRequest(order.id))
+    }
+  }
 
+  const rejectOrder = () => {
+    if (!loading) {
+      dispatch(rejectOrderRequest(order.id))
+    }
   }
 
   const renderAction = () => {
-    if (status === 0) {
+    if (order.status === ORDER_STATUS.Pending) {
       return (
         <View style={styles.rowEvenly}>
-          <Pressable style={styles.decline}>
+          <Pressable style={styles.decline} onPress={rejectOrder}>
             <Text color='white' variant='strong'>Decline</Text>
           </Pressable>
-          <Pressable style={styles.accept}>
+          <Pressable style={styles.accept} onPress={acceptOrder}>
             <Text color='white' variant='strong'>Accept</Text>
           </Pressable>
         </View>
       )
-    } else if (status === 1) {
+    } else if (tab === 1) {
       return (
         <View style={styles.rowCenter}>
           <Pressable style={styles.assign}>
@@ -82,19 +95,21 @@ const OrderByCustomer = ({data, status}) => {
     return <View></View>
   }
 
+  // console.log('order-detail', data)
   return (
     <View style={styles.container}>
       <View style={styles.item}>
         <View style={styles.avatar}>
-          <Image source={{uri: data.user.customer?.photo}} style={styles.avatar}/>
+          <Image source={{uri: order.user.customer?.photo}} style={styles.avatar}/>
         </View>
         <View style={styles.itemBody}>
           <View style={styles.row}>
-            <Text color='item' variant='h5' fontSize={14}>{data.user.first_name} {data.user.last_name}</Text>
-            {renderOrderStatus()}
+            <Text color='item' variant='h5' fontSize={14}>{order.user.name || `${order.user.first_name} ${order.user.last_name}`}</Text>
+            {/*{renderOrderStatus()}*/}
+            <Text color={ORDER_STATUS_COLOR[order.status]}>{order.status}</Text>
           </View>
           <View style={styles.row}>
-            <Text color={'item'}>{data.dishes.length} Order</Text>
+            <Text color={'item'}>{order.dishes.length} Order</Text>
             <Text color='darkGray' fontSize={12}>{getOrderTime()}</Text>
           </View>
         </View>
@@ -103,23 +118,23 @@ const OrderByCustomer = ({data, status}) => {
         </Pressable>
       </View>
       {expanded === true && <View style={styles.detailContainer}>
-        {data.dishes.map((item, index) => <DishDetail key={index} data={item}/>)}
+        {order.dishes.map((item, index) => <DishDetail key={index} data={item}/>)}
         <View style={styles.priceContainer}>
           <View style={styles.row}>
             <Text color={'item'} fontWeight={'400'} variant={'h5'} fontSize={12}>Price</Text>
-            <Text color='item' variant='h5' fontSize={14}>${data.sub_total}</Text>
+            <Text color='item' variant='h5' fontSize={14}>${order.sub_total}</Text>
           </View>
           <View style={styles.row}>
             <Text color={'item'} fontWeight={'400'} variant={'h5'} fontSize={12}>Fee</Text>
-            <Text color='item' variant='h5' fontSize={14}>${data.fees}</Text>
+            <Text color='item' variant='h5' fontSize={14}>${order.fees}</Text>
           </View>
           <View style={styles.row}>
             <Text color={'item'} fontWeight={'400'} variant={'h5'} fontSize={12}>Tip</Text>
-            <Text color='item' variant='h5' fontSize={14}>${data.tip}</Text>
+            <Text color='item' variant='h5' fontSize={14}>${order.tip}</Text>
           </View>
           <View style={styles.row}>
             <Text color={'item'} fontWeight={'400'} variant={'h5'} fontSize={12}>Total Price</Text>
-            <Text color='item' variant='h5' fontSize={14}>${data.total}</Text>
+            <Text color='item' variant='h5' fontSize={14}>${order.total}</Text>
           </View>
         </View>
         {renderAction()}

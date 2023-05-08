@@ -28,13 +28,18 @@ const Home = ({navigation}) => {
   const [position, setPosition] = useState(null);
   const [address, setAddress] = useState({})
 
+  const fetchData = () => {
+    dispatch(getAddressesData())
+    dispatch(getRestaurantsData(searchText ? searchText : null));
+
+  }
   // console.log('addresses', addresses, position)
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(getAddressesData())
+      fetchData()
     });
     dispatch(requestFailed())
-    dispatch(getAddressesData())
+    fetchData()
     return unsubscribe;
   }, [])
 
@@ -45,6 +50,32 @@ const Home = ({navigation}) => {
   const onBlurSearch = () => {
 
   };
+
+
+  const hideMenu = () => setVisible(false);
+
+  const showMenu = () => setVisible(true);
+
+  const setDefaultAddress = (item) => {
+    hideMenu();
+    setAddress(item)
+  }
+
+  const pickCurrentLocation = () => {
+    hideMenu()
+    getCurrentLocation()
+      .then((loc) => {
+        setPosition(loc)
+      })
+      .catch((err) => {
+        console.log('err', err)
+        showMessage({
+          message: err.message,
+          type: "danger",
+        })
+      })
+  }
+
 
   const renderItems = (rest, i) => {
     const {photo, name, description, rating_count,} = rest || {}
@@ -122,30 +153,6 @@ const Home = ({navigation}) => {
       return `${street}, ${city} - ${zip_code}`
     }
     return 'Choose an Address'
-  }
-
-  const hideMenu = () => setVisible(false);
-
-  const showMenu = () => setVisible(true);
-
-  const setDefaultAddress = (item) => {
-    hideMenu();
-    setAddress(item)
-  }
-
-  const pickCurrentLocation = () => {
-    hideMenu()
-    getCurrentLocation()
-      .then((loc) => {
-        setPosition(loc)
-      })
-      .catch((err) => {
-        console.log('err', err)
-        showMessage({
-          message: err.message,
-          type: "danger",
-        })
-      })
   }
 
   return (

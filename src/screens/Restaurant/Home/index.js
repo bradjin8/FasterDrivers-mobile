@@ -15,10 +15,10 @@ import OrderByCustomer from "../../../components/OrderByCustomer";
 const Home = () => {
   const dispatch = useDispatch()
   const {user, accessToken} = useSelector((state) => state.loginReducer)
-  const {myOrders, loading} = useSelector((state) => state.restaurantReducer)
+  const {myOrders, loading, needToRefreshOrders} = useSelector((state) => state.restaurantReducer)
   const [tab, setTab] = React.useState(0)
 
-  console.log('myOrders', myOrders)
+  // console.log('myOrders', myOrders)
 
   const {name, restaurant} = user
 
@@ -38,14 +38,14 @@ const Home = () => {
         status = []
     }
     dispatch(viewMyOrdersRequest({
-      user: user.id,
+      restaurant: restaurant.id,
       status: status.join(','),
     }))
   }
 
   useEffect(() => {
     fetchMyOrders()
-  }, [tab])
+  }, [tab, needToRefreshOrders])
 
   return (
     <View style={styles.mainWrapper}>
@@ -63,7 +63,7 @@ const Home = () => {
       <FlatList
         data={myOrders}
         renderItem={({item, index, separators}) => {
-          return <OrderByCustomer data={item} key={index} status={tab}/>
+          return <OrderByCustomer order={item} key={index} tab={tab} setTab={setTab}/>
         }}
         ListEmptyComponent={() => {
           return <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
