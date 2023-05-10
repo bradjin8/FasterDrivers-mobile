@@ -589,7 +589,7 @@ function* addPaymentAction(data) {
     goBack();
   } catch (e) {
     const {response} = e
-    console.log('add-payment-api-res', response)
+    console.log('add-payment-api-res', response.data)
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",

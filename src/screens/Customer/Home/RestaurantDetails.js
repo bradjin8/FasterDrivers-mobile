@@ -33,15 +33,21 @@ const RestaurantDetails = ({route}) => {
     setRating(rate)
   }
 
+  console.log('cartItems', cartItems)
   const onAdd = (product) => {
+    // check if user selected item from other restaurant
+    let _cartItems = _.cloneDeep(cartItems);
+    if (cartItems.length && cartItems[0].restaurant !== product.restaurant) {
+      _cartItems = []
+    }
+
     const index = cartItems.findIndex((item) => item.id === product.id);
     if (index > -1) {
-      let _cartItems = _.cloneDeep(cartItems);
       _cartItems[index].quantity += 1;
       dispatch(setUserCartItems(_cartItems))
     } else {
       dispatch(setUserCartItems([
-        ...cartItems,
+        ..._cartItems,
         {...product, quantity: 1},
       ]))
     }

@@ -30,7 +30,7 @@ const OrderByCustomer = ({order, tab}) => {
   }
 
   const getOrderTime = () => {
-    const ordered = new Date(order.created_at).getTime()
+    const ordered = new Date(order.updated_at).getTime()
     const now = Date.now()
 
     if (isNaN(ordered)) return '-'

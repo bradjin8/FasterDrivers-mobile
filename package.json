@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "cd android && ./gradlew assembleRelease && cd ..",
+    "build-release": "cd android && ./gradlew assembleRelease && cd ..",
+    "build-debug": "cd android && ./gradlew assembleDebug && cd ..",
+    "bundle-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "clean": "cd android && ./gradlew clean",
     "android": "react-native run-android ",
-    "bundle-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",

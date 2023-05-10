@@ -16,17 +16,17 @@ const Wallet = ({navigation}) => {
     checkStripeStatus()
       .then(res => res.data)
       .then(data => {
-        // console.log('stripe-status', data)
         const {
           restaurant: {
             connect_account: {
-              business_profile: businessProfile,
+              charges_enabled: chargesEnabled,
+              payouts_enabled: payoutsEnabled,
             }
           }
         } = data
-        if (businessProfile) {
-          setEnabled(true)
-        }
+        console.log('chargesEnabled', chargesEnabled)
+        console.log('payoutsEnabled', payoutsEnabled)
+        setEnabled(payoutsEnabled === true)
       })
       .finally(() => setLoading(false))
   }
