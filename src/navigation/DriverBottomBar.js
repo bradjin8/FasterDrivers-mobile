@@ -34,6 +34,7 @@ const DriverBottomBar = props => {
           height: scaleVertical(65),
           tabBarActiveTintColor: color.black,
           tabBarInactiveTintColor: color.gray,
+          tabBarLabelPosition: 'below-icon',
         }
       }}
     >

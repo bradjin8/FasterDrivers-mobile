@@ -49,6 +49,7 @@ const CustomerBottomBar = props => {
       screenOptions={{
         animationEnabled: true,
         tabBarStyle: tabBarStyle,
+        tabBarLabelPosition: 'below-icon',
       }}
     >
       <Tab.Screen

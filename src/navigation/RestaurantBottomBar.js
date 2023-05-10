@@ -2,6 +2,7 @@ import React from "react"
 import { Image } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import ViewDish from "screens/Restaurant/Menu/ViewDish";
 import Wallet from "screens/Restaurant/Settings/Wallet";
 import { Text } from "../components/index";
@@ -37,7 +38,8 @@ const RestaurantBottomBar = props => {
           height: scaleVertical(65),
           tabBarActiveTintColor: color.primary,
           tabBarInactiveTintColor: color.black,
-        }
+        },
+        tabBarLabelPosition: 'below-icon',
       }}
     >
       <Tab.Screen
