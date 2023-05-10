@@ -21,6 +21,10 @@ const ACCEPT_ORDER_REQUEST_STARTED = "ACCEPT_ORDER_REQUEST_STARTED"
 const ACCEPT_ORDER_REQUEST_COMPLETED = "ACCEPT_ORDER_REQUEST_COMPLETED"
 const REJECT_ORDER_REQUEST_STARTED = "REJECT_ORDER_REQUEST_STARTED"
 const REJECT_ORDER_REQUEST_COMPLETED = "REJECT_ORDER_REQUEST_COMPLETED"
+const GET_NEARBY_DRIVERS_REQUEST_STARTED = "GET_NEARBY_DRIVERS_REQUEST_STARTED"
+const GET_NEARBY_DRIVERS_REQUEST_COMPLETED = "GET_NEARBY_DRIVERS_REQUEST_COMPLETED"
+const ASSIGN_DRIVER_REQUEST_STARTED = "ASSIGN_DRIVER_REQUEST_STARTED"
+const ASSIGN_DRIVER_REQUEST_COMPLETED = "ASSIGN_DRIVER_REQUEST_COMPLETED"
 
 
 const initialState = {
@@ -28,6 +32,7 @@ const initialState = {
   dishes: [],
   myOrders: [],
   needToRefreshOrders: false,
+  nearbyDrivers: [],
 }
 
 //Actions
@@ -112,6 +117,28 @@ export const restaurantReducer = (state = initialState, action) => {
         loading: true
       }
     case REJECT_ORDER_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        needToRefreshOrders: true,
+      }
+    case GET_NEARBY_DRIVERS_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case GET_NEARBY_DRIVERS_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        nearbyDrivers: action.payload,
+      }
+    case ASSIGN_DRIVER_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case ASSIGN_DRIVER_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
@@ -335,10 +362,93 @@ export const setUpStripeAccount = () => {
   return XHR(URL, options)
 }
 
+export const getNearByDriversRequest = () => ({
+  type: GET_NEARBY_DRIVERS_REQUEST_STARTED,
+})
+
+const getNearbyDriversFinished = (data) => ({
+  type: GET_NEARBY_DRIVERS_REQUEST_COMPLETED,
+  payload: data,
+})
+
+export const getNearbyDriversAPI = () => {
+  const URL = `${appConfig.backendServerURL}/restaurants/nearby_drivers/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+function* getNearbyDriversAction() {
+  try {
+    const resp = yield call(getNearbyDriversAPI)
+    if (resp?.data) {
+      yield put(getNearbyDriversFinished(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+export const assignDriverRequest = (data) => ({
+  type: ASSIGN_DRIVER_REQUEST_STARTED,
+  payload: data,
+})
+
+const assignDriverFinished = (data) => ({
+  type: ASSIGN_DRIVER_REQUEST_COMPLETED,
+  payload: data,
+})
+
+export const assignDriverAPI = (data) => {
+  const URL = `${appConfig.backendServerURL}/restaurants/request_driver/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
+function* assignDriverAction(data) {
+  try {
+    console.log('assign-driver', data.payload)
+    const resp = yield call(assignDriverAPI, data.payload)
+    if (resp?.data) {
+      console.log('assign-driver', resp.data)
+      yield put(assignDriverFinished(resp.data))
+      showMessage({
+        message: "Driver Assigned Successfully",
+        type: "success"
+      })
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    console.log('assign-driver-error', response)
+    showMessage({
+      message: response?.data ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(ADD_NEW_DISH_REQUEST_STARTED, addNewDishAction),
   takeLatest(GET_DISHES_REQUEST_STARTED, getDishesAction),
   takeLatest(VIEW_MY_ORDERS_REQUEST_STARTED, viewMyOrdersAction),
   takeLatest(ACCEPT_ORDER_REQUEST_STARTED, acceptOrderAction),
   takeLatest(REJECT_ORDER_REQUEST_STARTED, rejectOrderAction),
+  takeLatest(GET_NEARBY_DRIVERS_REQUEST_STARTED, getNearbyDriversAction),
+  takeLatest(ASSIGN_DRIVER_REQUEST_STARTED, assignDriverAction),
 ])

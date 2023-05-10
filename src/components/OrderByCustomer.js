@@ -1,3 +1,4 @@
+import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Pressable, ActivityIndicator} from 'react-native';
 import {widthPercentageToDP} from "react-native-responsive-screen";
@@ -72,6 +73,13 @@ const OrderByCustomer = ({order, tab}) => {
     }
   }
 
+  const assignDriver = () => {
+    navigate('Map', {
+      screen: 'Map',
+      params: {orderId: order.id}
+    })
+  }
+
   const renderAction = () => {
     if (order.status === ORDER_STATUS.Pending) {
       return (
@@ -87,7 +95,7 @@ const OrderByCustomer = ({order, tab}) => {
     } else if (tab === 1) {
       return (
         <View style={styles.rowCenter}>
-          <Pressable style={styles.assign}>
+          <Pressable style={styles.assign} onPress={assignDriver}>
             <Text color='white' variant='strong'>Assign to Driver</Text>
           </Pressable>
         </View>

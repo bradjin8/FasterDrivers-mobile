@@ -90,3 +90,12 @@ export const getCurrentLocation = async () => {
     );
   })
 };
+
+
+export const extractLatLong = (location = '') => {
+  const regex = /POINT\s\(([-\d.]+)\s([-+\d.]+)\)/;
+  const matches = location.match(regex);
+  const longitude = matches[1];
+  const latitude = matches[2];
+  return {latitude, longitude}
+};

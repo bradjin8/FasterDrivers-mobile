@@ -14,8 +14,8 @@ const LOGIN_REQUEST_STARTED = "LOGIN_REQUEST_STARTED"
 const LOGIN_REQUEST_COMPLETED = "LOGIN_REQUEST_COMPLETED"
 const SIGNUP_REQUEST_STARTED = "SIGNUP_REQUEST_STARTED"
 const SIGNUP_REQUEST_COMPLETED = "SIGNUP_REQUEST_COMPLETED"
-const RESTAURANT_REQUEST_STARTED = "RESTAURANT_REQUEST_STARTED"
-const RESTAURANT_REQUEST_COMPLETED = "RESTAURANT_REQUEST_COMPLETED"
+const UPDATE_ACCOUNT_REQUEST_STARTED = "UPDATE_ACCOUNT_REQUEST_STARTED"
+const UPDATE_ACCOUNT_REQUEST_COMPLETED = "UPDATE_ACCOUNT_REQUEST_COMPLETED"
 const CHANGE_PASSWORD_REQUEST_STARTED = "CHANGE_PASSWORD_REQUEST_STARTED"
 const CHANGE_PASSWORD_REQUEST_COMPLETED = "CHANGE_PASSWORD_REQUEST_COMPLETED"
 const LOGOUT_REQUEST_STARTED = "LOGOUT_REQUEST_STARTED"
@@ -44,12 +44,12 @@ export const setSignUpData = (data) => ({
   type: SIGNUP_REQUEST_COMPLETED,
   payload: data,
 })
-export const updateRestaurant = (data) => ({
-  type: RESTAURANT_REQUEST_STARTED,
+export const updateAccount = (data) => ({
+  type: UPDATE_ACCOUNT_REQUEST_STARTED,
   payload: data,
 })
-export const updateRestaurantCompleted = (data) => ({
-  type: RESTAURANT_REQUEST_COMPLETED,
+export const updateAccountCompleted = (data) => ({
+  type: UPDATE_ACCOUNT_REQUEST_COMPLETED,
   payload: data,
 })
 export const changePassword = (data) => ({
@@ -93,12 +93,12 @@ export const loginReducer = (state = initialState, action) => {
         accessToken: action.payload.token,
         user: action.payload.user
       }
-    case RESTAURANT_REQUEST_STARTED:
+    case UPDATE_ACCOUNT_REQUEST_STARTED:
       return {
         ...state,
         loading: true
       }
-    case RESTAURANT_REQUEST_COMPLETED:
+    case UPDATE_ACCOUNT_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
@@ -153,7 +153,7 @@ function signUpAPI(data) {
   return XHR(URL, options)
 }
 
-async function restaurantUpdateAPI(data) {
+async function accountUpdateAPI(data) {
   const userAccount = await AsyncStorage.getItem("userAccount")
   const userData = JSON.parse(userAccount)
   const URL = `${appConfig.backendServerURL}/users/${userData.id}/`
@@ -240,12 +240,12 @@ function* signUpAction(data) {
   }
 }
 
-function* restaurantUpdateAction(data) {
+function* accountUpdateAction(data) {
   try {
-    const resp = yield call(restaurantUpdateAPI, data.payload)
+    const resp = yield call(accountUpdateAPI, data.payload)
     if(resp?.data) {
       AsyncStorage.setItem("userAccount", JSON.stringify(resp.data))
-      yield put(updateRestaurantCompleted(resp.data))
+      yield put(updateAccountCompleted(resp.data))
       goBack()
       showMessage({
         message: "Successfully details updated",
@@ -257,7 +257,7 @@ function* restaurantUpdateAction(data) {
     console.log("update-profile", response.data)
     yield put(requestFailed())
     showMessage({
-      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
@@ -287,6 +287,6 @@ function* changePasswordAction(data) {
 export default all([
   takeLatest(LOGIN_REQUEST_STARTED, loginAction),
   takeLatest(SIGNUP_REQUEST_STARTED, signUpAction),
-  takeLatest(RESTAURANT_REQUEST_STARTED, restaurantUpdateAction),
+  takeLatest(UPDATE_ACCOUNT_REQUEST_STARTED, accountUpdateAction),
   takeLatest(CHANGE_PASSWORD_REQUEST_STARTED, changePasswordAction),
 ])

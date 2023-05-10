@@ -6,7 +6,7 @@ import { Button, CustomTextInput, Text } from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { updateRestaurant } from "../../../screenRedux/loginRedux";
+import { updateAccount } from "../../../screenRedux/loginRedux";
 import { pickFromCamera, pickFromGallery } from "utils/Camera";
 import ActionSheet from "react-native-actionsheet";
 
@@ -56,7 +56,7 @@ const RestaurantProfile = () => {
     data.append("restaurant.description", restaurantDetails["restaurant.description"]);
     data.append("restaurant.type", restaurantDetails["restaurant.type"]);
 
-    dispatch(updateRestaurant(data))
+    dispatch(updateAccount(data))
   }
 
   return (

@@ -5,7 +5,7 @@ import { Images } from "src/theme"
 import { Button, CustomTextInput, Text } from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { updateRestaurant } from "../../../screenRedux/loginRedux";
+import { updateAccount } from "../../../screenRedux/loginRedux";
 import { useDispatch, useSelector } from "react-redux";
 import { pickFromCamera, pickFromGallery } from "utils/Camera";
 import ActionSheet from "react-native-actionsheet";
@@ -19,7 +19,7 @@ const AccountInformation = () => {
   const [changeImage, setChangeImage] = useState(null)
   const { name, driver: { phone, street, city, state, zip_code, photo } } = user
   const [pickImage, setPickImage] = useState(photo)
-  
+
   const [customerDetails, setCustomerDetails] = useState({
     "name": name,
     "driver.phone": phone,
@@ -28,11 +28,11 @@ const AccountInformation = () => {
     "driver.state": state,
     "driver.zip_code": zip_code,
   })
-  
+
   const onChangeText = (key, text) => {
     setCustomerDetails(prevState => ({ ...prevState, [key]: text }));
   }
-  
+
   const onSave = () => {
     let data = new FormData();
     if(changeImage) {
@@ -49,10 +49,10 @@ const AccountInformation = () => {
     data.append("driver.city", customerDetails["driver.city"]);
     data.append("driver.state", customerDetails["driver.state"]);
     data.append("driver.zip_code", customerDetails["driver.zip_code"]);
-    
-    dispatch(updateRestaurant(data))
+
+    dispatch(updateAccount(data))
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -72,7 +72,7 @@ const AccountInformation = () => {
             }
           </Pressable>
         </View>
-        
+
         <View>
           <Text variant="text" color="black" >
             Full Name

@@ -12,11 +12,11 @@ import {viewMyOrdersRequest} from "../../../screenRedux/restaurantRedux";
 import {Images} from "../../../theme";
 import OrderByCustomer from "../../../components/OrderByCustomer";
 
-const Home = () => {
+const Home = ({route}) => {
   const dispatch = useDispatch()
   const {user, accessToken} = useSelector((state) => state.loginReducer)
   const {myOrders, loading, needToRefreshOrders} = useSelector((state) => state.restaurantReducer)
-  const [tab, setTab] = React.useState(0)
+  const [tab, setTab] = React.useState(route.params?.tab || 0)
 
   // console.log('myOrders', myOrders)
 

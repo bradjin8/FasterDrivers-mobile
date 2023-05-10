@@ -8,7 +8,7 @@ import SimpleHeader from "components/SimpleHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {pickFromCamera, pickFromGallery} from "utils/Camera";
 import ActionSheet from "react-native-actionsheet";
-import {updateRestaurant} from "../../../screenRedux/loginRedux";
+import {updateAccount} from "../../../screenRedux/loginRedux";
 
 const AccountInformation = () => {
   const actionSheet = useRef(null);
@@ -50,7 +50,7 @@ const AccountInformation = () => {
     data.append("customer.addresses[0]city", customerDetails["customer.addresses[0]city"]);
     data.append("customer.addresses[0]state", customerDetails["customer.addresses[0]state"]);
     data.append("customer.addresses[0]zip_code", customerDetails["customer.addresses[0]zip_code"]);
-    dispatch(updateRestaurant(data))
+    dispatch(updateAccount(data))
   }
 
   return (
