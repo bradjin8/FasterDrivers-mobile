@@ -3,6 +3,8 @@ import { Image } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import Feather from "react-native-vector-icons/Feather";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import ViewDish from "screens/Restaurant/Menu/ViewDish";
 import Wallet from "screens/Restaurant/Settings/Wallet";
 import { Text } from "../components/index";
@@ -50,11 +52,7 @@ const RestaurantBottomBar = props => {
             <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Home}
-              resizeMode={'contain'}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
-            />
+            <SimpleLineIcons name={'home'} size={scale(22)} color={focused ? color.primary : color.black} />
           ),
           header: () => null
         }}
@@ -84,11 +82,7 @@ const RestaurantBottomBar = props => {
             <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Map</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Map}
-              resizeMode={'contain'}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
-            />
+            <Feather name={'map'} size={scale(22)} color={focused ? color.primary : color.black} />
           ),
           header: () => null
         }}

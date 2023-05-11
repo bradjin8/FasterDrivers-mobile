@@ -1,16 +1,14 @@
 import StatusFilter from "components/StatusFilter";
-import {navigate} from "navigation/NavigationService";
 import React, {useEffect} from "react";
-import {ActivityIndicator, Pressable, StyleSheet, View, Image, FlatList} from "react-native";
-import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
+import {FlatList, Pressable, StyleSheet, View} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import Octicons from "react-native-vector-icons/Octicons";
 import {useDispatch, useSelector} from "react-redux";
-import {color, scale, scaleVertical} from "utils";
+import {color, scaleVertical} from "utils";
 import {Text} from "../../../components/index";
-import BaseScreen from "../../../components/BaseScreen";
+import OrderByCustomer from "../../../components/OrderByCustomer";
 import {ORDER_STATUS} from "../../../consts/orders";
 import {viewMyOrdersRequest} from "../../../screenRedux/restaurantRedux";
-import {Images} from "../../../theme";
-import OrderByCustomer from "../../../components/OrderByCustomer";
 
 const Home = ({route}) => {
   const dispatch = useDispatch()
@@ -56,7 +54,7 @@ const Home = ({route}) => {
         </View>
         <Pressable onPress={() => {
         }}>
-          <Image source={Images.Next} style={styles.nextIcon}/>
+          <Octicons name={'chevron-right'} size={20} color={color.black} style={styles.nextIcon}/>
         </Pressable>
       </View>
       <StatusFilter status={tab} changeStatus={setTab}/>
@@ -94,9 +92,6 @@ const styles = StyleSheet.create({
   },
   nextIcon: {
     marginLeft: widthPercentageToDP(5),
-    width: scale(10),
-    height: scale(10),
-    resizeMode: 'contain'
   },
   container: {
     backgroundColor: color.lightGray,

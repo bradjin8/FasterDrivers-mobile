@@ -1,7 +1,7 @@
 import SimpleHeader from "components/SimpleHeader";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator, Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import MapView, {Marker} from "react-native-maps";
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -12,7 +12,7 @@ import {extractLatLong} from "utils/Location";
 import {Text} from "../../../components/text"
 import {assignDriverRequest, getNearByDriversRequest} from "../../../screenRedux/restaurantRedux";
 
-const Map = ({route}) => {
+const Map = ({navigation, route}) => {
   const {user: {restaurant: restaurant}} = useSelector(state => state.loginReducer)
   const {loading, nearbyDrivers} = useSelector(state => state.restaurantReducer)
   const {orderId} = route.params || {}
@@ -55,6 +55,10 @@ const Map = ({route}) => {
 
   useEffect(() => {
     dispatch(getNearByDriversRequest())
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(getNearByDriversRequest())
+    });
+    return unsubscribe
   }, [])
 
   const renderOverlay = () => {

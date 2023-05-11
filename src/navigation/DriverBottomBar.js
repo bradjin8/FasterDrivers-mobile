@@ -5,6 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { Text } from "../components/index";
 import { color, scaleVertical, scale } from "utils";
 import { Images } from "src/theme"
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import Octicons from "react-native-vector-icons/Octicons";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 import Settings from "screens/Driver/Settings"
 import AccountInformation from "screens/Driver/Settings/AccountInformation";
@@ -46,10 +49,7 @@ const DriverBottomBar = props => {
             <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Home}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <SimpleLineIcons name={'home'} size={scale(22)} color={focused ? color.black : color.gray} />
           ),
           header: () => null
         }}
@@ -62,10 +62,7 @@ const DriverBottomBar = props => {
             <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">History</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.history}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <Octicons name={'history'} size={scale(22)} color={focused ? color.black : color.gray} />
           ),
           header: () => null
         }}
@@ -78,10 +75,7 @@ const DriverBottomBar = props => {
             <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Wallet</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.OrderAcceptance}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <AntDesign name={'wallet'} color={focused ? color.black : color.gray} size={scale(22)} />
           ),
           header: () => null
         }}

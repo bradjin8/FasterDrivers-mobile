@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { color, scaleVertical } from "utils";
-import SimpleHeader from "../../../components/SimpleHeader";
-import { Button, CustomTextInput, Text } from "../../../components/index";
-import { useDispatch, useSelector } from "react-redux";
-import validator from "utils/validation";
-import { loginRequest } from "../../../screenRedux/loginRedux";
 import BaseScreen from "components/BaseScreen";
-import { navigate } from "navigation/NavigationService";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {color, scaleVertical} from "utils";
+import validator from "utils/validation";
+import {Button, CustomTextInput, Text} from "../../../components/index";
+import SimpleHeader from "../../../components/SimpleHeader";
 
 const SendFeedback = ({}) => {
   const dispatch = useDispatch()
@@ -17,7 +15,7 @@ const SendFeedback = ({}) => {
   const [userError, setUserError] = useState(null)
   const [password, setPassword] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
-  
+
   const onBlurUser = () => {
     if(!userName) {
       setUserError(true)
@@ -27,7 +25,7 @@ const SendFeedback = ({}) => {
       setUserError(false)
     }
   }
-  
+
   const onBlurPassword = () => {
     if(!password) {
       setPasswordError(true)
@@ -35,7 +33,7 @@ const SendFeedback = ({}) => {
       setPasswordError(false)
     }
   }
-  
+
   const onSignIn = () => {
     if(userName && password && validator.email.regEx.test(userName)) {
       let data = new FormData();
@@ -47,7 +45,7 @@ const SendFeedback = ({}) => {
       onBlurPassword();
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader

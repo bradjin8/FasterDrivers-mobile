@@ -1,14 +1,14 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, View, Image, TouchableHighlight, Platform, Pressable } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components";
-import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { updateAccount } from "../../../screenRedux/loginRedux";
-import { useDispatch, useSelector } from "react-redux";
-import { pickFromCamera, pickFromGallery } from "utils/Camera";
+import React, {useRef, useState} from "react";
+import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
+import {Button, CustomTextInput, Text} from "../../../components";
+import BaseScreen from "../../../components/BaseScreen";
+import {updateAccount} from "../../../screenRedux/loginRedux";
 
 const CarDetails = () => {
   const actionSheet = useRef(null);
@@ -155,7 +155,8 @@ const styles = StyleSheet.create({
   icon: {
     width: scale(36),
     height: scaleVertical(30),
-    tintColor: 'white'
+    tintColor: 'white',
+    resizeMode: 'contain',
   },
   stateView: {
     flexDirection: 'row',

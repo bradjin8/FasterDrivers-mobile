@@ -1,28 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { Image, View } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { createStackNavigator } from "@react-navigation/stack"
-import { Text } from "../components/index";
-import { color, scaleVertical, scale } from "utils";
-import { Images } from "src/theme"
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+import {createStackNavigator} from "@react-navigation/stack"
+import React, {useEffect, useState} from "react";
+import {Image, View} from "react-native";
+import Feather from "react-native-vector-icons/Feather";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+
+import {useSelector} from "react-redux";
+
+import Home from "screens/Customer/Home"
+import Cart from "screens/Customer/Home/Cart"
+import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
+import AddCard from "screens/Customer/Orders/AddCard"
+import OrderDetails from "screens/Customer/Orders/OrderDetails"
+
+import Orders from "screens/Customer/Orders/Orders"
+import Payment from "screens/Customer/Orders/Payment"
 
 import Settings from "screens/Customer/Settings"
 import AccountInformation from "screens/Customer/Settings/AccountInformation";
-import TermCondition from "screens/Restaurant/Settings/TermCondition";
-import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
-import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
-
-import Home from "screens/Customer/Home"
-import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
-import Cart from "screens/Customer/Home/Cart"
-
-import Orders from "screens/Customer/Orders/Orders"
-import OrderDetails from "screens/Customer/Orders/OrderDetails"
-import Payment from "screens/Customer/Orders/Payment"
-import AddCard from "screens/Customer/Orders/AddCard"
-
-import { useSelector } from "react-redux";
+import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
+import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
+import TermCondition from "screens/Restaurant/Settings/TermCondition";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {Text} from "../components/index";
 
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
@@ -64,11 +66,7 @@ const CustomerBottomBar = props => {
             <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Home}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-              resizeMode={'contain'}
-            />
+            <SimpleLineIcons name={'home'} size={scale(22)} color={focused ? color.black : color.gray} />
           ),
           header: () => null,
         }}
@@ -100,11 +98,7 @@ const CustomerBottomBar = props => {
                   {cartItems.length}
                 </Text>
               </View> : null}
-              <Image
-                source={Images.orders}
-                style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-                resizeMode={'contain'}
-              />
+              <Feather name={'shopping-cart'} size={scale(24)} color={focused ? color.black : color.gray} />
             </View>
           ),
           header: () => null

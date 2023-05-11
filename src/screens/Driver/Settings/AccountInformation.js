@@ -1,14 +1,15 @@
-import React, { useRef, useState } from "react";
-import { StyleSheet, View, Image, TouchableHighlight, Platform, Pressable } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components";
-import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { updateAccount } from "../../../screenRedux/loginRedux";
-import { useDispatch, useSelector } from "react-redux";
-import { pickFromCamera, pickFromGallery } from "utils/Camera";
+import React, {useRef, useState} from "react";
+import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
+import {Button, CustomTextInput, Text} from "../../../components";
+import BaseScreen from "../../../components/BaseScreen";
+import {updateAccount} from "../../../screenRedux/loginRedux";
 
 const AccountInformation = () => {
   const actionSheet = useRef(null);
@@ -17,11 +18,12 @@ const AccountInformation = () => {
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
   const [changeImage, setChangeImage] = useState(null)
-  const { name, driver: { phone, street, city, state, zip_code, photo } } = user
+  const { name, email, driver: { phone, street, city, state, zip_code, photo } } = user
   const [pickImage, setPickImage] = useState(photo)
 
   const [customerDetails, setCustomerDetails] = useState({
     "name": name,
+    "email": email,
     "driver.phone": phone,
     "driver.street": street,
     "driver.city": city,
@@ -44,6 +46,7 @@ const AccountInformation = () => {
       });
     }
     data.append("name", customerDetails.name);
+    data.append("email", customerDetails.email);
     data.append("driver.phone", customerDetails["driver.phone"]);
     data.append("driver.street", customerDetails["driver.street"]);
     data.append("driver.city", customerDetails["driver.city"]);
@@ -63,7 +66,7 @@ const AccountInformation = () => {
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
+              <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />
@@ -80,6 +83,13 @@ const AccountInformation = () => {
           <CustomTextInput
             value={customerDetails["name"]}
             onChangeText={(text) => onChangeText("name", text)}
+          />
+          <Text variant="text" color="black" >
+            Email
+          </Text>
+          <CustomTextInput
+            value={customerDetails["email"]}
+            onChangeText={(text) => onChangeText("email", text)}
           />
           <Text variant="text" color="black" >
             Phone Number
@@ -99,6 +109,15 @@ const AccountInformation = () => {
           <View style={styles.stateView}>
             <View style={{width: '47%'}}>
               <Text variant="text" color="black" >
+                City
+              </Text>
+              <CustomTextInput
+                value={customerDetails["driver.city"]}
+                onChangeText={(text) => onChangeText("driver.city", text)}
+              />
+            </View>
+            <View style={{width: '47%'}}>
+              <Text variant="text" color="black" >
                 State
               </Text>
               <CustomTextInput
@@ -106,17 +125,17 @@ const AccountInformation = () => {
                 onChangeText={(text) => onChangeText("driver.state", text)}
               />
             </View>
-            <View style={{width: '47%'}}>
-              <Text variant="text" color="black" >
-                Zip Code
-              </Text>
-              <CustomTextInput
-                keyboardType={'number-pad'}
-                value={customerDetails["driver.zip_code"]}
-                onChangeText={(text) => onChangeText("driver.zip_code", text)}
-              />
-            </View>
           </View>
+        </View>
+        <View style={{width: '47%'}}>
+          <Text variant="text" color="black" >
+            Zip Code
+          </Text>
+          <CustomTextInput
+            keyboardType={'number-pad'}
+            value={customerDetails["driver.zip_code"]}
+            onChangeText={(text) => onChangeText("driver.zip_code", text)}
+          />
         </View>
         <View style={{marginTop: scaleVertical(50)}}>
           <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()}  mt={30} fontWeight="700" />
@@ -174,7 +193,8 @@ const styles = StyleSheet.create({
   icon: {
     width: scale(36),
     height: scaleVertical(30),
-    tintColor: 'white'
+    tintColor: 'white',
+    resizeMode: 'contain',
   },
   stateView: {
     flexDirection: 'row',

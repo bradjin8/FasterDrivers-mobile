@@ -1,12 +1,12 @@
+import {navigate} from "navigation/NavigationService";
 import React from "react";
-import { StyleSheet, View, ScrollView, Image, Pressable } from "react-native";
-import { color, scaleVertical, restaurantSettingData } from "utils";
+import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import {useDispatch} from "react-redux";
+import {color, restaurantSettingData, scaleVertical} from "utils";
+import {Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import { Text } from "../../../components/index";
-import { Images } from "src/theme"
-import { navigate } from "navigation/NavigationService";
-import { useDispatch } from "react-redux";
-import { logoutRequest } from "../../../screenRedux/loginRedux";
+import {logoutRequest} from "../../../screenRedux/loginRedux";
 
 const Settings = ({}) => {
   const dispatch = useDispatch()
@@ -17,7 +17,7 @@ const Settings = ({}) => {
     }
     key && navigate(key)
   }
-  
+
   return (
     <View style={styles.mainWrapper}>
       <SimpleHeader
@@ -35,7 +35,7 @@ const Settings = ({}) => {
                     {setting.title}
                   </Text>
                 </View>
-                <Image source={Images.Next}  style={styles.nextArrow} resizeMode="contain"/>
+                <SimpleLineIcons name={'arrow-right'} size={10} color={color.black}/>
               </View>
             </Pressable>
           )
@@ -53,12 +53,12 @@ const styles = StyleSheet.create({
   listContain: {
     flexDirection: 'row',
     paddingVertical: scaleVertical(16),
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   inputTitle: {
     paddingHorizontal: scaleVertical(20)
   },
-  nextArrow: {width: 10, height: 10 },
 })
 
 export default Settings;

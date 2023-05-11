@@ -1,6 +1,7 @@
 import {StyleSheet, View, Image, TouchableOpacity, Pressable, ActivityIndicator} from "react-native"
 import React from "react"
 import {useNavigation} from "@react-navigation/native"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {color, scale, scaleVertical} from "utils";
 //Themes
 import Images from "../theme/Images"
@@ -46,10 +47,7 @@ const SimpleHeader = props => {
               showBackIcon && navigation.goBack()
             }}
           >
-            <Image
-              source={Images.Back}
-              style={{width: 15, height: 15}}
-            />
+            <MaterialIcons name={'arrow-back'} size={scale(20)} color={color.white}/>
           </TouchableOpacity>
         )}
       </View>

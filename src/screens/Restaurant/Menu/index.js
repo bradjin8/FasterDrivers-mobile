@@ -1,14 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator, FlatList, SafeAreaView} from "react-native";
-import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
-import {useDispatch, useSelector} from "react-redux";
-import {color, scale, scaleVertical, restaurantSettingData} from "utils";
-import {Images} from "src/theme"
-import {truncateString} from "utils/utils";
-import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
-import BaseScreen from "../../../components/BaseScreen";
 import {navigate} from "navigation/NavigationService";
+import React, {useEffect, useState} from "react";
+import {FlatList, Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
+import Entypo from "react-native-vector-icons/Entypo";
+import {useDispatch, useSelector} from "react-redux";
+import {color, scale, scaleVertical} from "utils";
+import {truncateString} from "utils/utils";
+import {Button, CustomTextInput, Text} from "../../../components/index";
 import {getDishesRequest} from "../../../screenRedux/restaurantRedux";
 
 const Menu = ({navigation, route}) => {
@@ -74,7 +73,7 @@ const Menu = ({navigation, route}) => {
         data={filterDishes()}
         style={styles.list}
         renderItem={({item, index}) => {
-          return (<View key={index} style={styles.listContain}>
+          return (<Pressable key={index} style={styles.listContain} onPress={() => navigate("ViewDish", {dish: item})}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <View style={styles.image}>
                 <Image source={{uri: item.image_1}} style={styles.image}/>
@@ -89,14 +88,14 @@ const Menu = ({navigation, route}) => {
               </View>
             </View>
             <View style={{alignItems: 'flex-end'}}>
-              <Pressable onPress={() => navigate("ViewDish", {dish: item})}>
-                <Image source={Images.ThreeDots} style={{width: 20, height: 20}} resizeMode={'contain'}/>
-              </Pressable>
+              <View>
+                <Entypo name={'dots-three-horizontal'} size={20} color={color.item}/>
+              </View>
               <Text variant="h5" color="black" fontSize={14} fontWeight="400">
                 ${item.price}
               </Text>
             </View>
-          </View>)
+          </Pressable>)
         }}
         refreshing={loading}
         onRefresh={fetchDishes}

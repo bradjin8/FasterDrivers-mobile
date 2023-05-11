@@ -1,14 +1,15 @@
-import React, {useRef, useState} from "react";
-import {StyleSheet, View, Image, TouchableHighlight, Platform, Pressable} from "react-native";
-import {useDispatch, useSelector} from "react-redux";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import {pickFromCamera, pickFromGallery} from "utils/Camera";
-import { Button, CustomTextInput, Text } from "../../../components";
-import BaseScreen from "../../../components/BaseScreen";
-import validator from "utils/validation";
 import SimpleHeader from "components/SimpleHeader";
+import React, {useRef, useState} from "react";
+import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
+import validator from "utils/validation";
+import {Button, CustomTextInput, Text} from "../../../components";
+import BaseScreen from "../../../components/BaseScreen";
 import {updateAccount} from "../../../screenRedux/loginRedux";
 
 const AccountInformation = ({ navigation }) => {
@@ -73,7 +74,7 @@ const AccountInformation = ({ navigation }) => {
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
+              <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
               <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />
@@ -168,12 +169,14 @@ const styles = StyleSheet.create({
   actualImage: {
     width: scaleVertical(80),
     height: scaleVertical(80),
-    borderRadius: scaleVertical(40)
+    borderRadius: scaleVertical(40),
+    resizeMode: 'contain',
   },
   icon: {
     width: scale(36),
     height: scaleVertical(30),
-    tintColor: 'white'
+    tintColor: 'white',
+    resizeMode: 'contain',
   },
 })
 

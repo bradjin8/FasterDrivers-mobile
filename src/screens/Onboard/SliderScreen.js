@@ -1,15 +1,15 @@
-import React, { useCallback, useState, useRef } from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
-import { color, scale, scaleVertical, screenWidth, screenHeight } from "utils";
-import { Images } from "src/theme";
-import { Button } from "../../components/index";
-import { navigate } from "navigation/NavigationService";
-import Carousel, { Pagination } from "react-native-snap-carousel";
+import {navigate} from "navigation/NavigationService";
+import React, {useRef, useState} from "react";
+import {Image, StyleSheet, View} from "react-native";
+import Carousel, {Pagination} from "react-native-snap-carousel";
+import {Images} from "src/theme";
+import {color, scale, scaleVertical, screenHeight, screenWidth} from "utils";
+import {Button} from "../../components/index";
 
 const SliderScreen = ({}) => {
   const carouselRef = useRef(null);
   const [index, setIndex] = useState(0);
-  
+
   const renderCarouselItem = () => {
     return (
       <View style={{alignItems: 'center'}}>
@@ -20,7 +20,7 @@ const SliderScreen = ({}) => {
       </View>
     );
   };
-  
+
   const renderMultipleMedia = () => {
     return (
       <Carousel
@@ -49,7 +49,7 @@ const SliderScreen = ({}) => {
       containerStyle={styles.dotContainer}
     />
   );
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContain}>

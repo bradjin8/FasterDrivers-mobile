@@ -1,14 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator} from "react-native";
-import {widthPercentageToDP} from "react-native-responsive-screen";
-import {useDispatch, useSelector} from "react-redux";
-import {color, scale, scaleVertical, restaurantSettingData} from "utils";
-import {Images} from "src/theme"
-import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
-import BaseScreen from "../../../components/BaseScreen";
 import {navigate} from "navigation/NavigationService";
-import {getDishesRequest} from "../../../screenRedux/restaurantRedux";
+import React from "react";
+import {Image, Pressable, StyleSheet, View} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import {color, scale} from "utils";
+import BaseScreen from "../../../components/BaseScreen";
+import {Text} from "../../../components/index";
 
 const ViewDish = ({route}) => {
   const dish = route.params?.dish || {};
@@ -23,7 +21,7 @@ const ViewDish = ({route}) => {
         <View style={styles.image}>
           <Image source={{uri: dish?.image_1}} style={{width: '100%', height: '100%'}} resizeMode={'cover'}/>
           <Pressable style={styles.edit} onPress={() => navigate("AddNewDish", {dish})}>
-            <Image source={Images.Pencil} style={{width: '50%', height: '50%'}} resizeMode={'contain'}/>
+            <SimpleLineIcons name={'pencil'} size={scale(14)} color={color.black}/>
           </Pressable>
         </View>
         <View style={styles.body}>

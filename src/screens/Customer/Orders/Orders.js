@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {FlatList, Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
-import {color, scale, scaleVertical} from "utils";
-import {Images} from "src/theme";
-import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
-import BaseScreen from "../../../components/BaseScreen";
-import {useDispatch, useSelector} from "react-redux";
-import {navigate} from "navigation/NavigationService";
-import {getMyOrders} from "../../../screenRedux/customerRedux";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import moment from 'moment'
+import {navigate} from "navigation/NavigationService";
+import React, {useEffect} from "react";
+import {FlatList, Image, Pressable, StyleSheet, View} from "react-native";
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen'
+import Octicons from "react-native-vector-icons/Octicons";
+import {useDispatch, useSelector} from "react-redux";
+import {color, scale} from "utils";
+import {Text} from "../../../components/index";
+import {getMyOrders} from "../../../screenRedux/customerRedux";
 
 const Orders = ({navigation}) => {
   const dispatch = useDispatch();
@@ -60,14 +59,14 @@ const Orders = ({navigation}) => {
   }
 
   const renderItem = ({item, index}) => {
-    return <View style={styles.orderContainer} key={index}>
+    return <Pressable style={styles.orderContainer} key={index} onPress={() => onPressOrder(item)}>
       <Image source={{uri: item.restaurant.photo}} style={styles.resIcon}/>
       <View style={styles.details}>
         <View style={styles.detailsRow}>
           <Text style={styles.title}>{item.restaurant.name}</Text>
-          <Pressable onPress={() => onPressOrder(item)}>
-            <Image source={Images.Next} style={styles.goIcon}/>
-          </Pressable>
+          <View style={styles.goIcon}>
+            <Octicons name={'chevron-right'} size={20} color={color.black}/>
+          </View>
         </View>
         <View style={styles.detailsRow}>
           <Text style={styles.info}>{item.dishes.length} dish{item.dishes.length > 1 && 'es'}</Text>
@@ -78,7 +77,7 @@ const Orders = ({navigation}) => {
           <Text style={{...styles.info, ...{color: getStatusColor(item.status)}}}>{item.status}</Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   }
 
   const renderOrders = () => {
@@ -128,10 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(2)
   },
   goIcon: {
-    width: wp(5),
-    height: wp(5),
     marginLeft: scale(10),
-    resizeMode: 'contain',
   },
   details: {
     width: wp(70),

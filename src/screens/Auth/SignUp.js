@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { color, scale, scaleVertical } from "utils";
+import React, {useState} from "react";
+import {Image, StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
 import validator from "utils/validation";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../components/index";
 import BaseScreen from "../../components/BaseScreen";
-import { useDispatch, useSelector } from "react-redux";
-import { signUpRequestStarted } from "../../screenRedux/loginRedux";
+import {Button, CustomTextInput, Text} from "../../components/index";
+import {signUpRequestStarted} from "../../screenRedux/loginRedux";
 
 const SignUp = ({ navigation, route }) => {
   const dispatch = useDispatch()

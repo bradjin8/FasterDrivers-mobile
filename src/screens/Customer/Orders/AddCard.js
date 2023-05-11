@@ -1,4 +1,4 @@
-import {navigate} from "navigation/NavigationService";
+import {CardField, useStripe} from "@stripe/stripe-react-native";
 import React, {useEffect, useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
@@ -7,7 +7,6 @@ import {color, scaleVertical} from "utils";
 import BaseScreen from "../../../components/BaseScreen";
 import {Button, CustomTextInput, Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import {CardField, useStripe} from "@stripe/stripe-react-native";
 import {addPaymentRequest, getAddressesData} from "../../../screenRedux/customerRedux";
 
 const AddCard = ({}) => {

@@ -79,7 +79,7 @@ export const getCurrentLocation = async () => {
     }
 
     Geolocation.getCurrentPosition((pos) => {
-        console.log('pos', pos)
+        // console.log('pos', pos)
         resolve(pos.coords)
       },
       (error) => {

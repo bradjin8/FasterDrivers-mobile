@@ -1,16 +1,15 @@
-import React, {useEffect, useRef, useState} from "react";
-import {StyleSheet, View, Image, Pressable, ScrollView, Platform, Switch} from "react-native";
-import RadioGroup from "react-native-radio-buttons-group";
-import {color, scale, scaleVertical} from "utils";
-import {Images} from "src/theme"
-import {Button, Text, CustomTextInput, CustomDropDown} from "../../../components/index";
-import {goBack, navigate} from "navigation/NavigationService";
 import SimpleHeader from "components/SimpleHeader";
-import BaseScreen from "../../../components/BaseScreen";
-import {pickFromCamera, pickFromGallery} from "utils/Camera";
+import {goBack} from "navigation/NavigationService";
+import React, {useRef, useState} from "react";
+import {Image, Platform, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
 import {useDispatch, useSelector} from "react-redux";
-import {addNewDishRequest, restaurantReducer, updateDish} from "../../../screenRedux/restaurantRedux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
+import BaseScreen from "../../../components/BaseScreen";
+import {Button, CustomDropDown, CustomTextInput, Text} from "../../../components/index";
+import {addNewDishRequest, updateDish} from "../../../screenRedux/restaurantRedux";
 
 const AddNewDish = ({route}) => {
   const dish = route.params?.dish
@@ -366,7 +365,8 @@ const styles = StyleSheet.create({
   icon: {
     width: scale(36),
     height: scaleVertical(30),
-    tintColor: 'white'
+    tintColor: 'white',
+    resizeMode: 'contain',
   },
   btnView: {
     paddingVertical: scaleVertical(10)

@@ -5,7 +5,7 @@ import {showMessage} from "react-native-flash-message";
 import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme";
 import {color, scale, scaleVertical} from "utils";
-import {ActivityIndicators, Button, CustomTextInput, Text} from "../../../components/index";
+import {Button, CustomTextInput, Text} from "../../../components/index";
 import {createNewOrder} from "../../../screenRedux/customerRedux";
 
 const Cart = ({route}) => {

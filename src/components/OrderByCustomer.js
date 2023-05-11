@@ -2,6 +2,7 @@ import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Pressable, ActivityIndicator} from 'react-native';
 import {widthPercentageToDP} from "react-native-responsive-screen";
+import Octicons from "react-native-vector-icons/Octicons";
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {truncateString} from "utils/utils";
@@ -124,7 +125,7 @@ const OrderByCustomer = ({order, tab}) => {
           </View>
         </View>
         <Pressable style={styles.itemNext} onPress={() => setExpanded(!expanded)}>
-          <Image source={expanded ? Images.Down : Images.Next} style={styles.expandIcon} resizeMode='contain'/>
+          <Octicons name={expanded ? 'chevron-down' : 'chevron-right'} size={20} color={color.black} style={styles.expandIcon}/>
         </Pressable>
       </View>
       {expanded === true && <View style={styles.detailContainer}>
@@ -228,8 +229,6 @@ const styles = StyleSheet.create({
     width: widthPercentageToDP(6),
   },
   expandIcon: {
-    width: scale(12),
-    height: scale(12),
     tintColor: color.black,
   },
   detailContainer: {

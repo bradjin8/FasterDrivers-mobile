@@ -1,9 +1,7 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { color, scale, scaleVertical, restaurantSettingData } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components/index";
 import SimpleHeader from "components/SimpleHeader";
+import React from "react";
+import {StyleSheet, View} from "react-native";
+import {color, scaleVertical} from "utils";
 import BaseScreen from "../../../components/BaseScreen";
 
 const History = () => {
@@ -14,7 +12,7 @@ const History = () => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-      
+
       </View>
     </BaseScreen>
   )

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image, TouchableHighlight } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components";
-import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { changePassword } from "../../../screenRedux/loginRedux";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {color, scale, scaleVertical} from "utils";
+import {Button, CustomTextInput, Text} from "../../../components";
+import BaseScreen from "../../../components/BaseScreen";
+import {changePassword} from "../../../screenRedux/loginRedux";
 
 const ChangePassword = ({}) => {
   const dispatch = useDispatch()
@@ -17,7 +16,7 @@ const ChangePassword = ({}) => {
   const [newError, setNewError] = useState(null)
   const [newRepeat, setNewRepeat] = useState(null)
   const [newRepeatError, setNewRepeatError] = useState(null)
-  
+
   const onBlurPassword = () => {
     if(!newPass) {
       setNewError(true)
@@ -39,7 +38,7 @@ const ChangePassword = ({}) => {
       setOldError(false)
     }
   }
-  
+
   const changePass = () => {
     if(oldPass && newPass && newRepeat === newPass) {
       let data = new FormData();
@@ -53,7 +52,7 @@ const ChangePassword = ({}) => {
       onBlurRePassword();
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader

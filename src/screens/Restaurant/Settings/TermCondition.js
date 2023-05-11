@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { color, scaleVertical } from "utils";
+import {StyleSheet, View} from "react-native";
+import {color, scaleVertical} from "utils";
+import {Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import { Text } from "../../../components/index";
 
 const TermCondition = ({}) => {
   return (

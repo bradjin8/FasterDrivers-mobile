@@ -1,13 +1,14 @@
+import SimpleHeader from "components/SimpleHeader";
 import React, {useRef, useState} from "react";
-import {StyleSheet, View, Image, TouchableHighlight, Platform, Pressable} from "react-native";
-import {color, scale, scaleVertical} from "utils";
+import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
+import ActionSheet from "react-native-actionsheet";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
 import {Button, CustomTextInput, Text} from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
-import SimpleHeader from "components/SimpleHeader";
-import {useDispatch, useSelector} from "react-redux";
-import {pickFromCamera, pickFromGallery} from "utils/Camera";
-import ActionSheet from "react-native-actionsheet";
 import {updateAccount} from "../../../screenRedux/loginRedux";
 
 const AccountInformation = () => {
@@ -63,7 +64,7 @@ const AccountInformation = () => {
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}}/>
+              <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
               <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture}/>
@@ -181,7 +182,8 @@ const styles = StyleSheet.create({
   icon: {
     width: scale(36),
     height: scaleVertical(30),
-    tintColor: 'white'
+    tintColor: 'white',
+    resizeMode: 'contain',
   },
   stateView: {
     flexDirection: 'row',

@@ -1,22 +1,20 @@
-import React, {useEffect, useState, useRef} from "react";
-import {Image, Pressable, ScrollView, StyleSheet, View, Platform, PermissionsAndroid, Linking, ToastAndroid, Alert, ActivityIndicator} from "react-native";
+import {navigate} from "navigation/NavigationService";
+import React, {useEffect, useState} from "react";
+import {ActivityIndicator, Image, Platform, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
-import {color, scale, scaleVertical, screenWidth} from "utils";
-import {Images} from "src/theme";
-import {getCurrentLocation} from "utils/Location";
-import {truncateString} from "utils/utils";
-import {ActivityIndicators, CustomTextInput, Text} from "../../../components/index";
-import BaseScreen from "../../../components/BaseScreen";
-import {useDispatch, useSelector} from "react-redux";
-import {getAddressesData, getRestaurantsData, requestFailed, updateAddresses} from "../../../screenRedux/customerRedux";
+import {Menu, MenuItem} from 'react-native-material-menu';
 import StarRating from 'react-native-star-rating-new';
+import AntDesign from "react-native-vector-icons/AntDesign";
 import Icon from 'react-native-vector-icons/dist/Feather';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
-import {navigate} from "navigation/NavigationService";
-import MapView from 'react-native-maps';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import Geolocation from 'react-native-geolocation-service';
-import {Menu, MenuItem} from 'react-native-material-menu';
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme";
+import {color, scale, scaleVertical, screenWidth} from "utils";
+import {getCurrentLocation} from "utils/Location";
+import {truncateString} from "utils/utils";
+import BaseScreen from "../../../components/BaseScreen";
+import {ActivityIndicators, CustomTextInput, Text} from "../../../components/index";
+import {getAddressesData, getRestaurantsData, requestFailed} from "../../../screenRedux/customerRedux";
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -160,7 +158,7 @@ const Home = ({navigation}) => {
       <View style={styles.headerView}>
         <View style={styles.profileView}>
           <Image source={{uri: photo}} defaultSource={Images.dummyProfile} style={styles.profilePic}/>
-          <Text variant="text" color="gray" fontSize={12} fontWeight="500" style={{marginLeft: scaleVertical(5)}}>
+          <Text variant="strong" color="black" fontSize={12} fontWeight="600" style={{marginLeft: scaleVertical(5)}}>
             {name}
           </Text>
         </View>
@@ -176,7 +174,7 @@ const Home = ({navigation}) => {
                   <Text variant="text" color="gray" fontSize={10} fontWeight="400">
                     {renderLocation()}
                   </Text>
-                  <Image source={Images.downArrow} style={styles.downIcon} resizeMode={'contain'}/>
+                  <AntDesign name={'caretdown'} size={10} color={color.black} style={{marginLeft: scaleVertical(5)}}/>
                 </View>
               }
               onRequestClose={() => hideMenu()}
@@ -257,7 +255,6 @@ const styles = StyleSheet.create({
   locationPopup: {justifyContent: 'center', width: '100%'},
   locationMenuItem: {justifyContent: 'space-between', flexDirection: 'row', width: '100%', alignItems: 'center'},
   profilePic: {width: scaleVertical(34), height: scaleVertical(34), borderRadius: scaleVertical(17)},
-  downIcon: {width: scaleVertical(11), height: scaleVertical(8)},
   flex: {flexDirection: 'row', alignItems: 'center'},
   container: {
     flex: 1,

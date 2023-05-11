@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { color, scale, scaleVertical } from "utils";
+import React, {useState} from "react";
+import {Image, StyleSheet, View} from "react-native";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
 import validator from "utils/validation";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../components/index";
 import BaseScreen from "../../components/BaseScreen";
+import {Button, CustomTextInput, Text} from "../../components/index";
 
 const ForgotPassword = ({ navigation }) => {
   const [userName, setUserName] = useState(null)

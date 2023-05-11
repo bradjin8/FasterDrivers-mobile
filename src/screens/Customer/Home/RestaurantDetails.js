@@ -1,15 +1,15 @@
+import _ from 'lodash'
+import {goBack, navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
 import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
-import {color, scale, scaleVertical, screenWidth} from "utils";
-import {Images} from "src/theme";
-import {ActivityIndicators, Button, Text} from "../../../components/index";
+import StarRating from "react-native-star-rating-new";
 import Icon from "react-native-vector-icons/dist/Feather";
 import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme";
+import {color, scale, scaleVertical, screenWidth} from "utils";
+import {ActivityIndicators, Button, Text} from "../../../components/index";
 import {getRestaurantDetails, setUserCartItems} from "../../../screenRedux/customerRedux";
-import {goBack, navigate} from "navigation/NavigationService";
-import StarRating from "react-native-star-rating-new";
-import _ from 'lodash'
 
 const RestaurantDetails = ({route}) => {
   const dispatch = useDispatch();

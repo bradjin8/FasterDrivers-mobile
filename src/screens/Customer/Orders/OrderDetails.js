@@ -1,18 +1,18 @@
 import OrderStatusIndicator from "components/OrderStatusIndicator";
-import React, {useEffect, useState} from "react";
-import {Image, Pressable, ScrollView, StyleSheet, TextInput, View} from "react-native";
-import {showMessage} from "react-native-flash-message";
-import {color, scale, scaleVertical, screenWidth} from "utils";
-import {Images} from "src/theme";
-import {ActivityIndicators, Button, Text} from "../../../components/index";
-import Icon from "react-native-vector-icons/dist/Feather";
-import {useDispatch, useSelector} from "react-redux";
-import {ORDER_STATUS} from "../../../consts/orders";
-import {getDishById, getRestaurantDetails, setUserCartItems} from "../../../screenRedux/customerRedux";
 import {goBack, navigate} from "navigation/NavigationService";
+import React, {useEffect, useState} from "react";
+import {Image, Linking, Pressable, ScrollView, StyleSheet, TextInput, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
+import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import StarRating from "react-native-star-rating-new";
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from "react-native-responsive-screen";
-import {Linking} from "react-native";
+import Icon from "react-native-vector-icons/dist/Feather";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme";
+import {color, scale, scaleVertical, screenWidth} from "utils";
+import {ActivityIndicators, Button, Text} from "../../../components/index";
+import {ORDER_STATUS} from "../../../consts/orders";
+import {getDishById} from "../../../screenRedux/customerRedux";
 
 const OrderDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -146,7 +146,7 @@ const OrderDetails = ({route}) => {
             />
           </View>}
 
-          {order?.driver && <View style={styles.driverContainer}>
+          {(true || order?.driver )&& <View style={styles.driverContainer}>
             <View style={styles.flex}>
               <Image source={{uri: order?.driver?.photo || "https://fancy-cherry-36842.s3.amazonaws.com/media/restaurant/images/beafbe99-6412-41dd-b948-c8fb03be32c4.jpg"}} style={styles.avatar} resizeMode={'cover'}/>
               <View style={styles.column}>
@@ -165,7 +165,7 @@ const OrderDetails = ({route}) => {
                     })
                 })
             }}>
-              <Image source={Images.Phone} resizeMode={'contain'}/>
+              <FontAwesome name={'phone'} size={scale(28)} color={color.white}/>
             </Pressable>
           </View>}
           {order?.driver !== null && <Button
@@ -222,7 +222,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: scaleVertical(25),
     top: scaleVertical(10),
-    // right: 0,
     zIndex: 11,
   },
   itemImage: {
@@ -280,7 +279,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     marginLeft: wp(3),
-    // flex: 1,
   },
   phone: {
     width: wp(13),

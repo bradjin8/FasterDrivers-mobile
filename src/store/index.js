@@ -1,4 +1,4 @@
-import { configureStore, createReducer, combineReducers } from "@reduxjs/toolkit"
+import {combineReducers, configureStore, createReducer} from "@reduxjs/toolkit"
 
 export const getStore = (globalState) => {
   const appReducer = createReducer(globalState, _ => {
@@ -14,8 +14,8 @@ export const getStore = (globalState) => {
       if (rootState) {
         rootState = {
           ...rootState,
-          auth: initialAuthState,
-          dashboard: initialDashboardState
+          auth: {},
+          dashboard: {}
         }
       }
     }

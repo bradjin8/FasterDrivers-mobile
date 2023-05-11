@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {ActivityIndicator, Linking, StyleSheet, View} from "react-native";
 import {scaleVertical} from "utils";
-import {color} from "../../../utils/color";
-import SimpleHeader from "../../../components/SimpleHeader";
-import {checkStripeStatus, setUpStripeAccount} from "../../../screenRedux/restaurantRedux";
-import {Text} from "../../../components/text";
 import {Button} from "../../../components/button";
+import SimpleHeader from "../../../components/SimpleHeader";
+import {Text} from "../../../components/text";
+import {checkStripeStatus, setUpStripeAccount} from "../../../screenRedux/restaurantRedux";
+import {color} from "../../../utils/color";
 
 const Wallet = ({navigation}) => {
   const [enabled, setEnabled] = useState(false)
