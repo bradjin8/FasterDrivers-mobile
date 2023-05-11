@@ -14,6 +14,8 @@ const GET_DISHES_REQUEST_STARTED = "GET_DISHES_REQUEST_STARTED"
 const GET_DISHES_REQUEST_COMPLETED = "GET_DISHES_REQUEST_COMPLETED"
 const ADD_NEW_DISH_REQUEST_STARTED = "ADD_NEW_DISH_REQUEST_STARTED"
 const ADD_NEW_DISH_REQUEST_COMPLETED = "ADD_NEW_DISH_REQUEST_COMPLETED"
+const UPDATE_DISH_REQUEST_STARTED = "UPDATE_DISH_REQUEST_STARTED"
+const UPDATE_DISH_REQUEST_COMPLETED = "UPDATE_DISH_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 const VIEW_MY_ORDERS_REQUEST_STARTED = "VIEW_MY_ORDERS_REQUEST_STARTED"
 const VIEW_MY_ORDERS_REQUEST_COMPLETED = "VIEW_MY_ORDERS_REQUEST_COMPLETED"
@@ -84,6 +86,16 @@ export const restaurantReducer = (state = initialState, action) => {
         loading: true
       }
     case ADD_NEW_DISH_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+      }
+    case UPDATE_DISH_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case UPDATE_DISH_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
@@ -443,6 +455,51 @@ function* assignDriverAction(data) {
   }
 }
 
+export const updateDish = (data) => ({
+  type: UPDATE_DISH_REQUEST_STARTED,
+  payload: data,
+})
+
+const updateDishFinished = (data) => ({
+  type: UPDATE_DISH_REQUEST_COMPLETED,
+  payload: data,
+})
+
+export const updateDishAPI = (data) => {
+  console.log('update-dish-api', data)
+  const URL = `${appConfig.backendServerURL}/restaurants/dishes/${data.id}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "PATCH",
+    data: data.data
+  }
+  return XHR(URL, options)
+}
+
+function* updateDishAction(data) {
+  try {
+    const resp = yield call(updateDishAPI, data.payload)
+    if (resp?.data) {
+      yield put(updateDishFinished(resp.data))
+      showMessage({
+        message: "Dish Updated Successfully",
+        type: "success"
+      })
+      goBack()
+    }
+  } catch (e) {
+    const {response} = e
+    console.log('update-dish-error', response.data)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(ADD_NEW_DISH_REQUEST_STARTED, addNewDishAction),
   takeLatest(GET_DISHES_REQUEST_STARTED, getDishesAction),
@@ -451,4 +508,5 @@ export default all([
   takeLatest(REJECT_ORDER_REQUEST_STARTED, rejectOrderAction),
   takeLatest(GET_NEARBY_DRIVERS_REQUEST_STARTED, getNearbyDriversAction),
   takeLatest(ASSIGN_DRIVER_REQUEST_STARTED, assignDriverAction),
+  takeLatest(UPDATE_DISH_REQUEST_STARTED, updateDishAction),
 ])

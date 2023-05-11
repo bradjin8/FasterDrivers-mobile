@@ -85,6 +85,7 @@ const AccountInformation = () => {
             Phone Number
           </Text>
           <CustomTextInput
+            keyboardType={'email-address'}
             value={customerDetails["customer.phone"]}
             onChangeText={(text) => onChangeText("customer.phone", text)}
           />
@@ -117,6 +118,7 @@ const AccountInformation = () => {
                 Zip Code
               </Text>
               <CustomTextInput
+                keyboardType={'number-pad'}
                 value={customerDetails["customer.addresses[0]zip_code"]}
                 onChangeText={(text) => onChangeText("customer.addresses[0]zip_code", text)}
               />

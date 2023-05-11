@@ -98,6 +98,7 @@ const AccountInformation = ({ navigation }) => {
             Email
           </Text>
           <CustomTextInput
+            keyboardType={'email-address'}
             value={email}
             onChangeText={(text) => setEmail(text)}
             onBlurText={onBlurUser}
@@ -108,6 +109,7 @@ const AccountInformation = ({ navigation }) => {
             Phone Number
           </Text>
           <CustomTextInput
+            keyboardType={'phone-pad'}
             value={phone}
             onChangeText={(text) => setPhone(text)}
             onBlurText={onBlurUser}

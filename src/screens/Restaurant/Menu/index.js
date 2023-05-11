@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator, FlatList} from "react-native";
+import {StyleSheet, View, Image, ScrollView, Pressable, ActivityIndicator, FlatList, SafeAreaView} from "react-native";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical, restaurantSettingData} from "utils";
@@ -43,7 +43,7 @@ const Menu = ({navigation, route}) => {
   }
 
   return (
-    <BaseScreen style={styles.mainWrapper}>
+    <SafeAreaView style={styles.mainWrapper}>
       <SimpleHeader
         title="Menu"
         showBackIcon={true}
@@ -89,7 +89,7 @@ const Menu = ({navigation, route}) => {
               </View>
             </View>
             <View style={{alignItems: 'flex-end'}}>
-              <Pressable onPress={() => navigate("ViewDish", {item})}>
+              <Pressable onPress={() => navigate("ViewDish", {dish: item})}>
                 <Image source={Images.ThreeDots} style={{width: 20, height: 20}} resizeMode={'contain'}/>
               </Pressable>
               <Text variant="h5" color="black" fontSize={14} fontWeight="400">
@@ -107,7 +107,7 @@ const Menu = ({navigation, route}) => {
         </View>}
       />
 
-    </BaseScreen>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({

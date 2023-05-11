@@ -11,25 +11,25 @@ import {navigate} from "navigation/NavigationService";
 import {getDishesRequest} from "../../../screenRedux/restaurantRedux";
 
 const ViewDish = ({route}) => {
-  const {item} = route?.params;
+  const dish = route.params?.dish || {};
 
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
-        title={item?.name}
+        title={dish?.name}
         showBackIcon={true}
       />
       <View style={styles.container}>
         <View style={styles.image}>
-          <Image source={{uri: item?.image_1}} style={{width: '100%', height: '100%'}} resizeMode={'cover'}/>
-          <Pressable style={styles.edit} onPress={() => {}}>
+          <Image source={{uri: dish?.image_1}} style={{width: '100%', height: '100%'}} resizeMode={'cover'}/>
+          <Pressable style={styles.edit} onPress={() => navigate("AddNewDish", {dish})}>
             <Image source={Images.Pencil} style={{width: '50%', height: '50%'}} resizeMode={'contain'}/>
           </Pressable>
         </View>
         <View style={styles.body}>
-          <Text variant='strong' fontSize={14} color='black'>{item?.name}</Text>
-          <Text variant='h5' fontSize={14} color='black'>${item?.price}</Text>
-          <Text variant='text' fontSize={12} color='black'>{item?.description}</Text>
+          <Text variant='strong' fontSize={14} color='black'>{dish?.name}</Text>
+          <Text variant='h5' fontSize={14} color='black'>${dish?.price}</Text>
+          <Text variant='text' fontSize={12} color='black'>{dish?.description}</Text>
         </View>
       </View>
     </BaseScreen>

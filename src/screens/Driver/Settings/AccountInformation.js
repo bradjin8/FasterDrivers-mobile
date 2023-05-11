@@ -86,6 +86,7 @@ const AccountInformation = () => {
           </Text>
           <CustomTextInput
             value={customerDetails["driver.phone"]}
+            keyboardType={'phone-pad'}
             onChangeText={(text) => onChangeText("driver.phone", text)}
           />
           <Text variant="text" color="black" >
@@ -110,6 +111,7 @@ const AccountInformation = () => {
                 Zip Code
               </Text>
               <CustomTextInput
+                keyboardType={'number-pad'}
                 value={customerDetails["driver.zip_code"]}
                 onChangeText={(text) => onChangeText("driver.zip_code", text)}
               />
