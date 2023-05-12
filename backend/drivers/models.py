@@ -57,3 +57,8 @@ class Driver(UUIDModel):
         max_length=255,
         blank=True
     )
+    car_image = models.ImageField(
+        upload_to='drivers/cars',
+        blank=True,
+        null=True
+    )
