@@ -18,11 +18,12 @@ const AccountInformation = () => {
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
   const [changeImage, setChangeImage] = useState(null)
-  const {name, customer: {phone, addresses, photo}} = user
+  const {name, email, customer: {phone, addresses, photo}} = user
   const [pickImage, setPickImage] = useState(photo)
 
   const [customerDetails, setCustomerDetails] = useState({
     "name": name || "",
+    "customer.email": email || "",
     "customer.phone": phone || "",
     "customer.addresses[0]street": addresses[0]?.street || "",
     "customer.addresses[0]city": addresses[0]?.city || "",
@@ -46,6 +47,7 @@ const AccountInformation = () => {
       });
     }
     data.append("name", customerDetails.name);
+    data.append("email", customerDetails.email);
     data.append("customer.phone", customerDetails["customer.phone"]);
     data.append("customer.addresses[0]street", customerDetails["customer.addresses[0]street"]);
     data.append("customer.addresses[0]city", customerDetails["customer.addresses[0]city"]);
@@ -83,16 +85,26 @@ const AccountInformation = () => {
             onChangeText={(text) => onChangeText("name", text)}
           />
           <Text variant="text" color="black">
-            Phone Number
+            Email
           </Text>
           <CustomTextInput
             keyboardType={'email-address'}
+            value={customerDetails["customer.email"]}
+            onChangeText={(text) => onChangeText("customer.email", text)}
+          />
+          <Text variant="text" color="black">
+            Phone Number
+          </Text>
+          <CustomTextInput
+            keyboardType={'phone-pad'}
             value={customerDetails["customer.phone"]}
             onChangeText={(text) => onChangeText("customer.phone", text)}
           />
-          <Text variant="text" color="black">
-            Address
-          </Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text variant="text" color="black">
+              Addresses
+            </Text>
+          </View>
           <CustomTextInput
             value={customerDetails["customer.addresses[0]street"]}
             onChangeText={(text) => onChangeText("customer.addresses[0]street", text)}
@@ -177,7 +189,8 @@ const styles = StyleSheet.create({
   actualImage: {
     width: scaleVertical(80),
     height: scaleVertical(80),
-    borderRadius: scaleVertical(40)
+    borderRadius: scaleVertical(40),
+    resizeMode: 'contain'
   },
   icon: {
     width: scale(36),

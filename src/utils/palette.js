@@ -18,4 +18,5 @@ export const palette = {
   warn: '#FF5023',
   info: '#17A400',
   success: '#00B300',
+  cyan: 'cyan',
 };

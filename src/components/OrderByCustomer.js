@@ -125,7 +125,7 @@ const OrderByCustomer = ({order, tab}) => {
           </View>
         </View>
         <Pressable style={styles.itemNext} onPress={() => setExpanded(!expanded)}>
-          <Octicons name={expanded ? 'chevron-down' : 'chevron-right'} size={20} color={color.black} style={styles.expandIcon}/>
+          <Octicons name={expanded ? 'chevron-down' : 'chevron-right'} size={20} color={color.black}/>
         </Pressable>
       </View>
       {expanded === true && <View style={styles.detailContainer}>
@@ -227,9 +227,6 @@ const styles = StyleSheet.create({
   },
   itemNext: {
     width: widthPercentageToDP(6),
-  },
-  expandIcon: {
-    tintColor: color.black,
   },
   detailContainer: {
     width: widthPercentageToDP(100),

@@ -22,7 +22,7 @@ const Map = ({navigation, route}) => {
 
 
   const dispatch = useDispatch()
-  const data = mockData
+  const data = nearbyDrivers
 
   console.log('restaurant', nearbyDrivers, orderId)
 
@@ -31,17 +31,7 @@ const Map = ({navigation, route}) => {
       const formData = new FormData()
       formData.append('driver', driverId)
       formData.append('order', orderId)
-      dispatch(assignDriverRequest(
-        formData,
-        () => {
-          navigate('Home', {
-            screen: 'Home',
-            params: {
-              tab: 1,
-            }
-          })
-        }
-      ))
+      dispatch(assignDriverRequest(formData))
     }
   }
 
@@ -62,10 +52,10 @@ const Map = ({navigation, route}) => {
   }, [])
 
   const renderOverlay = () => {
-    if (activeDriverIndex < 0)
+    if (activeDriverIndex < 0 || data.length < 1)
       return <View></View>
 
-    const {name, driver: driver} = data[activeDriverIndex]
+    const {id, name, driver: driver} = data[activeDriverIndex]
     return (<View style={styles.overlay}>
       <View style={styles.overlayRow}>
         <View style={styles.avatar}>
@@ -80,7 +70,7 @@ const Map = ({navigation, route}) => {
           <Text color={'gray'}>15 Minutes Away</Text>
         </View>
       </View>
-      <Pressable style={styles.assign} onPress={() => assignDriver(driver.id)}>
+      <Pressable style={styles.assign} onPress={() => assignDriver(id)}>
         <Text fontSize={16} variant={'strong'} color={'white'}>Assign</Text>
       </Pressable>
     </View>)

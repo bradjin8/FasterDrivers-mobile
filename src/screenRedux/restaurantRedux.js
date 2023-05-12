@@ -434,14 +434,18 @@ export const assignDriverAPI = (data) => {
 
 function* assignDriverAction(data) {
   try {
-    console.log('assign-driver', data.payload)
     const resp = yield call(assignDriverAPI, data.payload)
     if (resp?.data) {
-      console.log('assign-driver', resp.data)
       yield put(assignDriverFinished(resp.data))
       showMessage({
         message: "Driver Assigned Successfully",
         type: "success"
+      })
+      navigate('Home', {
+        screenName: 'Home',
+        params: {
+          tab: 1,
+        }
       })
     }
   } catch (e) {

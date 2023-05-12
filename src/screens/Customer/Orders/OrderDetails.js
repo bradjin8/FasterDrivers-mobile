@@ -146,16 +146,16 @@ const OrderDetails = ({route}) => {
             />
           </View>}
 
-          {(true || order?.driver )&& <View style={styles.driverContainer}>
+          {(order?.driver )&& <View style={styles.driverContainer}>
             <View style={styles.flex}>
               <Image source={{uri: order?.driver?.photo || "https://fancy-cherry-36842.s3.amazonaws.com/media/restaurant/images/beafbe99-6412-41dd-b948-c8fb03be32c4.jpg"}} style={styles.avatar} resizeMode={'cover'}/>
               <View style={styles.column}>
-                <Text color={'itemPrimary'} fontSize={10}>Courier</Text>
+                <Text color={'itemPrimary'} fontSize={12} variant={'h5'}>Courier</Text>
                 <Text variant={'strong'}>Wade Warren</Text>
               </View>
             </View>
             <Pressable style={styles.phone} onPress={() => {
-              const url = `tel:${order?.driver?.phone}`
+              const url = `tel:${order?.driver?.driver?.phone}`
               Linking.openURL(url)
                 .then((res) => {
                   if (!res)

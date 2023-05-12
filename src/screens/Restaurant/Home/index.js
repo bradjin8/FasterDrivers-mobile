@@ -27,7 +27,7 @@ const Home = ({route}) => {
         status = [ORDER_STATUS.Unpaid, ORDER_STATUS.Pending]
         break
       case 1:
-        status = [ORDER_STATUS.Accepted, ORDER_STATUS.InProgress, ORDER_STATUS.InTransit]
+        status = [ORDER_STATUS.Accepted, ORDER_STATUS.InProgress, ORDER_STATUS.InTransit, ORDER_STATUS.DriverAssigned]
         break
       case 2:
         status = [ORDER_STATUS.Delivered, ORDER_STATUS.Rejected]

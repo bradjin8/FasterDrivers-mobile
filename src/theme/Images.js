@@ -22,6 +22,7 @@ import search from "src/assets/images/seacrh.png"
 import Settings from "src/assets/images/settings.png"
 import Terms from "src/assets/images/terms.png"
 import ticks from "src/assets/images/ticks.png"
+import Market from "src/assets/images/market.png"
 
 export default {
   AppLogo,
@@ -48,4 +49,5 @@ export default {
   OrderDelivered,
   OrderRejected,
   Logo,
+  Market,
 }

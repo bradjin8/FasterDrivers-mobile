@@ -2,6 +2,7 @@ import SimpleHeader from "components/SimpleHeader";
 import React, {useRef, useState} from "react";
 import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme"
 import {color, scale, scaleVertical} from "utils";
@@ -16,9 +17,10 @@ const CarDetails = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [pickImage, setPickImage] = useState(user?.driver?.photo)
+  const { driver: { car_image, car_make, car_model, car_vin, car_license_number } } = user
+
+  const [pickImage, setPickImage] = useState(car_image)
   const [changeImage, setChangeImage] = useState(null)
-  const { driver: { car_make, car_model, car_vin, car_license_number } } = user
 
   const [customerDetails, setCustomerDetails] = useState({
     "driver.car_make": car_make,
@@ -34,7 +36,7 @@ const CarDetails = () => {
   const onSave = () => {
     let data = new FormData();
     if(changeImage) {
-      data.append('driver.photo', {
+      data.append('driver.car_image', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
         uri: Platform.OS === 'ios' ? pickImage.sourceURL.replace('file://', '') : pickImage.path,
@@ -59,7 +61,7 @@ const CarDetails = () => {
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencileView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
+              <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />

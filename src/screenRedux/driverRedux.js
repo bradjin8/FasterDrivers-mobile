@@ -59,8 +59,9 @@ export const driverReducer = (state = initialState, action) => {
 }
 
 // Saga
-async function getAssignedOrdersAPI({driverId}) {
-  const URL = `${appConfig.backendServerURL}/orders/?driver=${driverId}&status=Driver Assigned`
+async function getAssignedOrdersAPI(data) {
+  console.log('driverId', data)
+  const URL = `${appConfig.backendServerURL}/orders/?driver=${data.driverId}&status=Driver Assigned`
   const options = {
     headers: {
       Accept: "application/json"
@@ -70,9 +71,10 @@ async function getAssignedOrdersAPI({driverId}) {
   return XHR(URL, options)
 }
 
-function* getAssignedOrdersAction({payload}) {
+function* getAssignedOrdersAction(data) {
+  console.log('get-assigned-orders-action', data)
   try {
-    const resp = yield call(getAssignedOrdersAPI, payload)
+    const resp = yield call(getAssignedOrdersAPI, data.payload)
     if (resp.status === 200) {
       yield put(getAssignedOrdersCompleted(resp?.data))
     } else {

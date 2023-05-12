@@ -8,20 +8,25 @@ import {color} from "../utils/color";
 
 const OrderStatusIndicator = ({status}) => {
   let idx = -1
-  switch (status.toLowerCase()) {
-    case 'in progress':
-    case 'in transit':
+  switch (status) {
+    case ORDER_STATUS.DriverAssigned:
+    case ORDER_STATUS.InProgress:
+    case ORDER_STATUS.InTransit:
       idx = 1
       break;
-    case 'accepted':
+    case ORDER_STATUS.Accepted:
     // case 'pending':
       idx = 0
       break;
-    case 'delivered':
+    case ORDER_STATUS.Delivered:
       idx = 2
       break;
     default:
       idx = -1
+  }
+
+  if (status === ORDER_STATUS.Unpaid) {
+    return (<View/>)
   }
 
   if (status === ORDER_STATUS.Rejected) {
@@ -45,8 +50,8 @@ const OrderStatusIndicator = ({status}) => {
         return (
           <View key={index} style={styles.item}>
             <View style={{...styles.iconContainer, ...{
-              backgroundColor: idx === index ? color.primary : color.white,
-              borderColor: idx === index ? color.primary : color.black,
+              backgroundColor: idx >= index ? color.primary : color.white,
+              borderColor: idx >= index ? color.primary : color.black,
             }}}>
               <Image source={item.icon} style={styles.icon} />
             </View>

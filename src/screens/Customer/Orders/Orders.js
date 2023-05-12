@@ -8,6 +8,7 @@ import Octicons from "react-native-vector-icons/Octicons";
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale} from "utils";
 import {Text} from "../../../components/index";
+import {ORDER_STATUS} from "../../../consts/orders";
 import {getMyOrders} from "../../../screenRedux/customerRedux";
 
 const Orders = ({navigation}) => {
@@ -38,21 +39,20 @@ const Orders = ({navigation}) => {
   }
 
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case 'unpaid':
+    switch (status) {
+      case ORDER_STATUS.Unpaid:
+      case ORDER_STATUS.Rejected:
         return 'red'
-      case 'pending':
-      case 'in progress':
-      case 'in transit':
+      case ORDER_STATUS.DriverAssigned:
+        return 'cyan'
+      case ORDER_STATUS.Pending:
+      case ORDER_STATUS.InProgress:
+      case ORDER_STATUS.InTransit:
         return 'orange'
-      case 'accepted':
+      case ORDER_STATUS.Accepted:
         return 'green'
-      case 'rejected':
-        return 'red'
-      case 'delivered':
+      case ORDER_STATUS.Delivered:
         return 'blue'
-      case 'cancelled':
-        return 'red'
       default:
         return 'black'
     }

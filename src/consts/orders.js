@@ -14,6 +14,7 @@ export const ORDER_STATUS_COLOR = {
   Pending: 'orange',
   Accepted: 'primary',
   Rejected: 'error',
+  [ORDER_STATUS.DriverAssigned]: 'cyan',
   InProgress: 'primary',
   InTransit: 'primary',
   Delivered: 'success',
