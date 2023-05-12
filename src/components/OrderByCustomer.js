@@ -9,58 +9,12 @@ import {truncateString} from "utils/utils";
 import {Text} from "../components/index";
 import {ORDER_STATUS, ORDER_STATUS_COLOR} from "../consts/orders";
 import {acceptOrderRequest, getDishAPI, rejectOrderRequest} from "../screenRedux/restaurantRedux";
-import {Images} from "../theme";
-
+import moment from "moment";
 
 const OrderByCustomer = ({order, tab}) => {
   const [expanded, setExpanded] = useState(false)
   const {loading} = useSelector(state => state.restaurantReducer)
   const dispatch = useDispatch()
-
-
-  const renderOrderStatus = () => {
-    switch (tab) {
-      case 0:
-        return <Text color='primary'>New</Text>
-      case 1:
-        return <Text color='warn'>In Progress</Text>
-      case 2:
-        return <Text color='info'>Completed</Text>
-      default:
-        return <Text color='primary'>New</Text>
-    }
-  }
-
-  const getOrderTime = () => {
-    const ordered = new Date(order.updated_at).getTime()
-    const now = Date.now()
-
-    if (isNaN(ordered)) return '-'
-
-    const diff = (now - ordered) / 1000
-
-    if (diff < 60) {
-      return 'Less than a minute ago'
-    }
-    else if (diff < 3600) {
-      return `${Math.floor(diff / 60)} minutes ago`
-    }
-    else if (diff < 86400) {
-      return `${Math.floor(diff / 3600)} hours ago`
-    }
-    else if (diff < 604800) {
-      return `${Math.floor(diff / 86400)} days ago`
-    }
-    else if (diff < 2592000) {
-      return `${Math.floor(diff / 604800)} weeks ago`
-    }
-    else if (diff < 31536000) {
-      return `${Math.floor(diff / 2592000)} months ago`
-    }
-    else {
-      return `${Math.floor(diff / 31536000)} years ago`
-    }
-  }
 
   const acceptOrder = () => {
     if (!loading) {
@@ -82,25 +36,28 @@ const OrderByCustomer = ({order, tab}) => {
   }
 
   const renderAction = () => {
-    if (order.status === ORDER_STATUS.Pending) {
-      return (
-        <View style={styles.rowEvenly}>
-          <Pressable style={styles.decline} onPress={rejectOrder}>
-            <Text color='white' variant='strong'>Decline</Text>
-          </Pressable>
-          <Pressable style={styles.accept} onPress={acceptOrder}>
-            <Text color='white' variant='strong'>Accept</Text>
-          </Pressable>
-        </View>
-      )
-    } else if (tab === 1) {
-      return (
-        <View style={styles.rowCenter}>
-          <Pressable style={styles.assign} onPress={assignDriver}>
-            <Text color='white' variant='strong'>Assign to Driver</Text>
-          </Pressable>
-        </View>
-      )
+    switch (order.status) {
+      case ORDER_STATUS.Pending:
+        return (
+          <View style={styles.rowEvenly}>
+            <Pressable style={styles.decline} onPress={rejectOrder}>
+              <Text color='white' variant='strong'>Decline</Text>
+            </Pressable>
+            <Pressable style={styles.accept} onPress={acceptOrder}>
+              <Text color='white' variant='strong'>Accept</Text>
+            </Pressable>
+          </View>
+        )
+      case ORDER_STATUS.Accepted:
+        return (
+          <View style={styles.rowCenter}>
+            <Pressable style={styles.assign} onPress={assignDriver}>
+              <Text color='white' variant='strong'>Assign to Driver</Text>
+            </Pressable>
+          </View>
+        )
+      default:
+
     }
 
     return <View></View>
@@ -121,7 +78,7 @@ const OrderByCustomer = ({order, tab}) => {
           </View>
           <View style={styles.row}>
             <Text color={'item'}>{order.dishes.length} dish{order.dishes.length > 1 ? 'es' : ''}</Text>
-            <Text color='darkGray' fontSize={12}>{getOrderTime()}</Text>
+            <Text color='darkGray' fontSize={12}>{moment.utc(order.updated_at).fromNow()}</Text>
           </View>
         </View>
         <Pressable style={styles.itemNext} onPress={() => setExpanded(!expanded)}>

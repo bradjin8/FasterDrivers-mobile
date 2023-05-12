@@ -1,8 +1,9 @@
+import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
 import React from "react";
 import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {color, driverSettingData, scaleVertical} from "utils";
 import {Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
@@ -10,6 +11,7 @@ import {logoutRequest} from "../../../screenRedux/loginRedux";
 
 const Settings = ({}) => {
   const dispatch = useDispatch()
+  const {user: { name, driver: driver}} = useSelector((state) => state.loginReducer)
 
   const redirectTo = (key) => {
     if(key === "logout") {
@@ -20,10 +22,7 @@ const Settings = ({}) => {
 
   return (
     <View style={styles.mainWrapper}>
-      <SimpleHeader
-        title="Settings"
-        showBackIcon={true}
-      />
+      <DriverHeader photo={driver?.photo} name={name}/>
       <ScrollView style={styles.container}>
         {driverSettingData.map((setting, index) => {
           return(

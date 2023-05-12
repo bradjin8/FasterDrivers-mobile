@@ -1,7 +1,7 @@
 import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator, Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import {ActivityIndicator, Image, Linking, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import MapView, {Marker} from "react-native-maps";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -12,16 +12,18 @@ import {color, scale, scaleVertical} from "utils";
 import {extractLatLong, getCurrentLocation} from "utils/Location";
 import {useUpdateDriverLocationWebsocket} from "utils/web-socket";
 import {Button, Text} from "../../../components/index";
-import {getAssignedOrders} from "../../../screenRedux/driverRedux";
+import {ORDER_STATUS} from "../../../consts/orders";
+import {deliverOrder, getAssignedOrders, pickupOrder} from "../../../screenRedux/driverRedux";
 
 const MESSAGE = {
   FINDING: "Finding Orders...",
   ACCEPTING: "Accepting Order...",
-  REJECTING: "Rejecting Order..."
+  REJECTING: "Rejecting Order...",
+  COMPLETING: "Completing Order...",
 }
 const Home = ({navigation}) => {
   const {user: {id, name, driver}} = useSelector(state => state.loginReducer)
-  const {loading, assignedOrders} = useSelector(state => state.driverReducer)
+  const {loading, assignedOrders, needToRefresh} = useSelector(state => state.driverReducer)
   const dispatch = useDispatch()
 
   const [position, setPosition] = React.useState(null)
@@ -52,12 +54,20 @@ const Home = ({navigation}) => {
     setModal(false)
     setOrderIdx(-1)
     setMessage(MESSAGE.ACCEPTING)
+    dispatch(pickupOrder({orderId}))
   }
 
   const reject = (orderId) => {
     setModal(false)
     setOrderIdx(-1)
     setMessage(MESSAGE.REJECTING)
+  }
+
+  const complete = (orderId) => {
+    setModal(false)
+    setOrderIdx(-1)
+    setMessage(MESSAGE.COMPLETING)
+    dispatch(deliverOrder({orderId}))
   }
 
   useEffect(() => {
@@ -74,7 +84,13 @@ const Home = ({navigation}) => {
       clearInterval(interval)
       unsubscribe()
     }
-  }, [id])
+  }, [])
+
+  useEffect(() => {
+    if (needToRefresh) {
+      fetchOrders()
+    }
+  }, [needToRefresh])
 
   useEffect(() => {
     if (position) {
@@ -91,10 +107,33 @@ const Home = ({navigation}) => {
   const renderSelectedOrderDetail = () => {
     if (orderIdx < 0 || orderIdx >= assignedOrders.length) return null
 
-    const {id, address, total, restaurant, user} = assignedOrders[orderIdx]
+    const {id, address, fees, status, total, restaurant, user} = assignedOrders[orderIdx]
 
-    // console.log('order', address)
+    console.log('order', status)
     const deliveryAddress = user?.customer?.addresses?.find(add => add.id === address) || {}
+
+    const renderAction = () => {
+      if (status === ORDER_STATUS.Accepted) {
+        return <View style={styles.action}>
+          <Button
+            text={'Accept Order'} textColor={'white'} style={styles.accept} fontSize={16} fontWeight={'600'}
+            onPress={() => accept(id)}
+          />
+          <Pressable onPress={() => reject(id)}>
+            <Text variant={'strong'} fontSize={12}>Reject Order</Text>
+          </Pressable>
+        </View>
+      }
+
+      if (status === ORDER_STATUS.DriverAssigned) {
+        return <View style={styles.action}>
+          <Button
+            text={'Delivered'} textColor={'white'} style={styles.accept} fontSize={16} fontWeight={'600'}
+            onPress={() => complete(id)}
+          />
+        </View>
+      }
+    }
 
     return <Pressable
       style={{
@@ -111,9 +150,7 @@ const Home = ({navigation}) => {
           <View style={styles.marketMarker}>
             <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
           </View>
-          <View style={styles.line}>
-
-          </View>
+          <View style={styles.line}/>
           <View style={styles.driverMarker}>
             <Entypo name={'location-pin'} size={34}/>
           </View>
@@ -124,23 +161,15 @@ const Home = ({navigation}) => {
             <Text fontSize={12}>{restaurant.street} {restaurant.city}, {restaurant.state} {restaurant.zip_code}</Text>
           </View>
           <View style={styles.customer}>
-            <Text fontSize={12} variant={'strong'}>{name}</Text>
+            <Text fontSize={12} variant={'strong'}>{user?.name}</Text>
             <Text fontSize={12}>{deliveryAddress.street} {deliveryAddress.city}, {deliveryAddress.state} {deliveryAddress.zip_code}</Text>
-            <Pressable>
+            <Pressable onPress={() => Linking.openURL(`tel:${user?.customer?.phone}`)}>
               <Text color={'primary'} variant={'strong'} fontSize={12}>{user?.customer?.phone}</Text>
             </Pressable>
           </View>
         </View>
       </View>
-      {modal && <View style={styles.action}>
-        <Button
-          text={'Accept Order'} textColor={'white'} style={styles.accept} fontSize={16} fontWeight={'600'}
-          onPress={() => accept(id)}
-        />
-        <Pressable onPress={() => reject(id)}>
-          <Text variant={'strong'} fontSize={12}>Reject Order</Text>
-        </Pressable>
-      </View>}
+      {modal && renderAction()}
     </Pressable>
   }
 

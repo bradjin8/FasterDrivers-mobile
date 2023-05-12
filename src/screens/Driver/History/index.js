@@ -1,5 +1,4 @@
 import DriverHeader from "components/DriverHeader";
-import SimpleHeader from "components/SimpleHeader";
 import React from "react";
 import {StyleSheet, View} from "react-native";
 import {useSelector} from "react-redux";
@@ -7,7 +6,7 @@ import {color, scaleVertical} from "utils";
 import BaseScreen from "../../../components/BaseScreen";
 
 const History = () => {
-  const {user: { name, driver: driver}} = useSelector((state) => state.loginReducer);
+  const {user: { name, driver: driver}} = useSelector((state) => state.loginReducer)
   return (
     <BaseScreen style={styles.mainWrapper}>
       <DriverHeader photo={driver?.photo} name={name}/>
