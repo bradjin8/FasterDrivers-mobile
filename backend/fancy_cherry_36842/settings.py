@@ -33,6 +33,7 @@ env.read_env(env_file)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+IS_LOCAL = env.str("IS_LOCAL", default=False)
 
 try:
     # Pull secrets from Secret Manager
@@ -313,14 +314,17 @@ SENDGRID_SENDER = env.str("SENDGRID_SENDER", "sallar.rezaie@crowdbotics.com")
 
 ASGI_APPLICATION = 'fancy_cherry_36842.asgi.application'
 
+host = os.environ.get('REDIS_URL', 'redis://localhost:6379') if not IS_LOCAL else ('0.0.0.0', 6379)
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('redis', 6379)],
+            "hosts": [host],
         },
     },
 }
+
+REDIS_URL = [host]
 
 CONNECTED_SECRET = env.str("CONNECTED_SECRET", "")
 STRIPE_TEST_SECRET_KEY = env.str("STRIPE_TEST_SECRET_KEY", "")
