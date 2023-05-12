@@ -102,7 +102,7 @@ class PaymentViewSet(ModelViewSet):
             )
 
         except Exception as e:
-            return Response("The Restaurant owner has not enabled billing. Please contact the owner to resolve this issue.", status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail" :"The Restaurant owner has not enabled billing. Please contact the owner to resolve this issue."}, status=status.HTTP_400_BAD_REQUEST)
         djstripe_payment_intent = djstripe.models.PaymentIntent.sync_from_stripe_data(payment_intent)
         Payment.objects.create(
             order=order,
