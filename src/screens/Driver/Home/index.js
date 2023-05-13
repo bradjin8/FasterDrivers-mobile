@@ -1,6 +1,6 @@
 import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Image, Linking, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import MapView, {Marker} from "react-native-maps";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
@@ -123,6 +123,10 @@ const Home = ({navigation}) => {
     setResLocs(resLoc)
   }, [assignedOrders])
 
+  useEffect(() => {
+    fitToCoordinates()
+  }, [position, resLocs, desLocs])
+
   // console.log('assigned', assignedOrders)
   const renderSelectedOrderDetail = () => {
     if (orderIdx < 0 || orderIdx >= assignedOrders.length) return null
@@ -195,6 +199,18 @@ const Home = ({navigation}) => {
     </Pressable>
   }
 
+  const fitToCoordinates = () => {
+    mapView.current?.fitToCoordinates([position, ...desLocs, ...resLocs], {
+      edgePadding: {
+        top: 100,
+        right: 100,
+        bottom: 100,
+        left: 100,
+      },
+      animated: true,
+    })
+  }
+
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <DriverHeader photo={driver?.photo} name={name}/>
@@ -207,17 +223,7 @@ const Home = ({navigation}) => {
           longitudeDelta: 0.01,
         }}
         showsUserLocation={true}
-        onMapReady={() => {
-          mapView.current?.fitToCoordinates([position, ...resLocs, ...desLocs], {
-            edgePadding: {
-              top: 100,
-              right: 100,
-              bottom: 200,
-              left: 100,
-            },
-            animated: true,
-          })
-        }}
+        // onMapReady={() => fitToCoordinates()}
       >
         {resLocs.map((resLoc, idx) => (resLoc && <Marker
             key={'res-' + idx}
