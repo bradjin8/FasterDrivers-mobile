@@ -1,12 +1,11 @@
 import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Image, Linking, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import MapView, {Marker} from "react-native-maps";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
 import {useDispatch, useSelector} from "react-redux";
-import orderDetails from "screens/Customer/Orders/OrderDetails";
 import {Images} from "src/theme"
 import {color, scale, scaleVertical} from "utils";
 import {extractLatLong, getCurrentLocation} from "utils/Location";
@@ -31,6 +30,10 @@ const Home = ({navigation}) => {
   const [modal, setModal] = useState(false)
   const [message, setMessage] = useState(MESSAGE.FINDING)
 
+  const [resLocs, setResLocs] = useState([])
+  const [desLocs, setDesLocs] = useState([])
+
+  const mapView = useRef(null)
 
   const driverWebSocket = useUpdateDriverLocationWebsocket(id, false)
 
@@ -61,6 +64,7 @@ const Home = ({navigation}) => {
     setModal(false)
     setOrderIdx(-1)
     setMessage(MESSAGE.REJECTING)
+    fetchOrders()
   }
 
   const complete = (orderId) => {
@@ -71,15 +75,16 @@ const Home = ({navigation}) => {
   }
 
   useEffect(() => {
+    fetchOrders()
     getPosition()
     const interval = setInterval(() => {
       getPosition()
-    }, 30 * 1000)
+      fetchOrders()
+    }, 10 * 1000)
 
     const unsubscribe = navigation.addListener('focus', () => {
-      fetchOrders()
+      // fetchOrders()
     })
-    fetchOrders()
     return () => {
       clearInterval(interval)
       unsubscribe()
@@ -104,16 +109,31 @@ const Home = ({navigation}) => {
     }
   }, [position])
 
+  useEffect(() => {
+    let desLoc = [], resLoc = []
+    assignedOrders.map((order) => {
+      const {restaurant: {location}, user: {customer}, address} = order
+      const deliveryAddress = customer?.addresses?.find(add => add.id === address) || {}
+      // console.log('restaurant-address', location, deliveryAddress.location)
+      desLoc.push(extractLatLong(deliveryAddress.location))
+      resLoc.push(extractLatLong(location))
+    })
+    // console.log('desLoc', desLoc, 'resLoc', resLoc)
+    setDesLocs(desLoc)
+    setResLocs(resLoc)
+  }, [assignedOrders])
+
+  // console.log('assigned', assignedOrders)
   const renderSelectedOrderDetail = () => {
     if (orderIdx < 0 || orderIdx >= assignedOrders.length) return null
 
     const {id, address, fees, status, total, restaurant, user} = assignedOrders[orderIdx]
 
-    console.log('order', status)
+    // console.log('order', status)
     const deliveryAddress = user?.customer?.addresses?.find(add => add.id === address) || {}
 
     const renderAction = () => {
-      if (status === ORDER_STATUS.Accepted) {
+      if (status === ORDER_STATUS.DriverAssigned) {
         return <View style={styles.action}>
           <Button
             text={'Accept Order'} textColor={'white'} style={styles.accept} fontSize={16} fontWeight={'600'}
@@ -125,7 +145,7 @@ const Home = ({navigation}) => {
         </View>
       }
 
-      if (status === ORDER_STATUS.DriverAssigned) {
+      if (status === ORDER_STATUS.InTransit) {
         return <View style={styles.action}>
           <Button
             text={'Delivered'} textColor={'white'} style={styles.accept} fontSize={16} fontWeight={'600'}
@@ -133,6 +153,8 @@ const Home = ({navigation}) => {
           />
         </View>
       }
+
+      return <View/>
     }
 
     return <Pressable
@@ -177,36 +199,50 @@ const Home = ({navigation}) => {
     <SafeAreaView style={styles.mainWrapper}>
       <DriverHeader photo={driver?.photo} name={name}/>
       {position ? <MapView
+        ref={mapView}
         style={styles.container}
-        region={{
+        initialRegion={{
           ...position,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        showsUserLocation={true}
+        onMapReady={() => {
+          mapView.current?.fitToCoordinates([position, ...resLocs, ...desLocs], {
+            edgePadding: {
+              top: 100,
+              right: 100,
+              bottom: 200,
+              left: 100,
+            },
+            animated: true,
+          })
         }}
       >
-        <Marker coordinate={position} anchor={{x: 0.5, y: 0.5}}>
+        {resLocs.map((resLoc, idx) => (resLoc && <Marker
+            key={'res-' + idx}
+            coordinate={resLoc}
+            onPress={() => {
+              setOrderIdx(idx === orderIdx ? -1 : idx)
+            }}
+          >
+            <View style={styles.marketMarker}>
+              <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
+            </View>
+          </Marker>)
+        )}
+        {desLocs.map((desLoc, idx) => (desLoc && <Marker
+          key={'driver-' + idx}
+          coordinate={desLoc}
+          onPress={() => {
+            setOrderIdx(idx === orderIdx ? -1 : idx)
+          }}
+        >
           <View style={styles.driverMarker}>
             <Entypo name={'location-pin'} size={34}/>
           </View>
-        </Marker>
-        {assignedOrders.map((order, idx) => {
-          const {id, restaurant: {location}} = order
-          const loc = extractLatLong(location)
-          return (
-            <Marker
-              key={id}
-              coordinate={loc}
-              anchor={{x: 0.5, y: 0.5}}
-              onPress={() => {
-                setOrderIdx(idx === orderIdx ? -1 : idx)
-              }}
-            >
-              <View style={styles.marketMarker}>
-                <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
-              </View>
-            </Marker>
-          )
-        })}
+        </Marker>))}
+
       </MapView> : <ActivityIndicator/>}
       {loading && <View style={styles.finding}>
         <Text variant={'strong'} color={color.item} fontWeight={'600'}>{message}</Text>

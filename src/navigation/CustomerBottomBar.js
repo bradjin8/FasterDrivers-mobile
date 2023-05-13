@@ -10,9 +10,10 @@ import {useSelector} from "react-redux";
 import Home from "screens/Customer/Home"
 import Cart from "screens/Customer/Home/Cart"
 import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
+
 import AddCard from "screens/Customer/Orders/AddCard"
 import OrderDetails from "screens/Customer/Orders/OrderDetails"
-
+import OrderOnMap from "screens/Customer/Orders/OrderOnMap";
 import Orders from "screens/Customer/Orders/Orders"
 import Payment from "screens/Customer/Orders/Payment"
 
@@ -169,6 +170,7 @@ const OrderTab = () => {
       >
         <settingStack.Screen name="Orders" component={Orders} />
         <settingStack.Screen name="OrderDetails" component={OrderDetails} />
+        <settingStack.Screen name="OrderOnMap" component={OrderOnMap} />
         <settingStack.Screen name="Payment" component={Payment} />
         <settingStack.Screen name="AddCard" component={AddCard} />
       </settingStack.Navigator>

@@ -1,3 +1,4 @@
+import BaseScreen from "components/BaseScreen";
 import OrderStatusIndicator from "components/OrderStatusIndicator";
 import {goBack, navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
@@ -44,8 +45,8 @@ const OrderDetails = ({route}) => {
   console.log('order', order)
 
   return (
-    <>
-      <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 65}}>
+    <BaseScreen style={styles.mainWrapper}>
+      <View style={styles.container} contentContainerStyle={{paddingBottom: 65}}>
         <View>
           <Pressable onPress={() => goBack()} style={styles.backView}>
             <Icon name="arrow-left" size={20} color={color.black}/>
@@ -170,11 +171,13 @@ const OrderDetails = ({route}) => {
           </View>}
           {order?.driver !== null && <Button
             onPress={() => {
-              navigate('Map', {driver: order?.driver})
+              navigate('OrderOnMap', {order: order})
             }}
             text="Show on Map"
             textColor={'item'}
             noBG
+            fontSize={16}
+            fontWeight={'600'}
             style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10), borderColor: color.item, borderWidth: 1}}
           />}
           {order?.status === ORDER_STATUS.Delivered && <View style={styles.reviewContainer}>
@@ -201,8 +204,8 @@ const OrderDetails = ({route}) => {
             />
           </View>}
         </View>
-      </ScrollView>
-    </>
+      </View>
+    </BaseScreen>
   );
 };
 

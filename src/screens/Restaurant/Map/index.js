@@ -1,6 +1,5 @@
 import SimpleHeader from "components/SimpleHeader";
-import {navigate} from "navigation/NavigationService";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
 import MapView, {Marker} from "react-native-maps";
 import {widthPercentageToDP} from "react-native-responsive-screen";
@@ -10,22 +9,25 @@ import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {extractLatLong} from "utils/Location";
 import {Text} from "../../../components/text"
+import {ORDER_STATUS} from "../../../consts/orders";
 import {assignDriverRequest, getNearByDriversRequest} from "../../../screenRedux/restaurantRedux";
 
 const Map = ({navigation, route}) => {
   const {user: {restaurant: restaurant}} = useSelector(state => state.loginReducer)
-  const {loading, nearbyDrivers} = useSelector(state => state.restaurantReducer)
+  const {loading, nearbyDrivers, myOrders} = useSelector(state => state.restaurantReducer)
   const {orderId} = route.params || {}
 
   const [resPoint, setResPoint] = useState(null)
   const [activeDriverIndex, setActiveDriverIndex] = useState(-1)
-
+  const [driverLocs, setDriverLocs] = useState([])
 
   const dispatch = useDispatch()
-  const data = nearbyDrivers
+  const mapView = useRef(null)
+  // console.log('restaurant', nearbyDrivers, orderId)
 
-  console.log('restaurant', nearbyDrivers, orderId)
-
+  const fetchNearbyDrivers = () => {
+    dispatch(getNearByDriversRequest())
+  }
   const assignDriver = (driverId) => {
     if (orderId) {
       const formData = new FormData()
@@ -36,6 +38,10 @@ const Map = ({navigation, route}) => {
   }
 
   useEffect(() => {
+    setDriverLocs(nearbyDrivers.map(item => extractLatLong(item.driver.location)))
+  }, [nearbyDrivers])
+
+  useEffect(() => {
     if (restaurant?.location?.includes("POINT")) {
       const point = extractLatLong(restaurant.location)
       console.log('point', point)
@@ -44,18 +50,21 @@ const Map = ({navigation, route}) => {
   }, [restaurant?.location])
 
   useEffect(() => {
-    dispatch(getNearByDriversRequest())
+    fetchNearbyDrivers()
     const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(getNearByDriversRequest())
-    });
-    return unsubscribe
+      fetchNearbyDrivers()
+    })
+
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
   const renderOverlay = () => {
-    if (activeDriverIndex < 0 || data.length < 1)
+    if (activeDriverIndex < 0 || nearbyDrivers.length < 1)
       return <View></View>
 
-    const {id, name, driver: driver} = data[activeDriverIndex]
+    const {id, name, driver: driver} = nearbyDrivers[activeDriverIndex]
     return (<View style={styles.overlay}>
       <View style={styles.overlayRow}>
         <View style={styles.avatar}>
@@ -70,9 +79,9 @@ const Map = ({navigation, route}) => {
           <Text color={'gray'}>15 Minutes Away</Text>
         </View>
       </View>
-      <Pressable style={styles.assign} onPress={() => assignDriver(id)}>
+      {myOrders[orderId]?.status === ORDER_STATUS.Accepted && <Pressable style={styles.assign} onPress={() => assignDriver(id)}>
         <Text fontSize={16} variant={'strong'} color={'white'}>Assign</Text>
-      </Pressable>
+      </Pressable>}
     </View>)
   }
 
@@ -83,12 +92,24 @@ const Map = ({navigation, route}) => {
         showBackIcon={true}
       />
       {resPoint && <MapView
+        ref={mapView}
         style={styles.container}
         initialRegion={{
           latitude: resPoint.latitude,
           longitude: resPoint.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01
+        }}
+        onMapReady={() => {
+          mapView.current.fitToCoordinates([resPoint, ...driverLocs], {
+            edgePadding: {
+              top: 100,
+              right: 100,
+              bottom: 100,
+              left: 100
+            },
+            animated: true,
+          })
         }}
       >
         <Marker
@@ -99,13 +120,12 @@ const Map = ({navigation, route}) => {
             <MaterialIcons name="restaurant" size={26} color={color.white}/>
           </View>
         </Marker>
-        {data.map((item, index) => {
-          const point = extractLatLong(item.driver.location);
+        {driverLocs.map((loc, index) => {
           const active = index === activeDriverIndex
           return (
             <Marker
               key={index}
-              coordinate={point}
+              coordinate={loc}
               onPress={() => {
                 setActiveDriverIndex(activeDriverIndex === index ? -1 : index)
               }}
@@ -120,7 +140,7 @@ const Map = ({navigation, route}) => {
                 >
                   <Ionicons name="bicycle" size={26} color={active ? color.white : color.item}/>
                 </View>
-                <Text color={active ? 'white' : 'item'} variant={'strong'} fontSize={12}>{item.name.split(' ')[0]}</Text>
+                <Text color={active ? 'white' : 'item'} variant={'strong'} fontSize={12}>{nearbyDrivers[index].name.split(' ')[0]}</Text>
               </View>
             </Marker>
           )

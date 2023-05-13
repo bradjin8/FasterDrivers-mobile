@@ -94,7 +94,7 @@ export const driverReducer = (state = initialState, action) => {
 
 // Saga
 async function getAssignedOrdersAPI(data) {
-  const URL = `${appConfig.backendServerURL}/orders/?driver=${data.driverId}&status=Driver Assigned`
+  const URL = `${appConfig.backendServerURL}/orders/?driver=${data.driverId}&status=Driver Assigned,In Transit`
   const options = {
     headers: {
       Accept: "application/json"

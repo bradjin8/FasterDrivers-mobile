@@ -93,9 +93,13 @@ export const getCurrentLocation = async () => {
 
 
 export const extractLatLong = (location = '') => {
-  const regex = /POINT\s\(([-\d.]+)\s([-+\d.]+)\)/;
-  const matches = location.match(regex);
-  const longitude = matches[1];
-  const latitude = matches[2];
-  return {latitude, longitude}
+  try {
+    const data = location.split('(')[1]?.split(')')[0];
+    const longitude = Number(data?.split(' ')[0]);
+    const latitude = Number(data?.split(' ')[1]);
+    return {latitude, longitude}
+  } catch (e) {
+    console.log('extract-lat-long-ex', e.message)
+    return null
+  }
 };
