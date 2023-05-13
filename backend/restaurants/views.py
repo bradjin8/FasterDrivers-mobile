@@ -83,3 +83,12 @@ class RestaurantViewSet(ModelViewSet):
         order.status = "Driver Assigned"
         order.save()
         return Response("Driver requested successfully")
+
+    @action(detail=False, methods=['POST'])
+    def reject_assignment(self, request):
+        order = Order.objects.get(id=request.data.get('order'))
+        order.driver = None
+        order.driver_assigned_at = None
+        order.status = "In Progress"
+        order.save()
+        return Response("Driver declined order successfully")
