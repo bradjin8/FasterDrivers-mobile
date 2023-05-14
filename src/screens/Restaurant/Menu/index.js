@@ -16,8 +16,6 @@ const Menu = ({navigation, route}) => {
   const {loading, dishes} = useSelector(state => state.restaurantReducer)
   const {accessToken} = useSelector(state => state.loginReducer)
 
-  console.log('accessToken', accessToken)
-
   const fetchDishes = () => {
     dispatch(getDishesRequest())
   }
@@ -48,7 +46,6 @@ const Menu = ({navigation, route}) => {
         showBackIcon={true}
       />
       <View style={{
-        backgroundColor: color.white,
         padding: scaleVertical(25),
         paddingTop: scaleVertical(0),
       }}>
@@ -57,8 +54,6 @@ const Menu = ({navigation, route}) => {
           value={searchValue}
           placeholder="Search dishes"
           onChangeText={(text) => setSearchValue(text)}
-          onBlurText={() => {
-          }}
         />
       </View>
       <View style={styles.titleView}>
@@ -121,14 +116,21 @@ const styles = StyleSheet.create({
   },
   list: {
     minHeight: heightPercentageToDP(50),
-    flexGrow: 0,
+    // flexGrow: 0,
   },
   listContain: {
     flexDirection: 'row',
-    paddingVertical: scaleVertical(2),
+    marginVertical: scaleVertical(5),
     justifyContent: 'space-between',
     paddingRight: scaleVertical(25),
-
+    backgroundColor: color.white,
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    shadowColor: color.lightGray,
   },
   image: {width: widthPercentageToDP(14), height: widthPercentageToDP(14), backgroundColor: color.lightGray},
   inputTitle: {

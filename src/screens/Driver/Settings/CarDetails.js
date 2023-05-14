@@ -17,7 +17,7 @@ const CarDetails = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const { driver: { car_image, car_make, car_model, car_vin, car_license_number } } = user
+  const {driver: {car_image, car_make, car_model, car_vin, car_license_number}} = user
 
   const [pickImage, setPickImage] = useState(car_image)
   const [changeImage, setChangeImage] = useState(null)
@@ -30,12 +30,12 @@ const CarDetails = () => {
   })
 
   const onChangeText = (key, text) => {
-    setCustomerDetails(prevState => ({ ...prevState, [key]: text }));
+    setCustomerDetails(prevState => ({...prevState, [key]: text}));
   }
 
   const onSave = () => {
     let data = new FormData();
-    if(changeImage) {
+    if (changeImage) {
       data.append('driver.car_image', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
@@ -64,37 +64,37 @@ const CarDetails = () => {
               <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
-             <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />
-                       :
-             <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon} />
+              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} resizeMode={'contain'}/>
+              :
+              <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon}/>
             }
           </Pressable>
         </View>
 
         <View>
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             Mark
           </Text>
           <CustomTextInput
             value={customerDetails["driver.car_make"]}
             onChangeText={(text) => onChangeText("driver.car_make", text)}
           />
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             Model
           </Text>
           <CustomTextInput
             value={customerDetails["driver.car_model"]}
             onChangeText={(text) => onChangeText("driver.car_model", text)}
           />
-          <Text variant="text" color="black" >
+          <Text variant="text" color="black">
             VIN Number
           </Text>
           <CustomTextInput
             value={customerDetails["driver.car_vin"]}
             onChangeText={(text) => onChangeText("driver.car_vin", text)}
           />
-       <Text variant="text" color="black" >
-         Licence Number
+          <Text variant="text" color="black">
+            Licence Number
           </Text>
           <CustomTextInput
             value={customerDetails["driver.car_license_number"]}
@@ -102,7 +102,7 @@ const CarDetails = () => {
           />
         </View>
         <View style={{marginTop: scaleVertical(50)}}>
-          <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()}  mt={30} fontWeight="700" />
+          <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()} mt={30} fontWeight="700"/>
         </View>
       </View>
       <ActionSheet
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white
   },
   container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
-  imageContain: {width: '100%', justifyContent: 'center',alignItems: 'center'},
+  imageContain: {width: '100%', justifyContent: 'center', alignItems: 'center'},
   imageButton: {
     width: scaleVertical(80),
     height: scaleVertical(80),

@@ -157,6 +157,13 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.white,
     marginVertical: scaleVertical(5),
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 5,
+    shadowColor: color.lightGray,
   },
   item: {
     marginVertical: scale(10),

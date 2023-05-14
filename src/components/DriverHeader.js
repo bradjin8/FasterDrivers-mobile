@@ -6,13 +6,13 @@ import {color} from "../utils/color"
 import {scale} from "../utils/scale"
 import {Text} from '../components/text'
 
-const DriverHeader = ({photo, name}) => {
+const DriverHeader = ({photo, name, showAppName = false}) => {
   return <View style={styles.header}>
     <Image source={{uri: photo}} style={{width: scale(34), height: scale(34), borderRadius: scale(17)}}/>
     <Text style={styles.name} color={'gray'} fontSize={12} variant={'strong'}>{name}</Text>
     <View style={styles.logoContainer}>
       <Image source={Images.Logo} style={styles.logo}/>
-      <Text variant={'h5'} color={'primary'} fontWeight={'700'}>Fast Drivers</Text>
+      {showAppName && <Text variant={'h5'} color={'primary'} fontWeight={'700'}>Fast Drivers</Text>}
     </View>
   </View>
 }

@@ -30,7 +30,7 @@ const Orders = ({navigation}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchOrders()
     })
-    fetchOrders()
+    // fetchOrders()
     return unsubscribe
   }, []);
 
@@ -117,8 +117,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: wp(1),
+    marginVertical: 5,
     paddingHorizontal: wp(1),
+    backgroundColor: color.white,
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.7,
+    shadowRadius: 4,
+    shadowColor: color.lightGray,
   },
   resIcon: {
     width: wp(25),

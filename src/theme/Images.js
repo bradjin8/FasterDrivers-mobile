@@ -23,6 +23,8 @@ import Settings from "src/assets/images/settings.png"
 import Terms from "src/assets/images/terms.png"
 import ticks from "src/assets/images/ticks.png"
 import Market from "src/assets/images/market.png"
+import Car from "src/assets/images/car.png"
+import Subscription from "src/assets/images/subscription.png"
 
 export default {
   AppLogo,
@@ -50,4 +52,6 @@ export default {
   OrderRejected,
   Logo,
   Market,
+  Car,
+  Subscription,
 }

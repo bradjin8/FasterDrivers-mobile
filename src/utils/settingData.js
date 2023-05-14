@@ -83,12 +83,12 @@ export const driverSettingData = [
   },
   {
     title: "Car Details",
-    icon: Images.OrderAcceptance,
+    icon: Images.Car,
     key: "CarDetails"
   },
   {
     title: "Subscription",
-    icon: Images.MyRestaurant,
+    icon: Images.Subscription,
     key:"RestaurantProfile",
   },
   {

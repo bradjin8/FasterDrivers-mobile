@@ -12,7 +12,7 @@ import {extractLatLong, getCurrentLocation} from "utils/Location";
 import {useUpdateDriverLocationWebsocket} from "utils/web-socket";
 import {Button, Text} from "../../../components/index";
 import {ORDER_STATUS} from "../../../consts/orders";
-import {deliverOrder, getAssignedOrders, pickupOrder} from "../../../screenRedux/driverRedux";
+import {deliverOrder, getAssignedOrders, pickupOrder, rejectOrder} from "../../../screenRedux/driverRedux";
 
 const MESSAGE = {
   FINDING: "Finding Orders...",
@@ -64,7 +64,7 @@ const Home = ({navigation}) => {
     setModal(false)
     setOrderIdx(-1)
     setMessage(MESSAGE.REJECTING)
-    fetchOrders()
+    dispatch(rejectOrder({order: orderId}))
   }
 
   const complete = (orderId) => {
@@ -75,15 +75,14 @@ const Home = ({navigation}) => {
   }
 
   useEffect(() => {
-    fetchOrders()
     getPosition()
     const interval = setInterval(() => {
       getPosition()
-      fetchOrders()
+      // fetchOrders()
     }, 10 * 1000)
 
     const unsubscribe = navigation.addListener('focus', () => {
-      // fetchOrders()
+      fetchOrders()
     })
     return () => {
       clearInterval(interval)
@@ -200,15 +199,17 @@ const Home = ({navigation}) => {
   }
 
   const fitToCoordinates = () => {
-    mapView.current?.fitToCoordinates([position, ...desLocs, ...resLocs], {
-      edgePadding: {
-        top: 100,
-        right: 100,
-        bottom: 100,
-        left: 100,
-      },
-      animated: true,
-    })
+    if (desLocs.length > 0 && resLocs.length > 0 && position) {
+      mapView.current?.fitToCoordinates([position, ...desLocs, ...resLocs], {
+        edgePadding: {
+          top: 100,
+          right: 100,
+          bottom: 100,
+          left: 100,
+        },
+        animated: true,
+      })
+    }
   }
 
   return (

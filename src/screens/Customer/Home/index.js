@@ -1,6 +1,6 @@
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator, Image, Platform, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {ActivityIndicator, Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
 import {Menu, MenuItem} from 'react-native-material-menu';
 import StarRating from 'react-native-star-rating-new';
@@ -36,8 +36,6 @@ const Home = ({navigation}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       fetchData()
     });
-    dispatch(requestFailed())
-    fetchData()
     return unsubscribe;
   }, [])
 
@@ -154,7 +152,7 @@ const Home = ({navigation}) => {
   }
 
   return (
-    <BaseScreen style={styles.mainWrapper}>
+    <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.headerView}>
         <View style={styles.profileView}>
           <Image source={{uri: photo}} defaultSource={Images.dummyProfile} style={styles.profilePic}/>
@@ -221,9 +219,12 @@ const Home = ({navigation}) => {
         {loading ?
           (<ActivityIndicators/>)
           :
-          renderRestaurants()}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {renderRestaurants()}
+          </ScrollView>
+        }
       </View>
-    </BaseScreen>);
+    </SafeAreaView>);
 };
 
 const styles = StyleSheet.create({

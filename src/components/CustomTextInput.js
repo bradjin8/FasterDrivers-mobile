@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     marginBottom: scaleVertical(10)
   },
   searchSection: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     backgroundColor: color.secondary,
     borderRadius: scale(10),

@@ -71,7 +71,7 @@ const Home = ({route}) => {
         onRefresh={fetchMyOrders}
         refreshing={loading}
         style={{
-          backgroundColor: color.lightGray,
+          // backgroundColor: color.lightGray,
           flex: 1,
         }}
       />
