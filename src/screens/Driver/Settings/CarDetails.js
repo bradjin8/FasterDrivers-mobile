@@ -60,13 +60,13 @@ const CarDetails = () => {
       <View style={styles.container}>
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
-            <View style={styles.pencileView}>
+            <View style={styles.pencilView}>
               <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
               <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} resizeMode={'contain'}/>
               :
-              <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon}/>
+              <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon} resizeMode={'contain'}/>
             }
           </Pressable>
         </View>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  pencileView: {
+  pencilView: {
     width: scaleVertical(25), height: scaleVertical(25), borderRadius: scaleVertical(12.5),
     backgroundColor: color.white, position: 'absolute', top: 0, right: 0, alignItems: 'center', justifyContent: 'center', zIndex: 100
   },

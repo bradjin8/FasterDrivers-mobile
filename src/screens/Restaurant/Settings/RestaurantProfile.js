@@ -69,7 +69,7 @@ const RestaurantProfile = () => {
 
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
-            <View style={styles.pencileView}>
+            <View style={styles.pencilView}>
               <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
             </View>
             {pickImage ?
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  pencileView: {
+  pencilView: {
     width: scaleVertical(25), height: scaleVertical(25), borderRadius: scaleVertical(12.5),
     backgroundColor: color.white, position: 'absolute', top: 0, right: 0, alignItems: 'center', justifyContent: 'center', zIndex: 100
   },

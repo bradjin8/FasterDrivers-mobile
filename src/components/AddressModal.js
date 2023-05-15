@@ -79,13 +79,9 @@ const AddressModal = ({data, visible, onOk, onCancel}) => {
           </View>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10}}>
-          <View style={{width: '47%'}}>
-            <Button
-              title={'Cancel'}
-              onPress={onCancel}
-              style={styles.cancel}
-            />
-          </View>
+          <Pressable style={styles.cancel} onPress={onCancel}>
+            <Text variant={'h5'} color={'white'}>Cancel</Text>
+          </Pressable>
           <Pressable style={styles.ok} onPress={save}>
             <Text variant={'h5'} color={'white'}>Save</Text>
           </Pressable>
@@ -127,7 +123,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     paddingVertical: 10,
-    color: color.white,
     backgroundColor: color.primary,
+  },
+  cancel: {
+    width: '47%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingVertical: 10,
+    backgroundColor: color.error,
   },
 })

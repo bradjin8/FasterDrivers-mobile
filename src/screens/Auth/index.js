@@ -60,6 +60,7 @@ const SignIn = ({ route }) => {
           <Image
             source={Images.AppLogo}
             style={styles.icon}
+            resizeMode="contain"
           />
         </View>
         <View style={{width: '100%'}}>
