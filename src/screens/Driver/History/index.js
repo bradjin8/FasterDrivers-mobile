@@ -1,7 +1,7 @@
 import DriverHeader from "components/DriverHeader"
 import moment from "moment"
 import React, {useEffect, useState} from "react"
-import {ActivityIndicator, Image, Linking, Pressable, StyleSheet, View} from "react-native"
+import {ActivityIndicator, FlatList, Image, Linking, Pressable, SafeAreaView, StyleSheet, View} from "react-native"
 import Entypo from "react-native-vector-icons/Entypo";
 import {useDispatch, useSelector} from "react-redux"
 import {color, scale} from "utils"
@@ -32,7 +32,6 @@ const History = ({navigation}) => {
       const {address, restaurant, user: {name, customer: {phone, addresses}}} = item
       const deliveryAddress = addresses?.find(add => add.id === address)
 
-      console.log('item', item)
       const keyword = searchText.toLowerCase()
       return restaurant?.name?.toLowerCase().includes(keyword)
         || restaurant?.description?.toLowerCase().includes(keyword)
@@ -78,65 +77,63 @@ const History = ({navigation}) => {
     setOrdersByDate(temp)
   }, [filteredOrders])
 
-  const renderData = () => {
-    return Object.keys(ordersByDate).map(key => {
-      return <View key={key} style={{marginVertical: scale(5)}}>
-        <View style={{marginHorizontal: scale(20)}}>
-          <Text variant={'h5'} fontSize={14}>{key}</Text>
-        </View>
-        {ordersByDate[key].map((order, idx) => {
-          const {id, address, fees, tip, sub_total, status, total, restaurant, user} = order
-          const deliveryAddress = user?.customer?.addresses?.find(add => add.id === address) || {}
-
-          return (<View style={styles.orderContainer} key={idx}>
-            <View style={styles.images}>
-              <View style={styles.marketMarker}>
-                <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
-              </View>
-              <View style={styles.line}/>
-              <View style={styles.driverMarker}>
-                <Entypo name={'location-pin'} size={34}/>
-              </View>
-            </View>
-            <View style={styles.info}>
-              <View style={styles.restaurant}>
-                <Text fontSize={12} variant={'strong'}>{restaurant.name} {order.updated_at}</Text>
-                <Text fontSize={12}>{restaurant.street} {restaurant.city}, {restaurant.state} {restaurant.zip_code}</Text>
-              </View>
-              <View style={styles.customer}>
-                <Text fontSize={12} variant={'strong'}>{user?.name}</Text>
-                <Text fontSize={12}>{deliveryAddress.street} {deliveryAddress.city}, {deliveryAddress.state} {deliveryAddress.zip_code}</Text>
-                <Pressable onPress={() => Linking.openURL(`tel:${user?.customer?.phone}`)}>
-                  <Text color={'primary'} variant={'strong'} fontSize={12}>{user?.customer?.phone}</Text>
-                </Pressable>
-              </View>
-            </View>
-            <View style={styles.price}>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                <Text fontSize={12} variant={'strong'}>${sub_total}</Text>
-                <Text fontSize={12} variant={'strong'} style={styles.label}>Price</Text>
-              </View>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                <Text fontSize={12}>${fees}</Text>
-                <Text fontSize={12} variant={'strong'} style={styles.label}>Fees</Text>
-              </View>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                <Text fontSize={12}>+${tip}</Text>
-                <Text fontSize={12} variant={'strong'} style={styles.label}>Tip</Text>
-              </View>
-              <View style={styles.spliter}/>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                <Text fontSize={12} variant={'strong'} color={'primary'}>${total}</Text>
-                <Text fontSize={12} variant={'strong'} color={'primary'} style={styles.label}>Total</Text>
-              </View>
-            </View>
-          </View>)
-        })}
+  const renderItem = ({item: key, index, separators}) => {
+    return <View style={{marginVertical: scale(5)}}>
+      <View style={{marginHorizontal: scale(20)}}>
+        <Text variant={'h5'} fontSize={14}>{key}</Text>
       </View>
-    })
+      {ordersByDate[key].map((order, idx) => {
+        const {id, address, fees, tip, sub_total, status, total, restaurant, user} = order
+        const deliveryAddress = user?.customer?.addresses?.find(add => add.id === address) || {}
+
+        return (<View style={styles.orderContainer} key={idx}>
+          <View style={styles.images}>
+            <View style={styles.marketMarker}>
+              <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
+            </View>
+            <View style={styles.line}/>
+            <View style={styles.driverMarker}>
+              <Entypo name={'location-pin'} size={34}/>
+            </View>
+          </View>
+          <View style={styles.info}>
+            <View style={styles.restaurant}>
+              <Text fontSize={12} variant={'strong'}>{restaurant.name} {order.updated_at}</Text>
+              <Text fontSize={12}>{restaurant.street} {restaurant.city}, {restaurant.state} {restaurant.zip_code}</Text>
+            </View>
+            <View style={styles.customer}>
+              <Text fontSize={12} variant={'strong'}>{user?.name}</Text>
+              <Text fontSize={12}>{deliveryAddress.street} {deliveryAddress.city}, {deliveryAddress.state} {deliveryAddress.zip_code}</Text>
+              <Pressable onPress={() => Linking.openURL(`tel:${user?.customer?.phone}`)}>
+                <Text color={'primary'} variant={'strong'} fontSize={12}>{user?.customer?.phone}</Text>
+              </Pressable>
+            </View>
+          </View>
+          <View style={styles.price}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Text fontSize={12} variant={'strong'}>${sub_total}</Text>
+              <Text fontSize={12} variant={'strong'} style={styles.label}>Price</Text>
+            </View>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Text fontSize={12}>${fees}</Text>
+              <Text fontSize={12} variant={'strong'} style={styles.label}>Fees</Text>
+            </View>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Text fontSize={12}>+${tip}</Text>
+              <Text fontSize={12} variant={'strong'} style={styles.label}>Tip</Text>
+            </View>
+            <View style={styles.spliter}/>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Text fontSize={12} variant={'strong'} color={'primary'}>${total}</Text>
+              <Text fontSize={12} variant={'strong'} color={'primary'} style={styles.label}>Total</Text>
+            </View>
+          </View>
+        </View>)
+      })}
+    </View>
   }
 
-  return (<BaseScreen style={styles.mainWrapper}>
+  return (<SafeAreaView style={styles.mainWrapper}>
     <DriverHeader photo={driver?.photo} name={name}/>
     <View style={{marginHorizontal: scale(20)}}>
       <CustomTextInput
@@ -147,12 +144,16 @@ const History = ({navigation}) => {
       />
     </View>
     <View style={styles.container}>
-      {loading ?
-        <ActivityIndicator/>
-        : renderData()
-      }
+      <FlatList
+        data={Object.keys(ordersByDate)}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={<Text>No orders</Text>}
+        refreshing={loading}
+        onRefresh={fetchHistory}
+      />
     </View>
-  </BaseScreen>)
+  </SafeAreaView>)
 }
 const styles = StyleSheet.create({
   mainWrapper: {

@@ -1,7 +1,10 @@
+import AddressModal from "components/AddressModal";
 import SimpleHeader from "components/SimpleHeader";
-import React, {useRef, useState} from "react";
-import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
+import React, {useEffect, useRef, useState} from "react";
+import {ActivityIndicator, Image, Pressable, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
+import Entypo from "react-native-vector-icons/Entypo";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme"
@@ -9,26 +12,26 @@ import {color, scale, scaleVertical} from "utils";
 import {pickFromCamera, pickFromGallery} from "utils/Camera";
 import {Button, CustomTextInput, Text} from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
+import {addAddress, deleteAddress, getAddressesData, updateAddress} from "../../../screenRedux/customerRedux";
 import {updateAccount} from "../../../screenRedux/loginRedux";
 
-const AccountInformation = () => {
+const AccountInformation = ({navigation}) => {
   const actionSheet = useRef(null);
   const ImagePickerOptions = ["Take Photo", "Choose from Gallery", "Cancel"];
   const dispatch = useDispatch();
-  const user = useSelector(state => state.loginReducer.user)
-  const loading = useSelector(state => state.loginReducer.loading)
+  const {user, loading} = useSelector(state => state.loginReducer)
+  const {locationLoading, addresses} = useSelector(state => state.customerReducer)
+  const {name, email, customer} = user
+
   const [changeImage, setChangeImage] = useState(null)
-  const {name, email, customer: {phone, addresses, photo}} = user
-  const [pickImage, setPickImage] = useState(photo)
+  const [pickImage, setPickImage] = useState(customer.photo)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [activeAddress, setActiveAddress] = useState(null)
 
   const [customerDetails, setCustomerDetails] = useState({
     "name": name || "",
-    "customer.email": email || "",
-    "customer.phone": phone || "",
-    "customer.addresses[0]street": addresses[0]?.street || "",
-    "customer.addresses[0]city": addresses[0]?.city || "",
-    "customer.addresses[0]state": addresses[0]?.state || "",
-    "customer.addresses[0]zip_code": addresses[0]?.zip_code || "",
+    "email": email || "",
+    "customer.phone": customer.phone || "",
   })
 
   const onChangeText = (key, text) => {
@@ -42,19 +45,38 @@ const AccountInformation = () => {
       data.append('customer.photo', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
-        uri: Platform.OS === 'ios' ? pickImage.sourceURL?.replace('file://', '') || pickImage.path : pickImage.path,
+        // uri: Platform.OS === 'ios' ? pickImage.sourceURL?.replace('file://', '') || pickImage.path : pickImage.path,
+        uri: pickImage.path,
         data: pickImage.data
       });
     }
     data.append("name", customerDetails.name);
     data.append("email", customerDetails.email);
     data.append("customer.phone", customerDetails["customer.phone"]);
-    data.append("customer.addresses[0]street", customerDetails["customer.addresses[0]street"]);
-    data.append("customer.addresses[0]city", customerDetails["customer.addresses[0]city"]);
-    data.append("customer.addresses[0]state", customerDetails["customer.addresses[0]state"]);
-    data.append("customer.addresses[0]zip_code", customerDetails["customer.addresses[0]zip_code"]);
     dispatch(updateAccount(data))
   }
+
+  const onOk = (id, data) => {
+    setModalVisible(false)
+    if (id) {
+      dispatch(updateAddress(id, data))
+    } else {
+      let formData = new FormData();
+      formData.append("customer.addresses[0]street", data.street);
+      formData.append("customer.addresses[0]city", data.city);
+      formData.append("customer.addresses[0]state", data.state);
+      formData.append("customer.addresses[0]zip_code", data.zip_code);
+      dispatch(addAddress(formData))
+    }
+  }
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(getAddressesData())
+    });
+
+    return unsubscribe;
+  }, [])
 
   return (
     <BaseScreen style={styles.mainWrapper}>
@@ -89,8 +111,8 @@ const AccountInformation = () => {
           </Text>
           <CustomTextInput
             keyboardType={'email-address'}
-            value={customerDetails["customer.email"]}
-            onChangeText={(text) => onChangeText("customer.email", text)}
+            value={customerDetails["email"]}
+            onChangeText={(text) => onChangeText("email", text)}
           />
           <Text variant="text" color="black">
             Phone Number
@@ -100,45 +122,42 @@ const AccountInformation = () => {
             value={customerDetails["customer.phone"]}
             onChangeText={(text) => onChangeText("customer.phone", text)}
           />
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.row}>
             <Text variant="text" color="black">
               Addresses
             </Text>
+            <Pressable style={styles.row} onPress={() => {
+              setActiveAddress(null);
+              setModalVisible(true);
+            }}>
+              <Text variant={'strong'} color={'primary'}>Add</Text>
+              <MaterialCommunityIcons name={'plus'} size={scale(20)} color={color.primary}/>
+            </Pressable>
           </View>
-          <CustomTextInput
-            value={customerDetails["customer.addresses[0]street"]}
-            onChangeText={(text) => onChangeText("customer.addresses[0]street", text)}
-          />
-          <Text variant="text" color="black">
-            City
-          </Text>
-          <CustomTextInput
-            value={customerDetails["customer.addresses[0]city"]}
-            onChangeText={(text) => onChangeText("customer.addresses[0]city", text)}
-          />
-          <View style={styles.stateView}>
-            <View style={{width: '47%'}}>
-              <Text variant="text" color="black">
-                State
-              </Text>
-              <CustomTextInput
-                value={customerDetails["customer.addresses[0]state"]}
-                onChangeText={(text) => onChangeText("customer.addresses[0]state", text)}
-              />
-            </View>
-            <View style={{width: '47%'}}>
-              <Text variant="text" color="black">
-                Zip Code
-              </Text>
-              <CustomTextInput
-                keyboardType={'number-pad'}
-                value={customerDetails["customer.addresses[0]zip_code"]}
-                onChangeText={(text) => onChangeText("customer.addresses[0]zip_code", text)}
-              />
-            </View>
-          </View>
+          {locationLoading ? <ActivityIndicator/> : addresses.map((it, id) => {
+            return (<View key={id} style={styles.addressList}>
+              <Pressable onPress={() => {
+                setActiveAddress(it)
+                setModalVisible(true)
+              }}
+              >
+                <Text fontSize={12}>{it.street} {it.city} {it.state}, {it.zip_code}</Text>
+              </Pressable>
+              <View style={{flexDirection: 'row', width: scale(40), justifyContent: 'space-between'}}>
+                <Pressable onPress={() => {
+                }}>
+                  {/*<AntDesign name={'edit'} size={scale(16)} color={color.primary}/>*/}
+                </Pressable>
+                <Pressable onPress={() => {
+                  dispatch(deleteAddress(it.id))
+                }}>
+                  <Entypo name={'circle-with-cross'} size={scale(16)} color={color.error}/>
+                </Pressable>
+              </View>
+            </View>)
+          })}
         </View>
-        <View style={{marginTop: scaleVertical(50)}}>
+        <View style={{marginBottom: scaleVertical(10)}}>
           <Button text='Save' loading={loading} fontSize={16} onPress={() => onSave()} mt={30} fontWeight="700"/>
         </View>
       </View>
@@ -154,15 +173,17 @@ const AccountInformation = () => {
               res = await pickFromCamera();
               break;
             case 1:
-              res = await pickFromGallery();
+              res = await pickFromGallery(400, 400);
               break;
           }
           if (res) {
+            console.log('image', res)
             setChangeImage(true)
             setPickImage(res)
           }
         }}
       />
+      <AddressModal data={activeAddress} visible={modalVisible} onCancel={() => setModalVisible(false)} onOk={onOk}/>
     </BaseScreen>
   )
 }
@@ -172,6 +193,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.white
   },
   container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   imageContain: {width: '100%', justifyContent: 'center', alignItems: 'center'},
   imageButton: {
     width: scaleVertical(80),
@@ -198,10 +224,17 @@ const styles = StyleSheet.create({
     tintColor: 'white',
     resizeMode: 'contain',
   },
-  stateView: {
+  addressList: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: scale(10),
+    height: scaleVertical(40),
+    paddingHorizontal: scale(10),
+    paddingVertical: scaleVertical(5),
+    marginVertical: scaleVertical(5),
+    backgroundColor: color.slightGray,
+  },
 })
 
 export default AccountInformation;

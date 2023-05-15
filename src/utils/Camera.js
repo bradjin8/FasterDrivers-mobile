@@ -64,7 +64,7 @@ function permissionsAlert() {
   );
 }
 
-export const pickFromGallery = async () => {
+export const pickFromGallery = async (width = 500, height = 400) => {
   const havePermission = await getCameraGalleryPermissions();
   if (!havePermission) {
     permissionsAlert();
@@ -72,8 +72,8 @@ export const pickFromGallery = async () => {
   } else {
     try {
       const res = await ImagePicker.openPicker({
-        width: 500,
-        height: 400,
+        width: width,
+        height: height,
         cropping: true,
         mediaType: "photo",
         includeBase64: true
@@ -86,7 +86,7 @@ export const pickFromGallery = async () => {
   }
 };
 
-export const pickFromCamera = async () => {
+export const pickFromCamera = async (width = 500, height = 400) => {
   const havePermission = await getCameraGalleryPermissions();
   if (!havePermission) {
     permissionsAlert();
@@ -94,8 +94,8 @@ export const pickFromCamera = async () => {
   } else {
     try {
       const res = await ImagePicker.openCamera({
-        width: 500,
-        height: 400,
+        width: width,
+        height: height,
         cropping: true,
         mediaType: "photo",
         includeBase64: true,

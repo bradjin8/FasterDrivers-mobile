@@ -18,7 +18,6 @@ const CREATE_NEW_ORDER_REQUEST_STARTED = "CREATE_NEW_ORDER_REQUEST_STARTED"
 const CREATE_NEW_ORDER_REQUEST_COMPLETED = "CREATE_NEW_ORDER_REQUEST_COMPLETED"
 const GET_MY_ORDERS_REQUEST_STARTED = "GET_MY_ORDERS_REQUEST_STARTED"
 const GET_MY_ORDERS_REQUEST_COMPLETED = "GET_MY_ORDERS_REQUEST_COMPLETED"
-const UPDATE_ADDRESSES_REQUEST_STARTED = "UPDATE_ADDRESSES_REQUEST_STARTED"
 const GET_ADDRESSES_REQUEST_STARTED = "GET_ADDRESSES_REQUEST_STARTED"
 const GET_ADDRESSES_REQUEST_COMPLETED = "GET_ADDRESSES_REQUEST_COMPLETED"
 const SET_CART_ITEMS = "SET_CART_ITEMS"
@@ -36,13 +35,16 @@ const GENERATE_TEST_PAYMENT_REQUEST_STARTED = "GENERATE_TEST_PAYMENT_REQUEST_STA
 const GENERATE_TEST_PAYMENT_REQUEST_COMPLETED = "GENERATE_TEST_PAYMENT_REQUEST_COMPLETED"
 const UPDATE_CUSTOMER_REQUEST_STARTED = "UPDATE_CUSTOMER_REQUEST_STARTED"
 const UPDATE_CUSTOMER_REQUEST_COMPLETED = "UPDATE_CUSTOMER_REQUEST_COMPLETED"
+const ADD_ADDRESSES_REQUEST = "ADD_ADDRESSES_REQUEST"
+const DELETE_ADDRESS_REQUEST = "DELETE_ADDRESS_REQUEST"
+const UPDATE_ADDRESS_REQUEST = "UPDATE_ADDRESS_REQUEST"
 const REQUEST_FAILED = "REQUEST_FAILED"
 
 const initialState = {
   loading: false,
   locationLoading: false,
   restaurants: null,
-  addresses: null,
+  addresses: [],
   carts: [],
   restaurantDetails: null,
   orders: [],
@@ -57,11 +59,6 @@ export const getRestaurantsData = (data) => ({
 })
 export const getAddressesData = () => ({
   type: GET_ADDRESSES_REQUEST_STARTED,
-})
-export const updateAddresses = (id, data) => ({
-  type: UPDATE_ADDRESSES_REQUEST_STARTED,
-  payload: data,
-  id
 })
 export const setAddressesData = (data) => ({
   type: GET_ADDRESSES_REQUEST_COMPLETED,
@@ -140,13 +137,18 @@ export const generateTestPaymentRequestFinished = (data) => ({
   payload: data,
 })
 
-export const updateCustomerRequest = (data) => ({
-  type: UPDATE_CUSTOMER_REQUEST_STARTED,
+export const addAddress = (data) => ({
+  type: ADD_ADDRESSES_REQUEST,
   payload: data,
 })
-export const updateCustomerRequestFinished = (data) => ({
-  type: UPDATE_CUSTOMER_REQUEST_COMPLETED,
+export const updateAddress = (id, data) => ({
+  type: UPDATE_ADDRESS_REQUEST,
   payload: data,
+  id
+})
+export const deleteAddress = (id) => ({
+  type: DELETE_ADDRESS_REQUEST,
+  id
 })
 export const requestFailed = () => ({
   type: REQUEST_FAILED,
@@ -156,11 +158,15 @@ export const requestFailed = () => ({
 export const customerReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_RESTAURANTS_REQUEST_STARTED:
-      if (action.payload !== null) {
-        return {
-          ...state
-        }
-      }
+    case GET_RESTAURANT_DETAILS_REQUEST_STARTED:
+    case CREATE_NEW_ORDER_REQUEST_STARTED:
+    case GET_MY_ORDERS_REQUEST_STARTED:
+    case GET_PAYMENTS_REQUEST_STARTED:
+    case ADD_PAYMENT_REQUEST_STARTED:
+    case DELETE_PAYMENT_REQUEST_STARTED:
+    case PAY_ORDER_REQUEST_STARTED:
+    case GENERATE_TEST_PAYMENT_REQUEST_STARTED:
+    case UPDATE_CUSTOMER_REQUEST_STARTED:
       return {
         ...state,
         loading: true
@@ -172,30 +178,24 @@ export const customerReducer = (state = initialState, action) => {
         restaurants: action.payload
       }
     case GET_ADDRESSES_REQUEST_STARTED:
+    case ADD_ADDRESSES_REQUEST:
+    case DELETE_ADDRESS_REQUEST:
+    case UPDATE_ADDRESS_REQUEST:
       return {
         ...state,
         locationLoading: true
       }
+
     case GET_ADDRESSES_REQUEST_COMPLETED:
       return {
         ...state,
         locationLoading: false,
         addresses: action.payload
       }
-    case UPDATE_ADDRESSES_REQUEST_STARTED:
-      return {
-        ...state,
-        locationLoading: true
-      }
     case SET_CART_ITEMS:
       return {
         ...state,
         carts: action.payload
-      }
-    case GET_RESTAURANT_DETAILS_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
       }
     case GET_RESTAURANT_DETAILS_REQUEST_COMPLETED:
       return {
@@ -203,31 +203,12 @@ export const customerReducer = (state = initialState, action) => {
         loading: false,
         restaurantDetails: action.payload
       }
-    case CREATE_NEW_ORDER_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
     case CREATE_NEW_ORDER_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
-      }
-    case GET_MY_ORDERS_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
     case GET_MY_ORDERS_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
         orders: action.payload,
-      }
-    case GET_PAYMENTS_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
       }
     case GET_PAYMENTS_REQUEST_COMPLETED:
       return {
@@ -235,57 +216,16 @@ export const customerReducer = (state = initialState, action) => {
         loading: false,
         payments: action.payload.data,
       }
-    case ADD_PAYMENT_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
-    case ADD_PAYMENT_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
-      }
-    case DELETE_PAYMENT_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
-    case DELETE_PAYMENT_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
-      }
-    case PAY_ORDER_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
-    case PAY_ORDER_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
-      }
-    case GENERATE_TEST_PAYMENT_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
     case GENERATE_TEST_PAYMENT_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
         testPayment: action.payload,
       }
-    case UPDATE_CUSTOMER_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
+    case ADD_PAYMENT_REQUEST_COMPLETED:
+    case DELETE_PAYMENT_REQUEST_COMPLETED:
+    case PAY_ORDER_REQUEST_COMPLETED:
     case UPDATE_CUSTOMER_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
-      }
     case REQUEST_FAILED:
       return {
         ...state,
@@ -322,7 +262,7 @@ function getAddressesAPI() {
   return XHR(URL, options)
 }
 
-function updateAddressesAPI(id, data) {
+function updateAddressAPI(id, data) {
   const URL = `${appConfig.backendServerURL}/customers/address/${id}/`
   const options = {
     headers: {
@@ -330,6 +270,17 @@ function updateAddressesAPI(id, data) {
     },
     method: "PATCH",
     data: data
+  }
+  return XHR(URL, options)
+}
+
+function deleteAddressAPI(id) {
+  const URL = `${appConfig.backendServerURL}/customers/address/${id}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "DELETE",
   }
   return XHR(URL, options)
 }
@@ -429,9 +380,10 @@ export function payOrderAPI(data) {
   return XHR(URL, options)
 }
 
-export function updateCustomerAPI(data) {
-  console.log('update-customer-api', data)
-  const URL = `${appConfig.backendServerURL}/users/${data}/`
+export async function addAddressAPI(data) {
+  const userAccount = await AsyncStorage.getItem("userAccount")
+  const userData = JSON.parse(userAccount)
+  const URL = `${appConfig.backendServerURL}/users/${userData.id}/`
   const options = {
     headers: {
       Accept: "application/json",
@@ -442,16 +394,11 @@ export function updateCustomerAPI(data) {
   return XHR(URL, options)
 }
 
-function* updateCustomerAction(data) {
+function* addAddressAction(data) {
   try {
-    const resp = yield call(updateCustomerAPI, data.payload)
+    const resp = yield call(addAddressAPI, data.payload)
     if (resp?.data) {
-      yield put(updateCustomerRequestFinished(resp.data))
-      showMessage({
-        message: "Profile updated successfully!",
-        type: "success"
-      })
-      goBack()
+      yield put(getAddressesData())
     }
   } catch (e) {
     const {response} = e
@@ -495,12 +442,27 @@ function* getAddressesAction() {
   }
 }
 
-function* updateAddressesAction(data) {
+function* updateAddressAction(data) {
   try {
-    const resp = yield call(updateAddressesAPI, data.id, data.payload)
+    const resp = yield call(updateAddressAPI, data.id, data.payload)
     if (resp?.data) {
       yield put(getAddressesData())
     }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* deleteAddressAction(data) {
+  try {
+    console.log('delete-address', data)
+    yield call(deleteAddressAPI, data.id)
+    yield put(getAddressesData())
   } catch (e) {
     const {response} = e
     yield put(requestFailed())
@@ -647,11 +609,11 @@ function* generateTestPaymentAction(data) {
   }
 }
 
+
 export default all([
   takeLatest(GET_RESTAURANT_DETAILS_REQUEST_STARTED, getRestaurantDetailsAction),
   takeLatest(GET_RESTAURANTS_REQUEST_STARTED, getRestaurantsAction),
   takeLatest(GET_ADDRESSES_REQUEST_STARTED, getAddressesAction),
-  takeLatest(UPDATE_ADDRESSES_REQUEST_STARTED, updateAddressesAction),
   takeLatest(CREATE_NEW_ORDER_REQUEST_STARTED, createNewOrderAction),
   takeLatest(GET_MY_ORDERS_REQUEST_STARTED, getMyOrdersAction),
   takeLatest(GET_PAYMENTS_REQUEST_STARTED, getPaymentsAction),
@@ -659,5 +621,7 @@ export default all([
   takeLatest(DELETE_PAYMENT_REQUEST_STARTED, deletePaymentAction),
   takeLatest(PAY_ORDER_REQUEST_STARTED, payOrderAction),
   takeLatest(GENERATE_TEST_PAYMENT_REQUEST_STARTED, generateTestPaymentAction),
-  takeLatest(UPDATE_CUSTOMER_REQUEST_STARTED, updateCustomerAction),
+  takeLatest(ADD_ADDRESSES_REQUEST, addAddressAction),
+  takeLatest(UPDATE_ADDRESS_REQUEST, updateAddressAction),
+  takeLatest(DELETE_ADDRESS_REQUEST, deleteAddressAction),
 ])
