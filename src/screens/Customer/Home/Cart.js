@@ -1,5 +1,6 @@
 import SimpleHeader from "components/SimpleHeader";
-import React, {useState} from "react";
+import {navigate} from "navigation/NavigationService";
+import React, {useEffect, useState} from "react";
 import {Image, ScrollView, StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
 import {useDispatch, useSelector} from "react-redux";
@@ -40,6 +41,11 @@ const Cart = ({route}) => {
 
     dispatch(createNewOrder(data))
   }
+
+  useEffect(() => {
+    if (carts.length < 1)
+      navigate("Home")
+  }, [carts])
 
   const renderFinalTotal = () => {
     return carts.length && carts.reduce((prev, curr) => {

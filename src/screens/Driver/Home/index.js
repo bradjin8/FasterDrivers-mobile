@@ -75,13 +75,13 @@ const Home = ({navigation}) => {
   }
 
   useEffect(() => {
-    getPosition()
     const interval = setInterval(() => {
-      getPosition()
-      // fetchOrders()
+      // getPosition()
+      fetchOrders()
     }, 10 * 1000)
 
     const unsubscribe = navigation.addListener('focus', () => {
+      getPosition()
       fetchOrders()
     })
     return () => {
@@ -110,7 +110,7 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     let desLoc = [], resLoc = []
-    assignedOrders.map((order) => {
+    assignedOrders.filter(it => it.status === ORDER_STATUS.DriverAssigned).map((order) => {
       const {restaurant: {location}, user: {customer}, address} = order
       const deliveryAddress = customer?.addresses?.find(add => add.id === address) || {}
       // console.log('restaurant-address', location, deliveryAddress.location)

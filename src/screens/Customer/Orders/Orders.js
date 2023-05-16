@@ -17,7 +17,7 @@ const Orders = ({navigation}) => {
   const {user, accessToken} = useSelector(state => state.loginReducer);
 
   // console.log('user', user.id, accessToken)
-  // console.log('orders', orders)
+  console.log('orders', orders)
 
   const fetchOrders = () => {
     dispatch(getMyOrders({
@@ -82,7 +82,7 @@ const Orders = ({navigation}) => {
 
   const renderOrders = () => {
     return <FlatList
-      data={orders}
+      data={(orders || []).sort((a, b) => a.updated_at < b.updated_at ? 1 : -1)}
       renderItem={renderItem}
       refreshing={loading}
       onRefresh={fetchOrders}

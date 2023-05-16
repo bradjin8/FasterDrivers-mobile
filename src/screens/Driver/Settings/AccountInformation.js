@@ -41,7 +41,8 @@ const AccountInformation = () => {
       data.append('driver.photo', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
-        uri: Platform.OS === 'ios' ? pickImage.sourceURL.replace('file://', '') : pickImage.path,
+        // uri: Platform.OS === 'ios' ? pickImage.sourceURL.replace('file://', '') : pickImage.path,
+        uri: pickImage.path,
         data: pickImage.data
       });
     }
@@ -150,10 +151,10 @@ const AccountInformation = () => {
           let res;
           switch (index) {
             case 0:
-              res = await pickFromCamera();
+              res = await pickFromCamera(400, 400);
               break;
             case 1:
-              res = await pickFromGallery();
+              res = await pickFromGallery(400, 400);
               break;
           }
           if (res) {

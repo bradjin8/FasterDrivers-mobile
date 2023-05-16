@@ -203,7 +203,6 @@ export const customerReducer = (state = initialState, action) => {
         loading: false,
         restaurantDetails: action.payload
       }
-    case CREATE_NEW_ORDER_REQUEST_COMPLETED:
     case GET_MY_ORDERS_REQUEST_COMPLETED:
       return {
         ...state,
@@ -222,6 +221,7 @@ export const customerReducer = (state = initialState, action) => {
         loading: false,
         testPayment: action.payload,
       }
+    case CREATE_NEW_ORDER_REQUEST_COMPLETED:
     case ADD_PAYMENT_REQUEST_COMPLETED:
     case DELETE_PAYMENT_REQUEST_COMPLETED:
     case PAY_ORDER_REQUEST_COMPLETED:
@@ -479,6 +479,7 @@ function* createNewOrderAction(data) {
     debugger
     if (resp?.data) {
       yield put(createNewOrderFinished(resp.data))
+      yield put(setUserCartItems([]))
     }
     navigate("Orders")
   } catch (e) {

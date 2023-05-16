@@ -1,4 +1,5 @@
 import BaseScreen from "components/BaseScreen";
+import DriverCard from "components/DriverCard";
 import OrderStatusIndicator from "components/OrderStatusIndicator";
 import {goBack, navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
@@ -147,29 +148,8 @@ const OrderDetails = ({route}) => {
             />
           </View>}
 
-          {(order?.driver )&& <View style={styles.driverContainer}>
-            <View style={styles.flex}>
-              <Image source={{uri: order?.driver?.photo || "https://fancy-cherry-36842.s3.amazonaws.com/media/restaurant/images/beafbe99-6412-41dd-b948-c8fb03be32c4.jpg"}} style={styles.avatar} resizeMode={'cover'}/>
-              <View style={styles.column}>
-                <Text color={'itemPrimary'} fontSize={12} variant={'h5'}>Courier</Text>
-                <Text variant={'strong'}>Wade Warren</Text>
-              </View>
-            </View>
-            <Pressable style={styles.phone} onPress={() => {
-              const url = `tel:${order?.driver?.driver?.phone}`
-              Linking.openURL(url)
-                .then((res) => {
-                  if (!res)
-                    showMessage({
-                      message: 'Driver does not have a phone number',
-                      type: 'danger',
-                    })
-                })
-            }}>
-              <FontAwesome name={'phone'} size={scale(28)} color={color.white}/>
-            </Pressable>
-          </View>}
-          {order?.driver !== null && <Button
+          {order?.driver && <DriverCard driver={order?.driver} /> }
+          {order?.status === ORDER_STATUS.InTransit && <Button
             onPress={() => {
               navigate('OrderOnMap', {order: order})
             }}
@@ -241,6 +221,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     flex: 1,
+    marginBottom: scaleVertical(20),
   },
   flex: {
     flexDirection: "row",
@@ -264,32 +245,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', width: wp(100),
     paddingHorizontal: wp(3),
     paddingVertical: scaleVertical(5),
-  },
-  driverContainer: {
-    width: wp(100),
-    paddingHorizontal: wp(4),
-    paddingVertical: hp(1),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  avatar: {
-    width: wp(15),
-    height: wp(15),
-    borderRadius: wp(10),
-  },
-  column: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginLeft: wp(3),
-  },
-  phone: {
-    width: wp(13),
-    height: wp(13),
-    borderRadius: wp(6.5),
-    backgroundColor: color.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   reviewContainer: {
     marginHorizontal: scale(25),

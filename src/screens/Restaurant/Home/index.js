@@ -59,7 +59,7 @@ const Home = ({route}) => {
       </View>
       <StatusFilter status={tab} changeStatus={setTab}/>
       <FlatList
-        data={myOrders}
+        data={myOrders.sort((a, b) => a.updated_at < b.updated_at ? 1 : -1)}
         renderItem={({item, index, separators}) => {
           return <OrderByCustomer order={item} key={index} tab={tab} setTab={setTab}/>
         }}

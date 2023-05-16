@@ -10,7 +10,8 @@ import {color, scale, scaleVertical} from "utils";
 import {extractLatLong} from "utils/Location";
 import {Text} from "../../../components/text"
 import {ORDER_STATUS} from "../../../consts/orders";
-import {assignDriverRequest, getNearByDriversRequest} from "../../../screenRedux/restaurantRedux";
+import {getMyOrders} from "../../../screenRedux/customerRedux";
+import {assignDriverRequest, getNearByDriversRequest, viewMyOrdersRequest} from "../../../screenRedux/restaurantRedux";
 
 const Map = ({navigation, route}) => {
   const {user: {restaurant: restaurant}} = useSelector(state => state.loginReducer)
@@ -23,7 +24,7 @@ const Map = ({navigation, route}) => {
 
   const dispatch = useDispatch()
   const mapView = useRef(null)
-  // console.log('restaurant', nearbyDrivers, orderId)
+  console.log('restaurant', myOrders)
 
   const fetchNearbyDrivers = () => {
     dispatch(getNearByDriversRequest())
@@ -50,12 +51,20 @@ const Map = ({navigation, route}) => {
   }, [restaurant?.location])
 
   useEffect(() => {
-    fetchNearbyDrivers()
+    dispatch(viewMyOrdersRequest({
+      restaurant: restaurant.id,
+      status: [ORDER_STATUS.Accepted],
+    }))
     const unsubscribe = navigation.addListener('focus', () => {
       fetchNearbyDrivers()
     })
 
+    const interval = setInterval(() => {
+      fetchNearbyDrivers()
+    }, 60000)
+
     return () => {
+      clearInterval(interval)
       unsubscribe()
     }
   }, [])
@@ -79,7 +88,7 @@ const Map = ({navigation, route}) => {
           <Text color={'gray'}>15 Minutes Away</Text>
         </View>
       </View>
-      {myOrders[orderId]?.status === ORDER_STATUS.Accepted && <Pressable style={styles.assign} onPress={() => assignDriver(id)}>
+      {myOrders.find(order => order.id === orderId)?.status === ORDER_STATUS.Accepted && <Pressable style={styles.assign} onPress={() => assignDriver(id)}>
         <Text fontSize={16} variant={'strong'} color={'white'}>Assign</Text>
       </Pressable>}
     </View>)
@@ -91,7 +100,7 @@ const Map = ({navigation, route}) => {
         title="Map"
         showBackIcon={true}
       />
-      {resPoint && <MapView
+      {resPoint && driverLocs.length > 0 && <MapView
         ref={mapView}
         style={styles.container}
         initialRegion={{
@@ -101,15 +110,15 @@ const Map = ({navigation, route}) => {
           longitudeDelta: 0.01
         }}
         onMapReady={() => {
-          mapView.current.fitToCoordinates([resPoint, ...driverLocs], {
-            edgePadding: {
-              top: 100,
-              right: 100,
-              bottom: 100,
-              left: 100
-            },
-            animated: true,
-          })
+          // mapView.current.fitToCoordinates([resPoint, ...driverLocs], {
+          //   edgePadding: {
+          //     top: 100,
+          //     right: 100,
+          //     bottom: 100,
+          //     left: 100
+          //   },
+          //   animated: true,
+          // })
         }}
       >
         <Marker
@@ -140,7 +149,7 @@ const Map = ({navigation, route}) => {
                 >
                   <Ionicons name="bicycle" size={26} color={active ? color.white : color.item}/>
                 </View>
-                <Text color={active ? 'white' : 'item'} variant={'strong'} fontSize={12}>{nearbyDrivers[index].name.split(' ')[0]}</Text>
+                <Text color={active ? 'white' : 'item'} variant={'strong'} fontSize={12}>{nearbyDrivers[index]?.name?.split(' ')[0]}</Text>
               </View>
             </Marker>
           )

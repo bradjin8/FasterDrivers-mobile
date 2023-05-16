@@ -1,3 +1,4 @@
+import DriverCard from "components/DriverCard";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Pressable, ActivityIndicator} from 'react-native';
@@ -54,6 +55,12 @@ const OrderByCustomer = ({order, tab}) => {
             <Pressable style={styles.assign} onPress={assignDriver}>
               <Text color='white' variant='strong'>Assign to Driver</Text>
             </Pressable>
+          </View>
+        )
+      case ORDER_STATUS.DriverAssigned:
+        return (
+          <View style={{padding: scale(20)}}>
+            <DriverCard driver={order.driver} />
           </View>
         )
       default:
