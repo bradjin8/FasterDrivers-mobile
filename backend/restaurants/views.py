@@ -89,6 +89,6 @@ class RestaurantViewSet(ModelViewSet):
         order = Order.objects.get(id=request.data.get('order'))
         order.driver = None
         order.driver_assigned_at = None
-        order.status = "In Progress"
+        order.status = "Accepted"
         order.save()
         return Response("Driver declined order successfully")
