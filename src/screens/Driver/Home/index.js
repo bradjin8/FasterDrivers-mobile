@@ -2,7 +2,7 @@ import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Image, Linking, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
-import MapView, {Marker} from "react-native-maps";
+import MapView, {Marker, Polyline} from "react-native-maps";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,6 +13,7 @@ import {useUpdateDriverLocationWebsocket} from "utils/web-socket";
 import {Button, Text} from "../../../components/index";
 import {ORDER_STATUS} from "../../../consts/orders";
 import {deliverOrder, getAssignedOrders, pickupOrder, rejectOrder} from "../../../screenRedux/driverRedux";
+import {getRoute} from "../../../third-party/google";
 
 const MESSAGE = {
   FINDING: "Finding Orders...",
@@ -32,6 +33,7 @@ const Home = ({navigation}) => {
 
   const [resLocs, setResLocs] = useState([])
   const [desLocs, setDesLocs] = useState([])
+  const [routes, setRoutes] = useState([])
 
   const mapView = useRef(null)
 
@@ -55,34 +57,62 @@ const Home = ({navigation}) => {
 
   const accept = (orderId) => {
     setModal(false)
-    setOrderIdx(-1)
+    // setOrderIdx(-1)
     setMessage(MESSAGE.ACCEPTING)
     dispatch(pickupOrder({orderId}))
   }
 
   const reject = (orderId) => {
     setModal(false)
-    setOrderIdx(-1)
+    // setOrderIdx(-1)
     setMessage(MESSAGE.REJECTING)
     dispatch(rejectOrder({order: orderId}))
   }
 
   const complete = (orderId) => {
     setModal(false)
-    setOrderIdx(-1)
+    // setOrderIdx(-1)
     setMessage(MESSAGE.COMPLETING)
     dispatch(deliverOrder({orderId}))
   }
 
+  const calculatePositions = async () => {
+    let desLoc = [], resLoc = []
+    assignedOrders
+      // .filter(it => it.status === ORDER_STATUS.DriverAssigned)
+      .map((order) => {
+        const {restaurant: {location}, user: {customer}, address} = order
+        const deliveryAddress = customer?.addresses?.find(add => add.id === address) || {}
+        // console.log('restaurant-address', location, deliveryAddress.location)
+        desLoc.push(extractLatLong(deliveryAddress.location))
+        resLoc.push(extractLatLong(location))
+      })
+    // console.log('desLoc', desLoc, 'resLoc', resLoc)
+    setDesLocs(desLoc)
+    setResLocs(resLoc)
+
+    let _routes = []
+    for (let i = 0; i < resLoc.length; i++) {
+      const route = await getRoute(resLoc[i], desLoc[i])
+      _routes.push(route)
+    }
+    setRoutes(_routes)
+  }
+
+  // console.log('desLocs', desLocs)
+
+  const refresh = () => {
+    getPosition()
+    fetchOrders()
+  }
+
   useEffect(() => {
     const interval = setInterval(() => {
-      getPosition()
-      fetchOrders()
-    }, 60 * 1000)
+      refresh()
+    }, 10 * 1000)
 
     const unsubscribe = navigation.addListener('focus', () => {
-      getPosition()
-      fetchOrders()
+      refresh()
     })
     return () => {
       clearInterval(interval)
@@ -109,21 +139,11 @@ const Home = ({navigation}) => {
   }, [position])
 
   useEffect(() => {
-    let desLoc = [], resLoc = []
-    assignedOrders.filter(it => it.status === ORDER_STATUS.DriverAssigned).map((order) => {
-      const {restaurant: {location}, user: {customer}, address} = order
-      const deliveryAddress = customer?.addresses?.find(add => add.id === address) || {}
-      // console.log('restaurant-address', location, deliveryAddress.location)
-      desLoc.push(extractLatLong(deliveryAddress.location))
-      resLoc.push(extractLatLong(location))
-    })
-    // console.log('desLoc', desLoc, 'resLoc', resLoc)
-    setDesLocs(desLoc)
-    setResLocs(resLoc)
+    calculatePositions()
   }, [assignedOrders])
 
   useEffect(() => {
-    fitToCoordinates()
+    // fitToCoordinates()
   }, [position, resLocs, desLocs])
 
   // console.log('assigned', assignedOrders)
@@ -165,7 +185,7 @@ const Home = ({navigation}) => {
         ...styles.overlay,
         height: scale(modal ? 260 : 140),
       }}
-      onPress={() => !modal && setModal(true)}
+      onPress={() => setModal(!modal)}
     >
       {modal && <View style={styles.price}>
         <Text variant={'h5'}>${total}</Text>
@@ -215,42 +235,51 @@ const Home = ({navigation}) => {
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <DriverHeader photo={driver?.photo} name={name}/>
-      {position ? <MapView
-        ref={mapView}
-        style={styles.container}
-        initialRegion={{
-          ...position,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-        showsUserLocation={true}
-        // onMapReady={() => fitToCoordinates()}
-      >
-        {resLocs.map((resLoc, idx) => (resLoc && <Marker
-            key={'res-' + idx}
-            coordinate={resLoc}
+      {position ?
+        <MapView
+          ref={mapView}
+          style={styles.container}
+          initialRegion={{
+            ...position,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+          showsUserLocation={true}
+          onMapReady={() => fitToCoordinates()}
+        >
+          {resLocs.map((resLoc, idx) => (resLoc && <Marker
+              key={'res-' + idx}
+              coordinate={resLoc}
+              onPress={() => {
+                setOrderIdx(idx === orderIdx ? -1 : idx)
+              }}
+            >
+              <View style={styles.marketMarker}>
+                <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
+              </View>
+            </Marker>)
+          )}
+          {desLocs.map((desLoc, idx) => (desLoc && <Marker
+            key={'driver-' + idx}
+            coordinate={desLoc}
             onPress={() => {
               setOrderIdx(idx === orderIdx ? -1 : idx)
             }}
           >
-            <View style={styles.marketMarker}>
-              <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
+            <View style={styles.driverMarker}>
+              <Entypo name={'location-pin'} size={34}/>
             </View>
-          </Marker>)
-        )}
-        {desLocs.map((desLoc, idx) => (desLoc && <Marker
-          key={'driver-' + idx}
-          coordinate={desLoc}
-          onPress={() => {
-            setOrderIdx(idx === orderIdx ? -1 : idx)
-          }}
-        >
-          <View style={styles.driverMarker}>
-            <Entypo name={'location-pin'} size={34}/>
-          </View>
-        </Marker>))}
+          </Marker>))}
 
-      </MapView> : <ActivityIndicator/>}
+          {orderIdx > -1 && orderIdx < routes.length && <Polyline
+            coordinates={routes[orderIdx]}
+            strokeColor={color.primary}
+            strokeWidth={4}
+          />}
+        </MapView>
+        :
+        <ActivityIndicator/>
+      }
       {loading && <View style={styles.finding}>
         <Text variant={'strong'} color={color.item} fontWeight={'600'}>{message}</Text>
       </View>}

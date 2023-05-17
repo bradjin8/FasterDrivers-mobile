@@ -2,7 +2,7 @@ import SimpleHeader from "components/SimpleHeader";
 import React, {useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Image, Linking, Pressable, StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
-import MapView, {Marker} from "react-native-maps";
+import MapView, {Marker, Polyline} from "react-native-maps";
 import {heightPercentageToDP, widthPercentageToDP as wp, widthPercentageToDP} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -13,6 +13,7 @@ import {color, scale, scaleVertical} from "utils";
 import {extractLatLong} from "utils/Location";
 import {useUpdateDriverLocationWebsocket} from "utils/web-socket";
 import {Text} from "../../../components/index";
+import {getRoute} from "../../../third-party/google";
 
 const OrderOnMap = ({navigation, route}) => {
   const order = route.params?.order || {}
@@ -23,16 +24,37 @@ const OrderOnMap = ({navigation, route}) => {
   const [driverLocation, setDriverLocation] = useState(null)
   const [showInfo, setShowInfo] = useState(true)
 
+  const [routes, setRoutes] = useState([])
+
   const mapView = useRef(null)
 
 
   const driverWebSocket = useUpdateDriverLocationWebsocket(order?.driver?.id, false)
 
-  useEffect(() => {
+  const calculatePositions = () => {
     const deliveryAddress = order.user?.customer?.addresses?.find(address => address.id === order.address)
     setDeliveryLocation(extractLatLong(deliveryAddress?.location))
     setRestaurantLocation(extractLatLong(order.restaurant?.location))
     setDriverLocation(extractLatLong(order.driver?.driver?.location))
+  }
+
+  const calculateRoutes = async () => {
+    const _routes = await Promise.all([
+      getRoute(driverLocation, deliveryLocation),
+      getRoute(restaurantLocation, driverLocation),
+    ])
+    // console.log('routes', _routes)
+    setRoutes(_routes)
+  }
+
+  useEffect(() => {
+    if (driverLocation && restaurantLocation && deliveryLocation) {
+      calculateRoutes()
+    }
+  }, [driverLocation, restaurantLocation, deliveryLocation])
+
+  useEffect(() => {
+    calculatePositions()
   }, [order])
 
   useEffect(() => {
@@ -101,6 +123,15 @@ const OrderOnMap = ({navigation, route}) => {
               <Entypo name={'location-pin'} size={34}/>
             </View>
           </Marker>}
+
+          {routes.length > 0 && routes.map((route, index) => (
+            <Polyline
+              key={index}
+              coordinates={route}
+              strokeWidth={3}
+              strokeColor={index === 0 ? color.darkGray : color.primary}
+            />
+          ))}
         </MapView>
         :
         <ActivityIndicator/>

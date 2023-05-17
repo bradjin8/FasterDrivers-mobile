@@ -19,6 +19,7 @@
     "react-devtools-core": "~4.25.0"
   },
   "dependencies": {
+    "@mapbox/polyline": "^1.2.0",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/netinfo": "^9.3.7",
     "@react-navigation/bottom-tabs": "^6.3.2",
