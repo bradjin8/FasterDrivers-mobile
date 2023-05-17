@@ -67,4 +67,9 @@ class Driver(UUIDModel):
 
     @property
     def assigned_orders(self):
-        return Order.objects.filter(driver=self.user).count()
+        return Order.objects.filter(driver=self.user, status="Driver Assigned").count()
+
+
+    @property
+    def in_transit_orders(self):
+        return Order.objects.filter(driver=self.user, status="In Transit").count()
