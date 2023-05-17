@@ -26,3 +26,8 @@ export const ORDER_PENDING_STATUS = [
   ORDER_STATUS.DriverAssigned,
   ORDER_STATUS.InTransit,
 ]
+
+export const ORDER_REVIEW_MODE = {
+  RESTAURANT: 'Restaurant',
+  DRIVER: 'Driver',
+}

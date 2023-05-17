@@ -64,7 +64,7 @@ function permissionsAlert() {
   );
 }
 
-export const pickFromGallery = async (width = 500, height = 400) => {
+export const pickFromGallery = async (width = 600, height = 400) => {
   const havePermission = await getCameraGalleryPermissions();
   if (!havePermission) {
     permissionsAlert();
@@ -86,7 +86,7 @@ export const pickFromGallery = async (width = 500, height = 400) => {
   }
 };
 
-export const pickFromCamera = async (width = 500, height = 400) => {
+export const pickFromCamera = async (width = 600, height = 400) => {
   const havePermission = await getCameraGalleryPermissions();
   if (!havePermission) {
     permissionsAlert();

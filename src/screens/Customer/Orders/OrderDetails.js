@@ -1,6 +1,7 @@
 import BaseScreen from "components/BaseScreen";
 import DriverCard from "components/DriverCard";
 import OrderStatusIndicator from "components/OrderStatusIndicator";
+import RateModal from "components/RateModal";
 import {goBack, navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
 import {Image, Linking, Pressable, ScrollView, StyleSheet, TextInput, View} from "react-native";
@@ -13,8 +14,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenWidth} from "utils";
 import {ActivityIndicators, Button, Text} from "../../../components/index";
-import {ORDER_STATUS} from "../../../consts/orders";
+import {ORDER_REVIEW_MODE, ORDER_STATUS} from "../../../consts/orders";
 import {getDishById} from "../../../screenRedux/customerRedux";
+import {Flex, Margin} from "../../../theme/Styles";
 
 const OrderDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -22,8 +24,7 @@ const OrderDetails = ({route}) => {
   const order = route?.params?.order;
   const {id, photo, name, street, city, zip_code, state, description, type, rating, rating_count} = order.restaurant
   const [orderedDishes, setOrderedDishes] = useState([])
-  const [rate, setRate] = useState(0)
-  const [review, setReview] = useState('')
+  const [reviewMode, setReviewMode] = useState('')
 
   const fetchDishes = () => {
     if (order?.dishes) {
@@ -43,7 +44,7 @@ const OrderDetails = ({route}) => {
     return (<ActivityIndicators/>)
   }
 
-  console.log('order', order)
+  // console.log('order', order)
 
   return (
     <BaseScreen style={styles.mainWrapper}>
@@ -75,8 +76,8 @@ const OrderDetails = ({route}) => {
           <View style={{flexDirection: "row", alignItems: "center", justifyContent: 'flex-start'}}>
             <StarRating
               disabled={true}
-              halfStarEnabled={false}
-              maxStars={1}
+              halfStarEnabled={true}
+              maxStars={5}
               rating={rating}
               starSize={18}
               emptyStarColor={color.primary}
@@ -91,6 +92,14 @@ const OrderDetails = ({route}) => {
             <Text variant="text" color="item" fontSize={12} fontWeight="400" style={{marginLeft: scaleVertical(5)}}>
               ({rating_count})
             </Text>
+            {order?.status === ORDER_STATUS.Delivered && <Pressable
+              onPress={() => {
+                setReviewMode(ORDER_REVIEW_MODE.RESTAURANT)
+              }}
+              style={[Margin.h10]}
+            >
+              <Text variant={'small'} color={'gray'}>Rate the restaurant</Text>
+            </Pressable>}
           </View>
         </View>
         <OrderStatusIndicator status={order?.status}/>
@@ -160,31 +169,19 @@ const OrderDetails = ({route}) => {
             fontWeight={'600'}
             style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10), borderColor: color.item, borderWidth: 1}}
           />}
-          {order?.status === ORDER_STATUS.Delivered && <View style={styles.reviewContainer}>
-            <View style={styles.rateContainer}>
-              <Text variant={'strong'}>Tap to Rate</Text>
-              <StarRating
-                rating={rate}
-                starSize={20}
-                fullStarColor={color.primary}
-                containerStyle={styles.rateStar}
-                halfStarEnabled
-                selectedStar={(rating) => setRate(rating)}
+          {order?.status === ORDER_STATUS.Delivered && <View style={[Flex.itemsCenter]}>
+            <Button
+              onPress={() => {
+                setReviewMode(ORDER_REVIEW_MODE.DRIVER)
+              }}
+              isSecondary={true}
+              style={[Margin.h10]}
+              text={`Rate ${order?.driver?.name}'s Delivery`}
               />
-            </View>
-            <Text variant='strong'>Review the Restaurant:</Text>
-            <TextInput
-              style={styles.reviewText}
-              placeholder={'Write your review here'}
-              placeholderTextColor={color.darkGray}
-              multiline
-              numberOfLines={6}
-              value={review}
-              onChangeText={(text) => setReview(text)}
-            />
           </View>}
         </View>
       </View>
+      <RateModal visible={reviewMode !== ''} order={order} close={() => setReviewMode('')} mode={reviewMode} />
     </BaseScreen>
   );
 };
@@ -246,29 +243,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(3),
     paddingVertical: scaleVertical(5),
   },
-  reviewContainer: {
-    marginHorizontal: scale(25),
-    marginVertical: scale(10),
-  },
-  rateContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: hp(1),
-  },
-  rateStar: {
-    marginLeft: wp(2),
-    width: wp(30)
-  },
-  reviewText: {
-    marginTop: hp(1),
-    borderRadius: scale(15),
-    borderWidth: 1,
-    borderColor: color.black,
-    padding: scale(20),
-    lineHeight: scale(20),
-    minHeight: hp(15)
-  }
 });
 
 export default OrderDetails;

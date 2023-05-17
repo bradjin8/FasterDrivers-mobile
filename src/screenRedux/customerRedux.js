@@ -394,6 +394,18 @@ export async function addAddressAPI(data) {
   return XHR(URL, options)
 }
 
+export async function rateRestaurant(data) {
+  const URL = `${appConfig.backendServerURL}/reviews/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
 function* addAddressAction(data) {
   try {
     const resp = yield call(addAddressAPI, data.payload)

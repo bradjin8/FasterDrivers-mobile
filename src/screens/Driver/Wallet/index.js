@@ -13,7 +13,7 @@ import {Button} from "../../../components/button";
 const Wallet = () => {
   const {user: {name, driver: driver}} = useSelector((state) => state.loginReducer)
   const {isWithdrawing} = useSelector(state => state.driverReducer)
-  console.log('driver', driver)
+  // console.log('driver', driver)
 
   const onWithdraw = () => {
 

@@ -15,6 +15,7 @@ import {truncateString} from "utils/utils";
 import BaseScreen from "../../../components/BaseScreen";
 import {ActivityIndicators, CustomTextInput, Text} from "../../../components/index";
 import {getAddressesData, getRestaurantsData, requestFailed} from "../../../screenRedux/customerRedux";
+import {Flex} from "../../../theme/Styles";
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -29,7 +30,6 @@ const Home = ({navigation}) => {
   const fetchData = () => {
     dispatch(getAddressesData())
     dispatch(getRestaurantsData(searchText ? searchText : null));
-
   }
   // console.log('addresses', addresses, position)
   useEffect(() => {
@@ -72,9 +72,15 @@ const Home = ({navigation}) => {
       })
   }
 
+  useEffect(() => {
+    if (addresses?.length > 0) {
+      setAddress(addresses[0])
+    }
+  }, [addresses])
+
 
   const renderItems = (rest, i) => {
-    const {photo, name, description, rating_count,} = rest || {}
+    const {photo, name, description, rating, rating_count,} = rest || {}
     return (
       <Pressable key={"item-" + i.toString()} style={styles.itemContain} onPress={() => {
         if (address.id)
@@ -93,18 +99,18 @@ const Home = ({navigation}) => {
           <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
             {truncateString(description, 50)}
           </Text>
-          <View style={{flexDirection: 'row'}}>
+          <View style={[Flex.row, Flex.itemsCenter]}>
             <StarRating
               disabled={true}
-              maxStars={1}
-              rating={rating_count / 5}
+              maxStars={5}
+              rating={rating}
               starSize={20}
               fullStarColor={color.primary}
               emptyStarColor={color.lightGray}
               halfStarColor={color.primary}
             />
-            <Text variant="text" color="item" fontSize={16} fontWeight="700" style={{marginLeft: scaleVertical(5)}}>
-              {rating_count}
+            <Text variant="strong" color="item" fontSize={16} fontWeight="700" style={{marginLeft: scaleVertical(5)}}>
+              {Number(rating).toFixed(1)}
             </Text>
           </View>
         </View>

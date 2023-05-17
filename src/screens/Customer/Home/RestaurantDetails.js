@@ -10,6 +10,7 @@ import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenWidth} from "utils";
 import {ActivityIndicators, Button, Text} from "../../../components/index";
 import {getRestaurantDetails, setUserCartItems} from "../../../screenRedux/customerRedux";
+import {Flex} from "../../../theme/Styles";
 
 const RestaurantDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -18,8 +19,7 @@ const RestaurantDetails = ({route}) => {
   const {restaurant, address} = route?.params;
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-  const {id, photo, name, street, city, zip_code, state, description, type, rating_count} = restaurant
-  const [rating, setRating] = useState(rating_count)
+  const {id, photo, name, street, city, zip_code, state, description, type, rating, rating_count} = restaurant
 
   useEffect(() => {
     dispatch(getRestaurantDetails(id));
@@ -29,11 +29,7 @@ const RestaurantDetails = ({route}) => {
     setCartItems(cartItemsReducer)
   }, [cartItemsReducer]);
 
-  const handleRating = (rate) => {
-    setRating(rate)
-  }
-
-  console.log('cartItems', cartItems)
+  // console.log('cartItems', cartItems)
   const onAdd = (product) => {
     // check if user selected item from other restaurant
     let _cartItems = _.cloneDeep(cartItems);
@@ -77,7 +73,7 @@ const RestaurantDetails = ({route}) => {
   }
 
   const renderFinalTotal = () => {
-    return cartItems.length && cartItems.reduce((prev, curr) => {
+    return '$ ' + cartItems.reduce((prev, curr) => {
       return prev + (curr.quantity * curr.price)
     }, 0).toFixed(2)
   }
@@ -156,24 +152,24 @@ const RestaurantDetails = ({route}) => {
         </View>
 
         <View style={styles.content}>
-          <View style={styles.flex}>
-            <Text variant="text" color="item" fontSize={14} fontWeight="600">
+          <View style={[Flex.row, Flex.itemsEnd, Flex.justifyBetween]}>
+            <Text variant="h4" color="item" fontWeight="600">
               {name}
             </Text>
-            <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400" numberOfLines={2}
+            <Text variant="text" color="item" fontSize={12} fontWeight="400" numberOfLines={2}
                   ellipsizeMode="tail">
               {street}, {city} - {zip_code}, {state}
             </Text>
           </View>
-          <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
+          <Text variant="text" color="item" fontSize={12} fontWeight="400">
             {description}
           </Text>
-          <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
+          <Text variant="strong" color="item" fontSize={12} fontWeight="500">
             {type}
           </Text>
           <View style={{flexDirection: "row", alignItems: "center"}}>
             <StarRating
-              disabled={false}
+              disabled={true}
               halfStarEnabled={true}
               maxStars={5}
               rating={rating}
@@ -182,10 +178,9 @@ const RestaurantDetails = ({route}) => {
               fullStarColor={color.primary}
               containerStyle={styles.starContainer}
               starStyle={styles.starStyle}
-              selectedStar={(rating) => handleRating(rating)}
             />
-            <Text variant="text" color="item" fontSize={14} fontWeight="600" style={{marginLeft: scaleVertical(5)}}>
-              {rating}
+            <Text variant="strong" color="item" fontSize={14} fontWeight="600" style={{marginLeft: scaleVertical(5)}}>
+              {rating} ({rating_count} reviews)
             </Text>
           </View>
           <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {
@@ -207,11 +202,11 @@ const RestaurantDetails = ({route}) => {
             <Icon name="shopping-cart" size={20} color={color.white}/>
           </View>
           <Pressable onPress={() => navigate("Cart", {address: address})}>
-            <Text variant="text" color="white" fontSize={14} fontWeight="600">
+            <Text variant="strong" color="white" fontSize={16} fontWeight="600">
               View cart
             </Text>
           </Pressable>
-          <Text variant="text" color="white" fontSize={14} fontWeight="600">
+          <Text variant="strong" color="white" fontSize={14} fontWeight="600">
             {renderFinalTotal()}
           </Text>
         </View>
@@ -241,7 +236,7 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: "100%",
-    height: screenWidth / 2,
+    height: screenWidth * 2 / 3 ,
     resizeMode: 'stretch'
   },
   itemImageContain: {

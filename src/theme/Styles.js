@@ -135,3 +135,17 @@ export const BG = StyleSheet.create({
     backgroundColor: color.secondary,
   }
 })
+
+export const Templates = StyleSheet.create({
+  avatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+  },
+  image: {
+    width: scale(200),
+    height: scale(200) * (2 / 3),
+    resizeMode: 'cover',
+    borderRadius: 10,
+  }
+})
