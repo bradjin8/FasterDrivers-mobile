@@ -76,9 +76,9 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      // getPosition()
+      getPosition()
       fetchOrders()
-    }, 10 * 1000)
+    }, 60 * 1000)
 
     const unsubscribe = navigation.addListener('focus', () => {
       getPosition()
@@ -254,6 +254,11 @@ const Home = ({navigation}) => {
       {loading && <View style={styles.finding}>
         <Text variant={'strong'} color={color.item} fontWeight={'600'}>{message}</Text>
       </View>}
+      {assignedOrders.filter(it => it.status === ORDER_STATUS.InTransit).length > 0 && <Pressable style={styles.finding} onPress={() => {
+        setOrderIdx(assignedOrders.findIndex(it => it.status === ORDER_STATUS.InTransit))
+      }}>
+        <Text variant={'strong'} color={color.item} fontWeight={'600'}>You are now on a delivery </Text>
+      </Pressable>}
       {renderSelectedOrderDetail()}
     </SafeAreaView>
   )

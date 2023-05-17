@@ -1,3 +1,4 @@
+import PaymentCard from "components/PaymentCard";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect} from "react";
 import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
@@ -46,22 +47,7 @@ const Payment = ({route}) => {
             <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
           </View>
           <View style={styles.innerContain}>
-            {payments?.map((payment, index) => {
-              return (
-                <Pressable onPress={() => setPaymentId(payment.id)} key={'payment-' + index}>
-                  {paymentId === payment.id && <View style={styles.circle}>
-                    <Image source={Images.ticks} style={styles.tickImg}/>
-                  </View>}
-                  <View style={[styles.itemContain, paymentId === payment.id && styles.activeItem]} key={index.toString()}>
-                    <Text variant="text" color="black" fontSize={16} fontWeight="700">{payment.card.brand}</Text>
-                    <View style={[styles.flexDirection, styles.paddingTop]}>
-                      <FontAwesomeIcons name="cc-mastercard" size={16} color={color.black} style={{marginRight: scaleVertical(10)}}/>
-                      <Text variant="text" color="black" fontSize={16} fontWeight="400">************* {payment.card.last4}</Text>
-                    </View>
-                  </View>
-                </Pressable>
-              )
-            })}
+            {payments?.map((payment, index) => <PaymentCard payment={payment} key={index} onPress={() => setPaymentId(payment.id)} active={paymentId === payment.id}/> )}
             <Button
               style={styles.btnStyle}
               variant="outline"
@@ -100,18 +86,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     padding: scaleVertical(10)
   },
-  itemContain: {
-    backgroundColor: color.secondary,
-    borderRadius: scale(10),
-    borderColor: color.black,
-    borderWidth: scale(1),
-    marginBottom: scale(15),
-    padding: scale(10),
-    justifyContent: 'center',
-  },
-  activeItem: {
-    borderColor: color.primary,
-  },
   checkView: {
     position: 'absolute',
     right: -4,
@@ -126,15 +100,6 @@ const styles = StyleSheet.create({
   btnStyle: {
     borderColor: color.black,
   },
-  circle: {
-    position: 'absolute',
-    right: -10,
-    top: -8,
-    zIndex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tickImg: {height: 24, width: 24, borderRadius: 12},
 })
 
 export default Payment;

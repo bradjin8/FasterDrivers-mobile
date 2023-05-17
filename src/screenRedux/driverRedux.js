@@ -82,6 +82,7 @@ const initialState = {
   assignedOrders: [],
   needToRefresh: false,
   deliveredOrders: [],
+  isWithdrawing: false,
 }
 
 export const driverReducer = (state = initialState, action) => {
