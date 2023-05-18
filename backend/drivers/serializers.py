@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from django.db.models import Avg
+
 from .models import Driver
 
 
@@ -16,3 +18,9 @@ class DriverSerializer(serializers.ModelSerializer):
 
     def get_in_transit_orders(self, obj):
          return obj.in_transit_orders
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
+        rep['rating_count'] = instance.reviews.count()
+        return rep
