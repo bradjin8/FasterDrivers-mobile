@@ -3,6 +3,7 @@ from rest_framework import serializers
 from restaurants.serializers import ListRestaurantSerializer
 from users.serializers import UserProfileSerializer
 
+from reviews.models import DriverReview, Review
 from .models import OrderDishAddon, Order, OrderDish
 from .utility import calculate_total_cost
 
@@ -103,4 +104,12 @@ class OrderSerializer(serializers.ModelSerializer):
         rep['restaurant'] = ListRestaurantSerializer(instance.restaurant).data
         if instance.driver:
             rep['driver'] = UserProfileSerializer(instance.driver).data
+        if DriverReview.objects.filter(user=instance.user, order=instance).exists():
+            rep['driver_reviewed'] = True
+        else:
+            rep['driver_reviewed'] = False
+        if Review.objects.filter(user=instance.user, order=instance).exists():
+            rep['restaurant_reviewed'] = True
+        else:
+            rep['restaurant_reviewed'] = False
         return rep
