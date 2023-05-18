@@ -7,7 +7,7 @@ import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-nativ
 import StarRating from "react-native-star-rating-new";
 import {color, scale, scaleVertical} from "utils";
 import {ORDER_REVIEW_MODE} from "../consts/orders";
-import {rateRestaurant} from "../screenRedux/customerRedux";
+import {rateDriver, rateRestaurant} from "../screenRedux/customerRedux";
 import {Flex, Margin, Padding, Templates} from "../theme/Styles";
 
 const RateModal = ({order, visible, close, mode}) => {
@@ -25,13 +25,25 @@ const RateModal = ({order, visible, close, mode}) => {
     data.append('context', review)
     switch (mode) {
       case ORDER_REVIEW_MODE.DRIVER:
+        data.append('driver', order?.driver?.driver?.id)
+        rateDriver(data)
+          .then(() => {
+            showMessage({
+              message: 'Review left',
+              type: 'success',
+            })
+            close()
+          })
+          .catch((e) => {
+            console.log('e', e?.response?.data)
+          })
         break
       case ORDER_REVIEW_MODE.RESTAURANT:
         data.append('restaurant', order?.restaurant?.id)
         rateRestaurant(data)
           .then(() => {
             showMessage({
-              message: 'Review saved',
+              message: 'Review left',
               type: 'success',
             })
             close()
@@ -74,7 +86,7 @@ const RateModal = ({order, visible, close, mode}) => {
             starSize={20}
             fullStarColor={color.primary}
             containerStyle={styles.rateStar}
-            halfStarEnabled
+            halfStarEnabled={false}
             selectedStar={(rating) => setRate(rating)}
           />
         </View>
@@ -123,7 +135,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
   },
-
   ok: {
     width: '47%',
     justifyContent: 'center',
@@ -156,6 +167,6 @@ const styles = StyleSheet.create({
     borderColor: color.black,
     paddingHorizontal: scale(10),
     paddingVertical: scale(30),
-    height: scaleVertical(100)
+    height: scaleVertical(100),
   }
 })

@@ -92,7 +92,7 @@ const OrderDetails = ({route}) => {
             <Text variant="text" color="item" fontSize={12} fontWeight="400" style={{marginLeft: scaleVertical(5)}}>
               ({rating_count})
             </Text>
-            {order?.status === ORDER_STATUS.Delivered && <Pressable
+            {order?.status === ORDER_STATUS.Delivered && !order?.restaurant_reviewed && <Pressable
               onPress={() => {
                 setReviewMode(ORDER_REVIEW_MODE.RESTAURANT)
               }}
@@ -169,7 +169,7 @@ const OrderDetails = ({route}) => {
             fontWeight={'600'}
             style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10), borderColor: color.item, borderWidth: 1}}
           />}
-          {order?.status === ORDER_STATUS.Delivered && <View style={[Flex.itemsCenter]}>
+          {order?.status === ORDER_STATUS.Delivered && !order?.driver_reviewed && <View style={[Flex.itemsCenter]}>
             <Button
               onPress={() => {
                 setReviewMode(ORDER_REVIEW_MODE.DRIVER)
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   itemImage: {
     width: "100%",
-    height: screenWidth / 2.5,
+    height: screenWidth / 3 * 2,
   },
   itemImageContain: {
     width: wp(20),
