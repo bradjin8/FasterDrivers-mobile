@@ -1,3 +1,4 @@
+import CustomMessageModal from "components/CustomMessageModal";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
 import {ActivityIndicator, Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, View} from "react-native";
@@ -12,20 +13,20 @@ import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenWidth} from "utils";
 import {getCurrentLocation} from "utils/Location";
 import {truncateString} from "utils/utils";
-import BaseScreen from "../../../components/BaseScreen";
 import {ActivityIndicators, CustomTextInput, Text} from "../../../components/index";
-import {getAddressesData, getRestaurantsData, requestFailed} from "../../../screenRedux/customerRedux";
+import {getAddressesData, getRestaurantsData} from "../../../screenRedux/customerRedux";
 import {Flex} from "../../../theme/Styles";
 
 const Home = ({navigation}) => {
-  const dispatch = useDispatch();
-  const {loading, locationLoading, addresses, restaurants} = useSelector(state => state.customerReducer);
-  const {user} = useSelector(state => state.loginReducer);
-  const [searchText, setSearchText] = useState(null);
-  const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch()
+  const {loading, locationLoading, addresses, restaurants} = useSelector(state => state.customerReducer)
+  const {user} = useSelector(state => state.loginReducer)
+  const [searchText, setSearchText] = useState(null)
+  const [visible, setVisible] = useState(false)
   const {customer: {photo}, name} = user
-  const [position, setPosition] = useState(null);
+  const [position, setPosition] = useState(null)
   const [address, setAddress] = useState({})
+  const [visibleCustomModal, setVisibleCustomModal] = useState(false)
 
   const fetchData = () => {
     dispatch(getAddressesData())
@@ -230,6 +231,7 @@ const Home = ({navigation}) => {
           </ScrollView>
         }
       </View>
+      <CustomMessageModal data={{}} visible={visibleCustomModal} close={() => setVisibleCustomModal(false)} onOk={() => {}}/>
     </SafeAreaView>);
 };
 

@@ -1,7 +1,6 @@
-import {CustomTextInput} from "components/CustomTextInput";
 import {Text} from "components/text";
 import React, {useEffect, useState} from 'react'
-import {Button, Image, Modal, Pressable, StyleSheet, TextInput, View} from "react-native";
+import {Image, Modal, Pressable, StyleSheet, TextInput, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import StarRating from "react-native-star-rating-new";
@@ -100,7 +99,7 @@ const RateModal = ({order, visible, close, mode}) => {
           value={review}
           onChangeText={(text) => setReview(text)}
         />
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10}}>
+        <View style={[Flex.row, Flex.justifyBetween, Margin.v10]}>
           <Pressable style={styles.cancel} onPress={close}>
             <Text variant={'strong'} color={'item'}>Later</Text>
           </Pressable>
