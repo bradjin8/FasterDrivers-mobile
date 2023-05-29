@@ -3,6 +3,8 @@ from users.models import User
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
 
+from orders.models import Order
+
 
 class Driver(UUIDModel):
     """
@@ -62,3 +64,12 @@ class Driver(UUIDModel):
         blank=True,
         null=True
     )
+
+    @property
+    def assigned_orders(self):
+        return Order.objects.filter(driver=self.user, status="Driver Assigned").count()
+
+
+    @property
+    def in_transit_orders(self):
+        return Order.objects.filter(driver=self.user, status="In Transit").count()

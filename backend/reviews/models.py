@@ -5,7 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from home.models import UUIDModel
 from restaurants.models import Restaurant
 from orders.models import Order
-
+from drivers.models import Driver
 
 User = get_user_model()
 
@@ -22,6 +22,37 @@ class Review(UUIDModel):
     )
     restaurant = models.ForeignKey(
         Restaurant,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    order = models.OneToOneField(
+        Order,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+    rating = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
+    context = models.TextField(
+        blank=True
+    )
+
+
+class DriverReview(UUIDModel):
+    """
+    A data representation of a review
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        related_name='driver_reviews',
+        null=True
+    )
+    driver = models.ForeignKey(
+        Driver,
         on_delete=models.CASCADE,
         related_name='reviews'
     )
