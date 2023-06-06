@@ -13,10 +13,11 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenWidth} from "utils";
+import {truncateString} from "utils/utils";
 import {ActivityIndicators, Button, Text} from "../../../components/index";
 import {ORDER_REVIEW_MODE, ORDER_STATUS} from "../../../consts/orders";
 import {getDishById} from "../../../screenRedux/customerRedux";
-import {Flex, Margin} from "../../../theme/Styles";
+import {Flex, Margin, Padding} from "../../../theme/Styles";
 
 const OrderDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -77,8 +78,8 @@ const OrderDetails = ({route}) => {
             <StarRating
               disabled={true}
               halfStarEnabled={true}
-              maxStars={5}
-              rating={rating}
+              maxStars={1}
+              rating={0}
               starSize={18}
               emptyStarColor={color.primary}
               fullStarColor={color.primary}
@@ -90,7 +91,7 @@ const OrderDetails = ({route}) => {
               {rating || '0.0'}
             </Text>
             <Text variant="text" color="item" fontSize={12} fontWeight="400" style={{marginLeft: scaleVertical(5)}}>
-              ({rating_count})
+              ( {rating_count} )
             </Text>
             {order?.status === ORDER_STATUS.Delivered && !order?.restaurant_reviewed && <Pressable
               onPress={() => {
@@ -112,19 +113,19 @@ const OrderDetails = ({route}) => {
                 <Image source={image_1 ? {uri: image_1} : Images.item}
                        style={styles.itemImageContain}/>
                 <View style={{marginLeft: scaleVertical(10), flexDirection: 'row', justifyContent: 'space-between', width: wp(76), paddingRight: wp(2)}}>
-                  <View>
+                  <View style={{width: "80%"}}>
                     <View style={{flexDirection: 'row'}}>
                       {quantity > 1 && <Text variant="text" color="primary" fontSize={14} fontWeight="400">
                         {quantity}x </Text>}
-                      <Text variant="text" color="black" fontSize={14} fontWeight="600">
+                      <Text variant="strong" color="black" fontSize={14} fontWeight="400">
                         {name}
                       </Text>
                     </View>
-                    <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
-                      {description}
+                    <Text variant="text" color="item" fontSize={12} fontWeight="400">
+                      {truncateString(description, 80)}
                     </Text>
                   </View>
-                  <Text variant="text" color="itemPrimary" fontSize={12} fontWeight="400">
+                  <Text variant="strong" color="item" fontSize={12} fontWeight="400">
                     ${price}
                   </Text>
                 </View>
@@ -134,16 +135,16 @@ const OrderDetails = ({route}) => {
 
           <View style={styles.priceContainer}>
             <View style={styles.priceRow}>
-              <Text color={'item'} fontSize={16} fontWeight={'600'}>Price</Text>
-              <Text color={'item'} fontSize={16}>${order?.sub_total}</Text>
+              <Text variant={'strong'} color={'item'} fontSize={16} fontWeight={'400'}>Price</Text>
+              <Text variant={'strong'} color={'item'} fontSize={16} fontWeight={'400'}>${order?.sub_total}</Text>
             </View>
             <View style={styles.priceRow}>
-              <Text color={'item'} fontSize={16} fontWeight={'600'}>Fee</Text>
-              <Text color={'item'} fontSize={16}>${order?.fees}</Text>
+              <Text variant={'strong'} color={'item'} fontSize={16} fontWeight={'400'}>Fee</Text>
+              <Text variant={'strong'} color={'item'} fontSize={16} fontWeight={'400'}>${order?.fees}</Text>
             </View>
             <View style={styles.priceRow}>
-              <Text color={'item'} fontSize={16} fontWeight={'600'}>Total</Text>
-              <Text color={'item'} fontSize={16}>${order?.total}</Text>
+              <Text variant={'strong'} color={'item'} fontSize={16} fontWeight={'400'}>Total</Text>
+              <Text variant={'strong'} color={'item'} fontSize={16} fontWeight={'400'}>${order?.total}</Text>
             </View>
           </View>
 
@@ -169,13 +170,13 @@ const OrderDetails = ({route}) => {
             fontWeight={'600'}
             style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10), borderColor: color.item, borderWidth: 1}}
           />}
-          {order?.status === ORDER_STATUS.Delivered && !order?.driver_reviewed && <View style={[Flex.itemsCenter]}>
+          {order?.status === ORDER_STATUS.Delivered && !order?.driver_reviewed && <View style={[Flex.itemsCenter, Margin.v5]}>
             <Button
               onPress={() => {
                 setReviewMode(ORDER_REVIEW_MODE.DRIVER)
               }}
               isSecondary={true}
-              style={[Margin.h10]}
+              style={{width: "90%"}}
               text={`Rate ${order?.driver?.name}'s Delivery`}
               />
           </View>}
@@ -234,9 +235,9 @@ const styles = StyleSheet.create({
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
   starContainer: {justifyContent: "flex-start"},
   starStyle: {marginRight: scaleVertical(1)},
-  dishContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: hp(0.2)},
+  dishContainer: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginVertical: hp(0.2)},
   priceContainer: {
-    marginTop: hp(1),
+    marginVertical: 10,
   },
   priceRow: {
     flexDirection: 'row', justifyContent: 'space-between', width: wp(100),

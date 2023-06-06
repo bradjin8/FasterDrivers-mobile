@@ -222,11 +222,26 @@ function* signUpAction(data) {
         type: "success"
       })
       if(resp?.data.user.type === "Restaurant"){
-        navigate('RestaurantBottomBar')
+        navigate('RestaurantBottomBar', {
+          screen: 'Settings',
+          params: {
+            screen: 'AccountInformation',
+          }
+        })
       } else if(resp?.data.user.type === "Driver"){
-        navigate('DriverBottomBar')
+        navigate('DriverBottomBar', {
+          screen: 'Settings',
+          params: {
+            screen: 'AccountInformation',
+          }
+        })
       } else {
-        navigate('CustomerBottomBar')
+        navigate('CustomerBottomBar', {
+          screen: 'Settings',
+          params: {
+            screen: 'AccountInformation',
+          }
+        })
       }
     }
   } catch (e) {

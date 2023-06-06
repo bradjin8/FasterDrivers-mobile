@@ -50,8 +50,8 @@ const OrderStatusIndicator = ({status}) => {
         return (
           <View key={index} style={styles.item}>
             <View style={{...styles.iconContainer, ...{
-              backgroundColor: idx >= index ? color.primary : color.white,
-              borderColor: idx >= index ? color.primary : color.black,
+              backgroundColor: idx === index ? color.primary : color.white,
+              borderColor: color.black,
             }}}>
               <Image source={item.icon} style={styles.icon} />
             </View>
