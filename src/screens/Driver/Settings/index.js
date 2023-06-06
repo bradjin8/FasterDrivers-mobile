@@ -1,7 +1,7 @@
 import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
 import React from "react";
-import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {Alert, Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import {useDispatch, useSelector} from "react-redux";
 import {color, driverSettingData, scaleVertical} from "utils";
@@ -15,7 +15,14 @@ const Settings = ({}) => {
 
   const redirectTo = (key) => {
     if(key === "logout") {
-      dispatch(logoutRequest())
+      Alert.alert(`Are you sure you want to log out?`, '', [
+        {text: 'Cancel', onPress: () => {}},
+        {
+          text: "Yes", onPress: () => {
+            dispatch(logoutRequest())
+          }
+        },
+      ]);
     }
     key && navigate(key)
   }
