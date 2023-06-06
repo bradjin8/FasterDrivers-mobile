@@ -1,13 +1,13 @@
-import { all, call, put, takeLatest } from "redux-saga/effects"
+import {all, call, put, takeLatest} from "redux-saga/effects"
 import AsyncStorage from "@react-native-community/async-storage"
-import { showMessage } from "react-native-flash-message"
+import {showMessage} from "react-native-flash-message"
 
 // config
-import { appConfig } from "../config/app"
+import {appConfig} from "../config/app"
 
 // utils
 import XHR from "../utils/XHR"
-import { goBack, navigate } from "navigation/NavigationService";
+import {goBack, navigate} from "navigation/NavigationService";
 
 //Types
 const LOGIN_REQUEST_STARTED = "LOGIN_REQUEST_STARTED"
@@ -20,6 +20,8 @@ const CHANGE_PASSWORD_REQUEST_STARTED = "CHANGE_PASSWORD_REQUEST_STARTED"
 const CHANGE_PASSWORD_REQUEST_COMPLETED = "CHANGE_PASSWORD_REQUEST_COMPLETED"
 const LOGOUT_REQUEST_STARTED = "LOGOUT_REQUEST_STARTED"
 const REQUEST_FAILED = "REQUEST_FAILED"
+const FORGOT_PASSWORD_REQUEST_STARTED = "FORGOT_PASSWORD_REQUEST_STARTED"
+const FORGOT_PASSWORD_REQUEST_COMPLETED = "FORGOT_PASSWORD_REQUEST_COMPLETED"
 
 const initialState = {
   loading: false,
@@ -64,6 +66,14 @@ export const logoutRequest = (data) => ({
 })
 export const requestFailed = () => ({
   type: REQUEST_FAILED,
+})
+
+export const forgotPasswordRequest = (data) => ({
+  type: FORGOT_PASSWORD_REQUEST_STARTED,
+  payload: data,
+})
+export const forgotPasswordRequestCompleted = () => ({
+  type: FORGOT_PASSWORD_REQUEST_COMPLETED,
 })
 
 //Reducers
@@ -126,6 +136,16 @@ export const loginReducer = (state = initialState, action) => {
         user: null,
         accessToken: null
       }
+    case FORGOT_PASSWORD_REQUEST_STARTED:
+      return {
+        ...state,
+        loading: true
+      }
+    case FORGOT_PASSWORD_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+      }
     default:
       return state
   }
@@ -167,6 +187,19 @@ async function accountUpdateAPI(data) {
   return XHR(URL, options)
 }
 
+export function forgotPasswordAPI(data) {
+  const URL = `${appConfig.backendServerURL}/users/reset/`
+  console.log("data", data)
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
 async function changePasswordAPI(data) {
   const userAccount = await AsyncStorage.getItem("userAccount")
   const userData = JSON.parse(userAccount)
@@ -184,7 +217,7 @@ async function changePasswordAPI(data) {
 function* loginAction(data) {
   try {
     const resp = yield call(loginAPI, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(setSignInData(resp.data))
       AsyncStorage.setItem("userAccount", JSON.stringify(resp.data.user))
       AsyncStorage.setItem("token", resp.data.token)
@@ -192,16 +225,16 @@ function* loginAction(data) {
         message: "Successfully user login",
         type: "success"
       })
-      if(resp?.data.user.type === "Restaurant"){
+      if (resp?.data.user.type === "Restaurant") {
         navigate('RestaurantBottomBar')
-      } else if(resp?.data.user.type === "Driver"){
+      } else if (resp?.data.user.type === "Driver") {
         navigate('DriverBottomBar')
       } else {
         navigate('CustomerBottomBar')
       }
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail[0] ?? "Something went wrong, Please try again!",
@@ -213,7 +246,7 @@ function* loginAction(data) {
 function* signUpAction(data) {
   try {
     const resp = yield call(signUpAPI, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(setSignUpData(resp.data))
       AsyncStorage.setItem("userAccount", JSON.stringify(resp.data.user))
       AsyncStorage.setItem("token", resp.data.token)
@@ -221,14 +254,14 @@ function* signUpAction(data) {
         message: "Successfully user has been created",
         type: "success"
       })
-      if(resp?.data.user.type === "Restaurant"){
+      if (resp?.data.user.type === "Restaurant") {
         navigate('RestaurantBottomBar', {
           screen: 'Settings',
           params: {
             screen: 'AccountInformation',
           }
         })
-      } else if(resp?.data.user.type === "Driver"){
+      } else if (resp?.data.user.type === "Driver") {
         navigate('DriverBottomBar', {
           screen: 'Settings',
           params: {
@@ -245,7 +278,7 @@ function* signUpAction(data) {
       }
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     yield put(requestFailed())
     const error = response?.data?.email?.[0] || response?.data?.password?.[0]
     showMessage({
@@ -258,7 +291,7 @@ function* signUpAction(data) {
 function* accountUpdateAction(data) {
   try {
     const resp = yield call(accountUpdateAPI, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       AsyncStorage.setItem("userAccount", JSON.stringify(resp.data))
       yield put(updateAccountCompleted(resp.data))
       goBack()
@@ -268,7 +301,7 @@ function* accountUpdateAction(data) {
       })
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
     console.log("update-profile", response.data)
     yield put(requestFailed())
     showMessage({
@@ -281,7 +314,7 @@ function* accountUpdateAction(data) {
 function* changePasswordAction(data) {
   try {
     const resp = yield call(changePasswordAPI, data.payload)
-    if(resp?.data) {
+    if (resp?.data) {
       yield put(changePasswordCompleted())
       goBack()
       showMessage({
@@ -290,7 +323,27 @@ function* changePasswordAction(data) {
       })
     }
   } catch (e) {
-    const { response } = e
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* forgotPasswordAction(data) {
+  try {
+    const resp = yield call(forgotPasswordAPI, data.payload)
+    yield put(forgotPasswordRequestCompleted())
+    showMessage({
+      message: "Requested reset password Successfully",
+      type: "success"
+    })
+    goBack()
+  } catch (e) {
+    const {response} = e
+    console.log('forgot-password', response)
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail ?? "Something went wrong, Please try again!",
@@ -304,4 +357,5 @@ export default all([
   takeLatest(SIGNUP_REQUEST_STARTED, signUpAction),
   takeLatest(UPDATE_ACCOUNT_REQUEST_STARTED, accountUpdateAction),
   takeLatest(CHANGE_PASSWORD_REQUEST_STARTED, changePasswordAction),
+  takeLatest(FORGOT_PASSWORD_REQUEST_STARTED, forgotPasswordAction),
 ])
