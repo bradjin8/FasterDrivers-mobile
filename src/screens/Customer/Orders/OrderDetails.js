@@ -142,7 +142,7 @@ const OrderDetails = ({route}) => {
               <Text color={'item'} fontSize={16}>${order?.fees}</Text>
             </View>
             <View style={styles.priceRow}>
-              <Text color={'item'} fontSize={16} fontWeight={'600'}>Price</Text>
+              <Text color={'item'} fontSize={16} fontWeight={'600'}>Total</Text>
               <Text color={'item'} fontSize={16}>${order?.total}</Text>
             </View>
           </View>

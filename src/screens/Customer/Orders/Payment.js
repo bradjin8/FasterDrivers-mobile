@@ -43,8 +43,8 @@ const Payment = ({route}) => {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.pricingView}>
-            <Text variant="text" color="black" fontSize={14} fontWeight="400">Total</Text>
-            <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+            <Text variant="strong" color="black" fontSize={14} fontWeight="400">Total</Text>
+            <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
           </View>
           <View style={styles.innerContain}>
             {payments?.map((payment, index) => <PaymentCard payment={payment} key={index} onPress={() => setPaymentId(payment.id)} active={paymentId === payment.id}/> )}

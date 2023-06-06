@@ -14,9 +14,9 @@ const AddCard = ({}) => {
   const {user} = useSelector(state => state.loginReducer)
   const {addresses, loading} = useSelector(state => state.customerReducer)
   const [cardHolder, setCardHolder] = useState(user?.name)
-  const [cardNumber, setCardNumber] = useState(null)
-  const [cardDate, setCardDate] = useState(null)
-  const [cvv, setCvv] = useState(null)
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardDate, setCardDate] = useState('')
+  const [cvv, setCvv] = useState('')
   const defaultAddress = addresses?.find(o => o.default) || addresses[0]
 
   const {createPaymentMethod} = useStripe();
@@ -25,9 +25,16 @@ const AddCard = ({}) => {
   const onBlurCard = () => {};
 
   const addCard = () => {
-    if (!cardHolder) {
+    if (!cardHolder || !cardDate || !cvv) {
       showMessage({
-        message: 'Please enter card holder name',
+        message: 'Please enter card details',
+        type: 'danger',
+      })
+      return
+    }
+    if (cardDate.indexOf('/') < 0) {
+      showMessage({
+        message: 'Please enter a valid expire date',
         type: 'danger',
       })
       return
@@ -38,13 +45,13 @@ const AddCard = ({}) => {
         billingDetails: {
           name: cardHolder,
         }
-      }
-      // card: {
-      //   number: cardNumber,
-      //   expMonth: 11,
-      //   expYear: 24,
-      //   cvc: cvv,
-      // },
+      },
+      card: {
+        number: cardNumber,
+        expMonth: cardDate.split('/')[0],
+        expYear: cardDate.split('/')[1],
+        cvc: cvv,
+      },
     }).then((result) => {
       console.log('result', result);
       dispatch(addPaymentRequest({
@@ -53,7 +60,7 @@ const AddCard = ({}) => {
           name: cardHolder,
           address: {
             city: defaultAddress?.city,
-            country: defaultAddress?.country,
+            country: defaultAddress?.country || "US",
             line1: defaultAddress?.street,
             postal_code: defaultAddress?.zip_code,
             state: defaultAddress?.state,
@@ -87,10 +94,10 @@ const AddCard = ({}) => {
             onBlurText={onBlurCard}
           />
 
-          <Text variant="text" color="black" style={styles.inputTitle}>
+          {/*<Text variant="text" color="black" style={styles.inputTitle}>
             CARD DETAILS
-          </Text>
-          <CardField
+          </Text>*/}
+          {/*<CardField
             postalCodeEnabled={true}
             placeholders={{
               number: '4242 4242 4242 4242',
@@ -111,9 +118,9 @@ const AddCard = ({}) => {
             onFocus={(focusedField) => {
               // console.log('focusField', focusedField);
             }}
-          />
-          {/*<Text variant="text" color="black" style={styles.inputTitle}>
-            Card number
+          />*/}
+          <Text variant="text" color="black" style={styles.inputTitle}>
+            CARD NUMBER
           </Text>
           <CustomTextInput
             value={cardNumber}
@@ -125,7 +132,7 @@ const AddCard = ({}) => {
           <View style={styles.flexDirection}>
             <View style={styles.widthHalf}>
               <Text variant="text" color="black" style={styles.inputTitle}>
-                Expire date
+                EXPIRE DATE
               </Text>
               <CustomTextInput
                 value={cardDate}
@@ -145,7 +152,7 @@ const AddCard = ({}) => {
                 onBlurText={onBlurCard}
               />
             </View>
-          </View>*/}
+          </View>
         </View>
         <Button loading={loading} text="Add Card" mt={20} onPress={addCard}/>
       </View>
