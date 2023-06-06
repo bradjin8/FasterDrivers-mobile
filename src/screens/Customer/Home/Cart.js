@@ -42,10 +42,12 @@ const Cart = ({route}) => {
     dispatch(createNewOrder(data))
   }
 
-  useEffect(() => {
+  // useEffect(() => {
     if (carts.length < 1)
-      navigate("Home")
-  }, [carts])
+      setTimeout(() => {
+        navigate("Home")
+      }, 1000)
+  // }, [carts])
 
   const renderFinalTotal = () => {
     return carts.length && carts.reduce((prev, curr) => {
@@ -60,7 +62,7 @@ const Cart = ({route}) => {
         <View style={styles.flexRow}>
           <Image source={image_1 ? {uri: image_1} : Images.item} style={styles.downIcon}/>
           <View style={{width: "72%"}}>
-            <Text variant="text" color="black" fontSize={12} fontWeight="500">
+            <Text variant="strong" color="black" fontSize={14} fontWeight="400">
               <Text variant="text" color="primary" fontSize={12} fontWeight="500">
                 {quantity > 1 && quantity + "x "}
               </Text>{name}
@@ -72,7 +74,7 @@ const Cart = ({route}) => {
           </View>
         </View>
         <View style={{width: "20%", alignItems: "center"}}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">
             ${(price * quantity).toFixed(2)}
           </Text>
         </View>
@@ -84,19 +86,19 @@ const Cart = ({route}) => {
     return (
       <View>
         <View style={styles.pricingView}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="600">Price</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">Price</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
         </View>
         <View style={styles.pricingView}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="600">Fee</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">$0.00</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">Fee</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">$0.00</Text>
         </View>
         <View style={styles.pricingView}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="600">Total</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">Total</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
         </View>
         <View style={styles.items}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="600">
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">
             Address
           </Text>
         </View>
@@ -115,7 +117,7 @@ const Cart = ({route}) => {
 
         <View style={styles.instructionView}>
           <Text variant="text" color="black" fontSize={14} fontWeight="400">
-            Special instructions
+            SPECIAL INSTRUCTIONS
           </Text>
           <CustomTextInput
             value={searchText}
@@ -136,7 +138,7 @@ const Cart = ({route}) => {
       />
       <ScrollView style={styles.container}>
         <View style={styles.items}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="600">
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">
             Items
           </Text>
         </View>
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     paddingVertical: scaleVertical(10),
     marginBottom: scale(10),
   },
-  btnOther: {width: "25%", backgroundColor: color.black, height: scaleVertical(45)},
+  btnOther: {width: "25%", backgroundColor: color.black, height: scaleVertical(40)},
 });
 
 export default Cart;

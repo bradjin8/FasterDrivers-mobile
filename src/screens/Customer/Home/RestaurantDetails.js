@@ -29,7 +29,7 @@ const RestaurantDetails = ({route}) => {
     setCartItems(cartItemsReducer)
   }, [cartItemsReducer]);
 
-  // console.log('cartItems', cartItems)
+  // console.log('cartItems', restaurant)
   const onAdd = (product) => {
     // check if user selected item from other restaurant
     let _cartItems = _.cloneDeep(cartItems);
@@ -83,13 +83,13 @@ const RestaurantDetails = ({route}) => {
     return (
       <View style={styles.flex} key={"item-" + i.toString()}>
         <View style={styles.itemDetails}>
-          <Text variant="text" color="black" fontSize={12} fontWeight="500">
+          <Text variant="strong" color="black" fontSize={12} fontWeight="400">
             {item?.name}
           </Text>
           <Text variant="text" color="black" fontSize={12} fontWeight="300">
             {item?.description}
           </Text>
-          <View style={{justifyContent: 'center', flexDirection: 'row'}}>
+          <View style={{justifyContent: 'flex-start', flexDirection: 'row'}}>
             <Pressable onPress={() => onRemove(item)} style={styles.priceButton}>
               <Icon name="minus" size={15} color={color.black}/>
             </Pressable>
@@ -122,7 +122,7 @@ const RestaurantDetails = ({route}) => {
         return (
           <View key={'dish-' + index}>
             <View style={styles.itemTitle}>
-              <Text variant="text" color="secondaryBtn" fontSize={14} fontWeight="600">
+              <Text variant="strong" color="item" fontSize={14} fontWeight="600">
                 {type}
               </Text>
             </View>
@@ -131,6 +131,10 @@ const RestaurantDetails = ({route}) => {
         )
       })
     )
+  }
+
+  const gotoCart = () => {
+    navigate("Cart", {address: address})
   }
 
   if (loading) {
@@ -171,20 +175,22 @@ const RestaurantDetails = ({route}) => {
             <StarRating
               disabled={true}
               halfStarEnabled={true}
-              maxStars={5}
-              rating={rating}
+              maxStars={1}
+              rating={0}
               starSize={18}
-              emptyStarColor={color.lightGray}
+              emptyStarColor={color.primary}
               fullStarColor={color.primary}
               containerStyle={styles.starContainer}
               starStyle={styles.starStyle}
             />
-            <Text variant="strong" color="item" fontSize={14} fontWeight="600" style={{marginLeft: scaleVertical(5)}}>
-              {rating} ({rating_count} reviews)
+            <Text variant="strong" color="item" fontSize={14} fontWeight="600" style={{marginLeft: scaleVertical(3)}}>
+              {rating}
+            </Text>
+            <Text variant="strong" color="gray" fontSize={12} fontWeight="600" style={{marginLeft: scaleVertical(3)}}>
+              ( {rating_count}+ )
             </Text>
           </View>
-          <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {
-          }} fontSize={12}/>
+          <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12}/>
         </View>
 
         <View style={styles.itemContainer}>
@@ -193,15 +199,15 @@ const RestaurantDetails = ({route}) => {
       </ScrollView>
       <View style={styles.cartView}>
         <View style={styles.cartContain}>
-          <View>
+          <Pressable onPress={gotoCart}>
             {cartItems.length ? <View style={styles.circle}>
               <Text variant="text" color="white" fontSize={12} fontWeight="600">
                 {cartItems.length}
               </Text>
             </View> : null}
             <Icon name="shopping-cart" size={20} color={color.white}/>
-          </View>
-          <Pressable onPress={() => navigate("Cart", {address: address})}>
+          </Pressable>
+          <Pressable onPress={gotoCart}>
             <Text variant="strong" color="white" fontSize={16} fontWeight="600">
               View cart
             </Text>
@@ -258,7 +264,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     width: scaleVertical(100),
     borderColor: color.black,
-    height: scaleVertical(45),
+    height: scaleVertical(40),
     marginTop: scaleVertical(15),
   },
   cartView: {
@@ -289,12 +295,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: color.angry
   },
-  itemTitle: {flexDirection: 'row', justifyContent: 'space-between', marginBottom: scaleVertical(10)},
+  itemTitle: {flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10},
   itemDetails: {
     width: widthPercentageToDP(60),
   },
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
-  starContainer: {width: 100, justifyContent: "space-evenly"},
+  starContainer: {width: 30, justifyContent: "flex-start"},
   starStyle: {marginRight: scaleVertical(3), margin: 3}
 });
 
