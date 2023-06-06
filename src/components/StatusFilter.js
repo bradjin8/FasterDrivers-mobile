@@ -12,6 +12,7 @@ const StatusFilter = ({status, changeStatus}) => {
         <Pressable key={id} style={id !== status ? styles.item : styles.itemActive} onPress={() => changeStatus(id)}>
           <Text
             color={status === id ? color.white : color.black}
+            style={{textAlign: 'center'}}
           >
             {it}
           </Text>
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
     padding: 3,
     borderColor: color.black,
     borderWidth: 1,
-    width: widthPercentageToDP(33)
+    width: widthPercentageToDP(33),
   },
   itemActive: {
     padding: 3,

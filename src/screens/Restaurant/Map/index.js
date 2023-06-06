@@ -154,8 +154,8 @@ const Map = ({navigation, route}) => {
             </Marker>
           )
         })}
-        {renderOverlay()}
       </MapView>}
+      {renderOverlay()}
     </SafeAreaView>
   )
 }

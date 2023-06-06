@@ -11,6 +11,7 @@ import {Text} from "../components/index";
 import {ORDER_STATUS, ORDER_STATUS_COLOR} from "../consts/orders";
 import {acceptOrderRequest, getDishAPI, rejectOrderRequest} from "../screenRedux/restaurantRedux";
 import moment from "moment";
+import {Flex} from "../theme/Styles";
 
 const OrderByCustomer = ({order, tab}) => {
   const [expanded, setExpanded] = useState(false)
@@ -149,7 +150,10 @@ const DishDetail = ({data}) => {
       <View style={styles.dishBody}>
         <Image source={{uri: dish.image_1}} style={styles.photo}/>
         <View>
-          <Text color={'item'} fontWeight={'400'} variant={'h5'} fontSize={12}>x{data.quantity} {dish.name}</Text>
+          <View style={[Flex.row, Flex.itemsCenter]}>
+            {data?.quantity > 1 && <Text color={'primary'} fontWeight={'400'} variant={'h5'} fontSize={12}>{data.quantity}x</Text>}
+            <Text style={{marginLeft: 5}}>{dish.name}</Text>
+          </View>
           <Text color={'darkGray'} variant={'hint'}>{truncateString(dish.description, 50)}</Text>
         </View>
       </View>
