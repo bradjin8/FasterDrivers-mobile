@@ -25,7 +25,7 @@ const Cart = ({route}) => {
       });
 
     let data = new FormData();
-    data.append('restaurant', carts[0].restaurant);
+    data.append('restaurant', carts?.[0]?.restaurant);
 
     if (shippingAddress) {
       data.append('address', shippingAddress.id);

@@ -26,3 +26,25 @@ export const getRoute = async (start, end) => {
     return []
   }
 }
+
+export const getAddressFromLocation = async (location) => {
+try {
+    const res = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
+      params: {
+        latlng: `${location.latitude},${location.longitude}`,
+        key: GOOGLE_MAPS_API_KEY
+      }
+    })
+    // console.log('get-address-success', res.data.results[0].formatted_address)
+    return {
+      street: res.data.results[0].address_components[0].long_name,
+      city: res.data.results[0].address_components[3].long_name,
+      state: res.data.results[0].address_components[4].long_name,
+      zip_code: res.data.results[0].address_components[6].long_name,
+      address: res.data.results[0].formatted_address
+    }
+  } catch (e) {
+    console.log('get-address-error', e.message)
+    return ""
+  }
+}

@@ -508,6 +508,7 @@ function* createNewOrderAction(data) {
     navigate("Orders")
   } catch (e) {
     const {response} = e
+    yield put(setUserCartItems([]))
     yield put(requestFailed())
     debugger
     showMessage({

@@ -81,7 +81,7 @@ const CustomerBottomBar = props => {
           ),
           tabBarIcon: ({ focused }) => (
             <View>
-              {false && cartItems.length ? <View style={{
+              {cartItems.length ? <View style={{
                 position: 'absolute',
                 right: -20,
                 top: -8,

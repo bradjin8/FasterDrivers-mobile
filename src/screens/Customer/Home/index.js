@@ -16,6 +16,7 @@ import {truncateString} from "utils/utils";
 import {ActivityIndicators, CustomTextInput, Text} from "../../../components/index";
 import {getAddressesData, getRestaurantsData} from "../../../screenRedux/customerRedux";
 import {Flex} from "../../../theme/Styles";
+import {getAddressFromLocation} from "../../../third-party/google";
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch()
@@ -24,7 +25,7 @@ const Home = ({navigation}) => {
   const [searchText, setSearchText] = useState(null)
   const [visible, setVisible] = useState(false)
   const {customer: {photo}, name} = user
-  const [position, setPosition] = useState(null)
+  const [currentAddress, setCurrentAddress] = useState(null)
   const [address, setAddress] = useState({})
   const [visibleCustomModal, setVisibleCustomModal] = useState(false)
 
@@ -61,8 +62,10 @@ const Home = ({navigation}) => {
   const pickCurrentLocation = () => {
     hideMenu()
     getCurrentLocation()
-      .then((loc) => {
-        setPosition(loc)
+      .then(async (loc) => {
+        const address = await getAddressFromLocation(loc)
+        setCurrentAddress(address)
+        setAddress(address)
       })
       .catch((err) => {
         console.log('err', err)
@@ -80,7 +83,7 @@ const Home = ({navigation}) => {
   }, [addresses])
 
 
-  const renderItems = (rest, i) => {
+  const renderRestaurant = (rest, i) => {
     const {photo, name, description, rating, rating_count,} = rest || {}
     return (
       <Pressable key={"item-" + i.toString()} style={styles.itemContain} onPress={() => {
@@ -103,11 +106,11 @@ const Home = ({navigation}) => {
           <View style={[Flex.row, Flex.itemsCenter]}>
             <StarRating
               disabled={true}
-              maxStars={5}
-              rating={rating}
+              maxStars={1}
+              rating={0}
               starSize={20}
               fullStarColor={color.primary}
-              emptyStarColor={color.lightGray}
+              emptyStarColor={color.primary}
               halfStarColor={color.primary}
             />
             <Text variant="strong" color="item" fontSize={16} fontWeight="700" style={{marginLeft: scaleVertical(5)}}>
@@ -132,7 +135,7 @@ const Home = ({navigation}) => {
         return (
           <View key={"rest-" + index}>
             <View style={styles.itemTitle}>
-              <Text variant="text" color="secondaryBtn" fontSize={14} fontWeight="600">
+              <Text variant="strong" color="item" fontSize={14} fontWeight="500">
                 {type}
               </Text>
               <View style={styles.flex}>
@@ -143,7 +146,7 @@ const Home = ({navigation}) => {
               </View>
             </View>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingTop: scaleVertical(15), paddingBottom: 20}}>
-              {restaurants[type].map((rest, i) => renderItems(rest, i))}
+              {restaurants[type].map((rest, i) => renderRestaurant(rest, i))}
             </ScrollView>
           </View>
         )
@@ -151,7 +154,7 @@ const Home = ({navigation}) => {
     )
   }
   const renderLocation = () => {
-    if (address.id) {
+    if (address.zip_code) {
       const {street, city, zip_code} = address
       return `${street}, ${city} - ${zip_code}`
     }
@@ -163,7 +166,7 @@ const Home = ({navigation}) => {
       <View style={styles.headerView}>
         <View style={styles.profileView}>
           <Image source={{uri: photo}} defaultSource={Images.dummyProfile} style={styles.profilePic}/>
-          <Text variant="strong" color="black" fontSize={12} fontWeight="600" style={{marginLeft: scaleVertical(5)}}>
+          <Text variant="strong" color="gray" fontSize={12} fontWeight="400" style={{marginLeft: scaleVertical(5)}}>
             {name}
           </Text>
         </View>
@@ -204,14 +207,22 @@ const Home = ({navigation}) => {
                   </MenuItem>
                 )
               })}
-              <MenuItem onPress={pickCurrentLocation} style={{justifyContent: 'center'}}>
-                <View style={[styles.locationPopup, styles.flex]}>
-                  <MaterialIcons name="location-pin" size={16} color={color.black} style={{marginLeft: Platform.OS === 'ios' ? scale(12.5) : 0}}/>
-                  <Text variant="text" color="gray" fontSize={12} fontWeight="400" style={{marginLeft: scale(5)}}>
-                    Use Current Location
+              {currentAddress ?
+                <MenuItem onPress={() => setDefaultAddress(currentAddress)} style={{justifyContent: 'center'}}>
+                  <Text variant="text" color="gray" fontSize={12} fontWeight="400">
+                    {address.street}, {address.state} - {address.zip_code} (Current)
                   </Text>
-                </View>
-              </MenuItem>
+                </MenuItem>
+                :
+                <MenuItem onPress={pickCurrentLocation} style={{justifyContent: 'center'}}>
+                  <View style={[styles.locationPopup, styles.flex]}>
+                    <MaterialIcons name="location-pin" size={16} color={color.black} style={{marginLeft: Platform.OS === 'ios' ? scale(12.5) : 0}}/>
+                    <Text variant="text" color="gray" fontSize={12} fontWeight="400" style={{marginLeft: scale(5)}}>
+                      Use Current Location
+                    </Text>
+                  </View>
+                </MenuItem>
+              }
             </Menu>
           </Pressable>}
       </View>
@@ -231,7 +242,8 @@ const Home = ({navigation}) => {
           </ScrollView>
         }
       </View>
-      <CustomMessageModal data={{}} visible={visibleCustomModal} close={() => setVisibleCustomModal(false)} onOk={() => {}}/>
+      <CustomMessageModal data={{}} visible={visibleCustomModal} close={() => setVisibleCustomModal(false)} onOk={() => {
+      }}/>
     </SafeAreaView>);
 };
 
@@ -282,11 +294,18 @@ const styles = StyleSheet.create({
   },
   itemContain: {
     width: screenWidth / 1.8,
-    backgroundColor: color.secondary,
-    shadowColor: color.secondary,
+    backgroundColor: color.white,
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowOffset: {
+      width: 0,
+      height: 15,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 5,
     marginHorizontal: scaleVertical(5),
-    borderRadius: scaleVertical(15),
-    overflow: 'hidden',
+    borderRadius: 15,
+    // overflow: 'hidden',
   },
   itemTitle: {flexDirection: 'row', justifyContent: 'space-between'},
   noData: {textAlign: 'center', marginTop: scaleVertical(20)},
