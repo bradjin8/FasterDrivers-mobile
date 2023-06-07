@@ -42,6 +42,11 @@ class Order(UUIDModel):
         decimal_places=2,
         default=0
     )
+    taxes = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        default=0
+    )
     tip = models.DecimalField(
         max_digits=6,
         decimal_places=2,
@@ -51,6 +56,30 @@ class Order(UUIDModel):
         max_digits=7,
         decimal_places=2,
         default=0
+    )
+    cashback_used = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0
+    )
+    driver_payout = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0
+    )
+    restaurant_payout = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0
+    )
+    customer_charge_amount = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0
+    )
+    customer_charge_id = models.CharField(
+        max_length=255,
+        blank=True
     )
     address = models.ForeignKey(
         CustomerAddress,
@@ -95,8 +124,9 @@ class Order(UUIDModel):
     )
 
     def save(self, *args, **kwargs):
-        self.fees = self.sub_total * Decimal(0.14)
-        self.total = self.sub_total + self.fees + self.tip
+        self.fees = 5
+        self.taxes = self.sub_total * (self.restaurant.tax_rate / 100)
+        self.total = self.sub_total + self.fees + self.tip + self.taxes
         return super().save(*args, **kwargs)
 
 

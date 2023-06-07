@@ -57,6 +57,11 @@ class Restaurant(UUIDModel):
     description = models.TextField(
         blank=True
     )
+    tax_rate = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        default=0
+    )
     connect_account = models.ForeignKey(
         Account,
         on_delete=models.SET_NULL,

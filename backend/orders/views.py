@@ -100,4 +100,37 @@ class OrderViewSet(ModelViewSet):
         order.delivered_at = timezone.now()
         order.save()
         serializer = OrderSerializer(order).data
+
+        # Transfer appropriate amounts to restaurant and driver
+        try:
+            restaurant_transfer = stripe.Transfer.create(
+                amount=int(order.restaurant_payout * 100),
+                currency='usd',
+                destination=order.restaurant.connect_account.id,
+                # source_transaction=order.customer_charge_id
+            )
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            driver_transfer = stripe.Transfer.create(
+                amount=int(order.driver_payout * 100),
+                currency='usd',
+                destination=order.driver.driver.connect_account.id,
+                # source_transaction=order.customer_charge_id
+            )
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        payment = Payment.objects.get(
+            order=order
+        )
+
+        dj_restaurant_transfer = djstripe.models.Transfer.sync_from_stripe_data(restaurant_transfer)
+        dj_driver_transfer = djstripe.models.Transfer.sync_from_stripe_data(driver_transfer)
+
+        payment.restaurant_transfer = dj_restaurant_transfer
+        payment.driver_transfer = dj_driver_transfer
+        payment.save()
+
         return Response(serializer)
