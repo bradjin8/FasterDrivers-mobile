@@ -80,6 +80,9 @@ export const Margin = StyleSheet.create({
   t5: {
     marginTop: scaleVertical(5)
   },
+  r10: {
+    marginRight: scaleVertical(10)
+  }
 })
 
 export const Padding = StyleSheet.create({

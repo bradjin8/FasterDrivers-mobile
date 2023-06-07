@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import moment from "moment";
 import {goBack, navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
 import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
@@ -9,8 +10,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenWidth} from "utils";
 import {ActivityIndicators, Button, Text} from "../../../components/index";
-import {getRestaurantDetails, setUserCartItems} from "../../../screenRedux/customerRedux";
-import {Flex} from "../../../theme/Styles";
+import {getRestaurantDetails, getRestaurantReviewsAPI, setUserCartItems} from "../../../screenRedux/customerRedux";
+import {Flex, Margin, Padding} from "../../../theme/Styles";
 
 const RestaurantDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -18,11 +19,34 @@ const RestaurantDetails = ({route}) => {
   const restaurantDetails = useSelector(state => state.customerReducer.restaurantDetails);
   const {restaurant, address} = route?.params;
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
-  const [cartItems, setCartItems] = useState(cartItemsReducer)
   const {id, photo, name, street, city, zip_code, state, description, type, rating, rating_count} = restaurant
+
+  const [cartItems, setCartItems] = useState(cartItemsReducer)
+  const [reviews, setReviews] = useState([])
+  const [loadingReviews, setLoadingReviews] = useState(false)
+
+  const fetchReviews = () => {
+    if (id) {
+      setLoadingReviews(true)
+      getRestaurantReviewsAPI(id)
+        .then(({status, data}) => {
+          // setReviews(json)
+          if (status === 200 && data?.length > 0) {
+            console.log('reviews', data)
+            setReviews(data)
+          }
+          setLoadingReviews(false)
+        })
+        .catch((error) => {
+          console.error(error);
+          setLoadingReviews(false)
+        });
+    }
+  }
 
   useEffect(() => {
     dispatch(getRestaurantDetails(id));
+    fetchReviews()
   }, []);
 
   useEffect(() => {
@@ -133,6 +157,39 @@ const RestaurantDetails = ({route}) => {
     )
   }
 
+  const renderReviews = () => {
+    return <View style={[Margin.v5]}>
+      {
+        reviews.map((review, idx) => {
+          console.log(review.customer)
+
+          return <View key={idx} style={[Flex.row, Flex.justifyBetween, Margin.v10]}>
+            <View style={{width: '70%'}}>
+              <Text color={'item'} variant={'strong'}>{review?.user?.name}</Text>
+              <View style={[Flex.row, Flex.itemsCenter]}>
+                <Text variant={'strong'} style={Margin.r10}>{review.rating}</Text>
+                <StarRating
+                  disabled={true}
+                  maxStars={5}
+                  rating={review.rating}
+                  starSize={15}
+                  fullStarColor={color.primary}
+                  emptyStarColor={color.gray}
+                  />
+              </View>
+              <Text>
+                {review.context}
+              </Text>
+            </View>
+            <View style={{width: '20%'}}>
+              <Text fontSize={12}>{moment(review.updated_at).format('MM/DD/yyyy')}</Text>
+            </View>
+          </View>
+        })
+      }
+    </View>
+  }
+
   const gotoCart = () => {
     navigate("Cart", {address: address})
   }
@@ -190,8 +247,10 @@ const RestaurantDetails = ({route}) => {
               ( {rating_count}+ )
             </Text>
           </View>
+          {renderReviews()}
           <Button style={styles.btnStyle} variant="outline" text="Group Order" textColor="black" onPress={() => {}} fontSize={12}/>
         </View>
+
 
         <View style={styles.itemContainer}>
           {renderDishes()}
@@ -250,8 +309,8 @@ const styles = StyleSheet.create({
     height: scaleVertical(80),
   },
   content: {
-    paddingHorizontal: scaleVertical(25),
-    paddingVertical: scaleVertical(15),
+    paddingHorizontal: 25,
+    paddingVertical: 15,
   },
   itemContainer: {
     flex: 1,

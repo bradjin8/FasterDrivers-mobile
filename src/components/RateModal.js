@@ -6,7 +6,7 @@ import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-nativ
 import StarRating from "react-native-star-rating-new";
 import {color, scale, scaleVertical} from "utils";
 import {ORDER_REVIEW_MODE} from "../consts/orders";
-import {rateDriver, rateRestaurant} from "../screenRedux/customerRedux";
+import {rateDriverAPI, rateRestaurantAPI} from "../screenRedux/customerRedux";
 import {Flex, Margin, Padding, Templates} from "../theme/Styles";
 
 const RateModal = ({order, visible, close, mode}) => {
@@ -25,7 +25,7 @@ const RateModal = ({order, visible, close, mode}) => {
     switch (mode) {
       case ORDER_REVIEW_MODE.DRIVER:
         data.append('driver', order?.driver?.driver?.id)
-        rateDriver(data)
+        rateDriverAPI(data)
           .then(() => {
             showMessage({
               message: 'Review left',
@@ -39,7 +39,7 @@ const RateModal = ({order, visible, close, mode}) => {
         break
       case ORDER_REVIEW_MODE.RESTAURANT:
         data.append('restaurant', order?.restaurant?.id)
-        rateRestaurant(data)
+        rateRestaurantAPI(data)
           .then(() => {
             showMessage({
               message: 'Review left',

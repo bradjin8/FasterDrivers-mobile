@@ -395,7 +395,7 @@ export async function addAddressAPI(data) {
   return XHR(URL, options)
 }
 
-export async function rateRestaurant(data) {
+export async function rateRestaurantAPI(data) {
   const URL = `${appConfig.backendServerURL}/reviews/`
   const options = {
     headers: {
@@ -407,7 +407,7 @@ export async function rateRestaurant(data) {
   return XHR(URL, options)
 }
 
-export async function rateDriver(data) {
+export async function rateDriverAPI(data) {
   const URL = `${appConfig.backendServerURL}/driver-reviews/`
   const options = {
     headers: {
@@ -418,6 +418,18 @@ export async function rateDriver(data) {
   }
   return XHR(URL, options)
 }
+
+export async function getRestaurantReviewsAPI(restaurantId) {
+  const URL = `${appConfig.backendServerURL}/reviews/?restaurant=${restaurantId}`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 
 function* addAddressAction(data) {
   try {
