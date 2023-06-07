@@ -2,6 +2,8 @@ from rest_framework import serializers
 
 from .models import Review, DriverReview
 
+from users.serializers import UserProfileSerializer
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     """
@@ -11,6 +13,12 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        if instance.user:
+            rep['user'] = UserProfileSerializer(instance.user).data
+        return rep
+
 
 class DriverReviewSerializer(serializers.ModelSerializer):
     """
@@ -19,3 +27,9 @@ class DriverReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = DriverReview
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        if instance.user:
+            rep['user'] = UserProfileSerializer(instance.user).data
+        return rep

@@ -4,10 +4,19 @@ from django.db.models import Avg
 
 from .models import Driver
 
+from djstripe.models import Account
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
+
 
 class DriverSerializer(serializers.ModelSerializer):
     assigned_orders = serializers.SerializerMethodField()
     in_transit_orders = serializers.SerializerMethodField()
+    connect_account = AccountSerializer(required=False)
 
     class Meta:
         model = Driver
