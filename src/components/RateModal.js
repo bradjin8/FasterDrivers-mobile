@@ -12,7 +12,7 @@ import {Flex, Margin, Padding, Templates} from "../theme/Styles";
 const RateModal = ({order, visible, close, mode}) => {
   const [rate, setRate] = useState(0)
   const [review, setReview] = useState('')
-  console.log('order', order)
+  // console.log('order', order)
   const save = () => {
     if (rate === 0) {
       return alert('Please set your rate')

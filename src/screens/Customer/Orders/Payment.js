@@ -1,14 +1,16 @@
 import PaymentCard from "components/PaymentCard";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect} from "react";
-import {Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {Alert, Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import FontAwesomeIcons from 'react-native-vector-icons/dist/FontAwesome';
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {Button, Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import {getPaymentsRequest, payOrderRequest} from "../../../screenRedux/customerRedux";
+import {deletePaymentRequest, getPaymentsRequest, payOrderRequest} from "../../../screenRedux/customerRedux";
 import {Images} from "../../../theme";
+import {Flex} from "../../../theme/Styles";
 
 const Payment = ({route}) => {
   const dispatch = useDispatch()
@@ -26,6 +28,24 @@ const Payment = ({route}) => {
     dispatch(payOrderRequest(data))
   }
 
+  const removePaymentMethod = () => {
+    Alert.alert('Are you sure to remove this payment method?', '', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          const data = new FormData()
+          data.append('payment_method', paymentId)
+          dispatch(deletePaymentRequest(data))
+        }
+      }
+    ])
+  }
+
   const renderFinalTotal = () => {
     return order.total
   }
@@ -33,6 +53,10 @@ const Payment = ({route}) => {
   useEffect(() => {
     dispatch(getPaymentsRequest())
   }, [])
+
+  useEffect(() => {
+    setPaymentId(null)
+  }, [payments])
 
   return (
     <View style={styles.mainWrapper}>
@@ -47,7 +71,7 @@ const Payment = ({route}) => {
             <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
           </View>
           <View style={styles.innerContain}>
-            {payments?.map((payment, index) => <PaymentCard payment={payment} key={index} onPress={() => setPaymentId(payment.id)} active={paymentId === payment.id}/> )}
+            {payments?.map((payment, index) => <PaymentCard payment={payment} key={index} onPress={() => setPaymentId(payment.id)} active={paymentId === payment.id}/>)}
             <Button
               style={styles.btnStyle}
               variant="outline"
@@ -60,7 +84,10 @@ const Payment = ({route}) => {
             />
           </View>
         </ScrollView>
-        {paymentId && <Button loading={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay}/>}
+        {paymentId && <View style={[Flex.row, Flex.justifyBetween]}>
+          <Button loading={loading} text="Remove" fontSize={18} fontWeight={'600'} mt={20} onPress={removePaymentMethod} width={widthPercentageToDP(40)} style={{backgroundColor: 'red'}}/>
+          <Button loading={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay} width={widthPercentageToDP(40)}/>
+        </View>}
       </View>
     </View>
   )

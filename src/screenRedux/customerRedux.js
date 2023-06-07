@@ -348,6 +348,7 @@ function addPaymentAPI(data) {
   const options = {
     headers: {
       Accept: "application/json",
+      "Content-Type": "application/json",
     },
     method: "POST",
     data: data
@@ -572,9 +573,13 @@ function* addPaymentAction(data) {
   try {
     const resp = yield call(addPaymentAPI, data.payload)
     if (resp?.data) {
-      yield put(addPaymentRequestFinished(resp.data))
+      yield put(getPaymentsRequest())
     }
-    goBack();
+    showMessage({
+      message: "Payment method added successfully!",
+      type: "success"
+    })
+    goBack()
   } catch (e) {
     const {response} = e
     console.log('add-payment-api-res', response)
@@ -590,7 +595,8 @@ function* deletePaymentAction(data) {
   try {
     const resp = yield call(deletePaymentAPI, data.payload)
     if (resp?.data) {
-      yield put(deletePaymentRequestFinished(resp.data))
+      // yield put(deletePaymentRequestFinished(resp.data))
+      yield put(getPaymentsRequest())
     }
   } catch (e) {
     const {response} = e

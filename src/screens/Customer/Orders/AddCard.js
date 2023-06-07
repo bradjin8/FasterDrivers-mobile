@@ -1,4 +1,4 @@
-import {CardField, useStripe} from "@stripe/stripe-react-native";
+import {CardField, useStripe, CardForm, CardFieldInput} from "@stripe/stripe-react-native";
 import React, {useEffect, useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
@@ -22,23 +22,34 @@ const AddCard = ({}) => {
   const {createPaymentMethod} = useStripe();
 
   // console.log('defaultAddress', defaultAddress)
-  const onBlurCard = () => {};
+  const onBlurCard = () => {
+  };
 
   const addCard = () => {
-    if (!cardHolder || !cardDate || !cvv) {
+    if (!cardHolder
+      // || !cardDate || !cvv
+    ) {
       showMessage({
         message: 'Please enter card details',
         type: 'danger',
       })
       return
     }
-    if (cardDate.indexOf('/') < 0) {
-      showMessage({
-        message: 'Please enter a valid expire date',
-        type: 'danger',
-      })
-      return
-    }
+    // if (cardDate.indexOf('/') < 0) {
+    //   showMessage({
+    //     message: 'Please enter a valid expire date',
+    //     type: 'danger',
+    //   })
+    //   return
+    // }
+
+    // const card = {
+    //   number: cardNumber,
+    //   expMonth: cardDate.split('/')[0],
+    //   expYear: cardDate.split('/')[1],
+    //   cvc: cvv,
+    // }
+    // console.log('card', card)
     createPaymentMethod({
       paymentMethodType: 'Card',
       paymentMethodData: {
@@ -46,16 +57,19 @@ const AddCard = ({}) => {
           name: cardHolder,
         }
       },
-      card: {
-        number: cardNumber,
-        expMonth: cardDate.split('/')[0],
-        expYear: cardDate.split('/')[1],
-        cvc: cvv,
-      },
+      // card,
     }).then((result) => {
       console.log('result', result);
-      dispatch(addPaymentRequest({
-        payment_method: result.paymentMethod.id,
+      const {error, paymentMethod} = result
+      if (error) {
+        showMessage({
+          message: error.message,
+          type: 'danger',
+        })
+        return
+      }
+      dispatch(addPaymentRequest(JSON.stringify({
+        payment_method: paymentMethod.id,
         billing_details: {
           name: cardHolder,
           address: {
@@ -66,7 +80,7 @@ const AddCard = ({}) => {
             state: defaultAddress?.state,
           }
         },
-      }))
+      })))
     }).catch(e => {
       console.log('create-payment-error', e.message);
     })
@@ -94,11 +108,11 @@ const AddCard = ({}) => {
             onBlurText={onBlurCard}
           />
 
-          {/*<Text variant="text" color="black" style={styles.inputTitle}>
+          <Text variant="text" color="black" style={styles.inputTitle}>
             CARD DETAILS
-          </Text>*/}
-          {/*<CardField
-            postalCodeEnabled={true}
+          </Text>
+          <CardField
+            postalCodeEnabled={false}
             placeholders={{
               number: '4242 4242 4242 4242',
             }}
@@ -118,8 +132,13 @@ const AddCard = ({}) => {
             onFocus={(focusedField) => {
               // console.log('focusField', focusedField);
             }}
-          />*/}
-          <Text variant="text" color="black" style={styles.inputTitle}>
+          />
+          {/*<CardForm*/}
+          {/*  onFormComplete={(details) => {*/}
+          {/*    console.log('card details', details)*/}
+          {/*  }}*/}
+          {/*/>*/}
+          {/*<Text variant="text" color="black" style={styles.inputTitle}>
             CARD NUMBER
           </Text>
           <CustomTextInput
@@ -152,7 +171,7 @@ const AddCard = ({}) => {
                 onBlurText={onBlurCard}
               />
             </View>
-          </View>
+          </View>*/}
         </View>
         <Button loading={loading} text="Add Card" mt={20} onPress={addCard}/>
       </View>
