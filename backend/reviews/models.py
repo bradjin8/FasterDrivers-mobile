@@ -30,11 +30,13 @@ class Review(UUIDModel):
         on_delete=models.SET_NULL,
         null=True
     )
-    rating = models.PositiveIntegerField(
+    rating = models.DecimalField(
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5)
-        ]
+        ],
+        max_digits=2,
+        decimal_places=1
     )
     context = models.TextField(
         blank=True
@@ -61,11 +63,13 @@ class DriverReview(UUIDModel):
         on_delete=models.SET_NULL,
         null=True
     )
-    rating = models.PositiveIntegerField(
+    rating = models.DecimalField(
         validators=[
             MinValueValidator(1),
             MaxValueValidator(5)
-        ]
+        ],
+        max_digits=2,
+        decimal_places=1
     )
     context = models.TextField(
         blank=True

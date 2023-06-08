@@ -3,7 +3,7 @@ from users.models import User
 from django.contrib.gis.db import models
 from django.core.validators import RegexValidator
 
-from djstripe.models import Account
+from djstripe.models import Account, Customer
 
 from orders.models import Order
 
@@ -67,12 +67,23 @@ class Driver(UUIDModel):
         blank=True,
         null=True
     )
+    account = models.ForeignKey(
+        'djstripe.Customer',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        help_text="The Driver's Stripe Customer object, if it exists"
+    )
+    subscription = models.ForeignKey(
+        'djstripe.Subscription', null=True, blank=True, on_delete=models.SET_NULL,
+        help_text="The Driver's Stripe Subscription object, if it exists"
+    )
     connect_account = models.ForeignKey(
-        Account,
+        'djstripe.Account',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        help_text="The Driver's Stripe Account object, if it exists"
+        help_text="The Driver's Stripe Connect Account object, if it exists"
     )
 
     @property

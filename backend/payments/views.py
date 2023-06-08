@@ -471,15 +471,30 @@ class SubscriptionsViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def plans(self, request):
-        plans = stripe.Plan.list(active=True)
+        if request.user.type == "Restaurant":
+            product_name = "Restaurant Subscription"
+        else:
+            product_name = "Driver Subscription"
+
+        products = stripe.Product.list()
+        for product in products:
+            if product['name'] == product_name:
+                product = product
+                break
+
+        plans = stripe.Plan.list(product=product['id'], active=True)
         for plan in plans:
             djstripe.models.Plan.sync_from_stripe_data(plan)
         return Response(plans)
 
     @action(detail=False, methods=['patch'], permission_classes=[IsAuthenticated])
     @transaction.atomic
-    def change_subscription(self, request): 
-        subscription = request.user.subscription
+    def change_subscription(self, request):
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        subscription = profile.subscription
         stripe_sub = stripe.Subscription.retrieve(subscription.id)
         plan_id = request.data.get('plan_id', None)
         sub = stripe.Subscription.modify(
@@ -496,8 +511,12 @@ class SubscriptionsViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     @transaction.atomic
-    def unsubscribe(self, request): 
-        subscription = request.user.subscription
+    def unsubscribe(self, request):
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        subscription = profile.subscription
         sub = stripe.Subscription.delete(subscription.id)
         djstripe.models.Subscription.sync_from_stripe_data(sub)
         return Response("You've successfully unsubscribed", status=status.HTTP_200_OK)
@@ -505,7 +524,11 @@ class SubscriptionsViewSet(ModelViewSet):
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     @transaction.atomic
     def subscribe(self, request):
-        subscription = request.user.subscription
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        subscription = profile.subscription
         if subscription and subscription.status != "canceled":
             return Response({'detail': 'User is already subscribed'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -530,7 +553,7 @@ class SubscriptionsViewSet(ModelViewSet):
                             invoice_settings={
                                 'default_payment_method': payment_method,
                             },
-                            )
+                        )
 
             else:
                 return Response({'detail': 'Missing Payment Method'}, status=status.HTTP_400_BAD_REQUEST)
@@ -540,10 +563,9 @@ class SubscriptionsViewSet(ModelViewSet):
                 customer=customer.id,
                 items=[
                     {
-                    'plan': plan_id,
+                        'plan': plan_id,
                     },
                 ],
-                trial_period_days=30,
                 expand=['latest_invoice.payment_intent'],
                 )
             djstripe_subscription = djstripe.models.Subscription.sync_from_stripe_data(subscription)
@@ -551,9 +573,9 @@ class SubscriptionsViewSet(ModelViewSet):
             return Response({'detail': 'Card Declined'})
 
         # associate customer and subscription with the user
-        request.user.account = djstripe_customer
-        request.user.subscription = djstripe_subscription
-        request.user.save()
+        profile.account = djstripe_customer
+        profile.subscription = djstripe_subscription
+        profile.save()
 
         # return information back to the front end
         data = {
@@ -561,22 +583,3 @@ class SubscriptionsViewSet(ModelViewSet):
             'subscription': subscription
         }
         return Response(data, status=status.HTTP_201_CREATED)
-
-# A webhook to catch a successful payment and add paid likes to the User account
-@webhooks.handler("invoice.updated")
-def subscription_renewal_webhook(event, **kwargs):
-    data = event.data.get("object", {})
-    payment_status = data.get('paid')
-    customer_id = data.get('customer')
-    user = User.objects.get(
-        account__id=customer_id
-    )
-    if payment_status == True:
-        send_notification(
-            user=user,
-            title="Your subscription has been successfully renewed",
-            content="Your subscription has been successfully renewed",
-            data=user.id,
-            data_type='userId',
-            mom=user
-        )
