@@ -25,6 +25,10 @@ import ticks from "src/assets/images/ticks.png"
 import Market from "src/assets/images/market.png"
 import Car from "src/assets/images/car.png"
 import Subscription from "src/assets/images/subscription.png"
+import VertLineDot from "src/assets/images/vert_line_dot.png"
+import Wallet from "src/assets/images/wallet.png"
+import History from "src/assets/images/history.png"
+import Home from "src/assets/images/home.png"
 
 export default {
   AppLogo,
@@ -54,4 +58,8 @@ export default {
   Market,
   Car,
   Subscription,
+  VertLineDot,
+  Home,
+  History,
+  Wallet,
 }

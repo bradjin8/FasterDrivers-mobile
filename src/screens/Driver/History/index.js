@@ -10,10 +10,11 @@ import {CustomTextInput} from "../../../components/CustomTextInput"
 import {Text} from "../../../components/text"
 import {getDeliveredOrders} from "../../../screenRedux/driverRedux"
 import {Images} from "../../../theme"
+import {Flex, Margin} from "../../../theme/Styles";
 
 const History = ({navigation}) => {
   const {user: {id, name, driver: driver}} = useSelector((state) => state.loginReducer)
-  const {loading, deliveredOrders} = useSelector((state) => state.driverReducer)
+  const {deliveredOrders} = useSelector((state) => state.driverReducer)
   const [filteredOrders, setFilteredOrders] = useState(deliveredOrders)
   const [ordersByDate, setOrdersByDate] = useState({})
   const [searchText, setSearchText] = useState('')
@@ -87,43 +88,44 @@ const History = ({navigation}) => {
         const deliveryAddress = user?.customer?.addresses?.find(add => add.id === address) || {}
 
         return (<View style={styles.orderContainer} key={idx}>
-          <View style={styles.images}>
-            <View style={styles.marketMarker}>
-              <Image source={Images.Market} style={{width: scale(20), height: scale(20)}} resizeMode={'contain'}/>
-            </View>
-            <View style={styles.line}/>
-            <View style={styles.driverMarker}>
-              <Entypo name={'location-pin'} size={34}/>
-            </View>
-          </View>
           <View style={styles.info}>
-            <View style={styles.restaurant}>
-              <Text fontSize={12} variant={'strong'}>{restaurant.name} {order.updated_at}</Text>
-              <Text fontSize={12}>{restaurant.street} {restaurant.city}, {restaurant.state} {restaurant.zip_code}</Text>
+            <Image source={Images.VertLineDot} style={styles.line} resizeMode={'contain'}/>
+            <View style={[Flex.row, Flex.justifyStart, Flex.itemsCenter]}>
+              <View style={styles.marker}>
+                <Image source={Images.Market} style={{width: 20, height: 20}} resizeMode={'contain'}/>
+              </View>
+              <View style={styles.restaurant}>
+                <Text fontSize={12} variant={'strong'}>{restaurant.name} {order.updated_at}</Text>
+                <Text fontSize={12}>{restaurant.street}</Text>
+                <Text fontSize={12}>{restaurant.city}, {restaurant.state} {restaurant.zip_code}</Text>
+              </View>
             </View>
-            <View style={styles.customer}>
-              <Text fontSize={12} variant={'strong'}>{user?.name}</Text>
-              <Text fontSize={12}>{deliveryAddress.street} {deliveryAddress.city}, {deliveryAddress.state} {deliveryAddress.zip_code}</Text>
-              <Pressable onPress={() => Linking.openURL(`tel:${user?.customer?.phone}`)}>
-                <Text color={'primary'} variant={'strong'} fontSize={12}>{user?.customer?.phone}</Text>
-              </Pressable>
+            <View style={[Flex.row, Flex.justifyStart, Flex.itemsCenter]}>
+              <View style={styles.marker}>
+                <Entypo name={'location-pin'} size={20}/>
+              </View>
+              <View style={styles.restaurant}>
+                <Text fontSize={12} variant={'strong'}>{user?.name}</Text>
+                <Text fontSize={12}>{deliveryAddress.street}</Text>
+                <Text fontSize={12}>{deliveryAddress.city}, {deliveryAddress.state} {deliveryAddress.zip_code}</Text>
+              </View>
             </View>
           </View>
           <View style={styles.price}>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <Text fontSize={12} variant={'strong'}>${sub_total}</Text>
-              <Text fontSize={12} variant={'strong'} style={styles.label}>Price</Text>
+            <View style={[Flex.row, Flex.itemsCenter, Flex.justifyEnd]}>
+              <Text fontSize={12} variant={''}>${sub_total}</Text>
+              <Text fontSize={12} variant={''} style={styles.label}>Price</Text>
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <View style={[Flex.row, Flex.itemsCenter, Flex.justifyEnd]}>
               <Text fontSize={12}>${fees}</Text>
-              <Text fontSize={12} variant={'strong'} style={styles.label}>Fees</Text>
+              <Text fontSize={12} variant={''} style={styles.label}>Fees</Text>
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <View style={[Flex.row, Flex.itemsCenter, Flex.justifyEnd]}>
               <Text fontSize={12}>+${tip}</Text>
-              <Text fontSize={12} variant={'strong'} style={styles.label}>Tip</Text>
+              <Text fontSize={12} variant={''} style={styles.label}>Tip</Text>
             </View>
             <View style={styles.spliter}/>
-            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <View style={[Flex.row, Flex.itemsCenter, Flex.justifyEnd, Margin.t10]}>
               <Text fontSize={12} variant={'strong'} color={'primary'}>${total}</Text>
               <Text fontSize={12} variant={'strong'} color={'primary'} style={styles.label}>Total</Text>
             </View>
@@ -149,7 +151,7 @@ const History = ({navigation}) => {
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={<Text>No orders</Text>}
-        refreshing={loading}
+        refreshing={false}
         onRefresh={fetchHistory}
       />
     </View>
@@ -176,23 +178,14 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowColor: color.lightGray,
   },
-  driverMarker: {
-    width: scale(36),
-    height: scale(36),
-    borderRadius: scale(18),
-    borderWidth: 2,
-    borderColor: color.primary,
-    backgroundColor: color.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  marketMarker: {
-    width: scale(36),
-    height: scale(36),
-    borderRadius: scale(18),
+  marker: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: color.primary,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 10,
   },
   images: {
     justifyContent: 'space-between',
@@ -200,32 +193,33 @@ const styles = StyleSheet.create({
     paddingBottom: scale(10),
     width: scale(40)
   },
-  line: {
-    height: scale(30),
-    width: 0,
-    borderColor: color.primary,
-    borderStyle: 'dotted',
-    borderWidth: 1,
-  },
   info: {
-    marginLeft: scale(10),
+    position: 'relative',
     justifyContent: 'space-between',
+    paddingVertical: 10,
+    height: 130,
+  },
+  line: {
+    position: 'absolute',
+    width: 2,
+    height: 52,
+    left: 16,
+    top: 40,
+    resizeMode: 'contain',
+    zIndex: -1
   },
   restaurant: {
     height: scale(34),
-    justifyContent: 'space-evenly'
-  },
-  customer: {
-    height: scale(50),
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   price: {
-    width: scale(70),
+    width: 100,
+    justifyContent: 'center',
   },
   spliter: {
     height: 1,
-    marginHorizontal: '0%',
-    width: '100%',
+    width: '50%',
+    marginHorizontal: '25%',
     backgroundColor: color.black,
     marginVertical: scale(5)
   },

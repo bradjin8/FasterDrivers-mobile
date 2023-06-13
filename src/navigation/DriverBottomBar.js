@@ -46,10 +46,14 @@ const DriverBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <SimpleLineIcons name={'home'} size={scale(22)} color={focused ? color.black : color.gray} />
+            <Image
+              source={Images.Home}
+              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              resizeMode={'contain'}
+            />
           ),
           header: () => null
         }}
@@ -59,10 +63,14 @@ const DriverBottomBar = props => {
         component={HistoryTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">History</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">History</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Octicons name={'history'} size={scale(22)} color={focused ? color.black : color.gray} />
+            <Image
+              source={Images.History}
+              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              resizeMode={'contain'}
+            />
           ),
           header: () => null
         }}
@@ -72,10 +80,14 @@ const DriverBottomBar = props => {
         component={WalletTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Wallet</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Wallet</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <AntDesign name={'wallet'} color={focused ? color.black : color.gray} size={scale(22)} />
+            <Image
+              source={Images.Wallet}
+              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              resizeMode={'contain'}
+            />
           ),
           header: () => null
         }}
@@ -85,12 +97,13 @@ const DriverBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Settings}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
