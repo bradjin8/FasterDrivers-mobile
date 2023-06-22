@@ -80,7 +80,8 @@ LOCAL_APPS = [
     'restaurants',
     'reviews',
     'orders',
-    'payments'
+    'payments',
+    'socials'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -92,6 +93,8 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.apple',
     'django_extensions',
     'drf_yasg',
     'storages',
@@ -332,3 +335,22 @@ STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "")
 STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", False)
 DJSTRIPE_WEBHOOK_SECRET = env.str("DJSTRIPE_WEBHOOK_SECRET", "")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'facebook': {
+        'SCOPE': [
+            'email',
+            'public_profile'
+        ],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    }
+}
