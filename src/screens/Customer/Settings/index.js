@@ -2,27 +2,46 @@ import {navigate} from "navigation/NavigationService";
 import React from "react";
 import {Alert, Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {color, customerSettingData, scaleVertical} from "utils";
 import {Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import {logoutRequest} from "../../../screenRedux/loginRedux";
+import {deleteAccountRequest, logoutRequest} from "../../../screenRedux/loginRedux";
 
 const Settings = ({}) => {
   const dispatch = useDispatch()
-
+  const {user} = useSelector(state => state.loginReducer)
   const redirectTo = (key) => {
-    if(key === "logout") {
-      Alert.alert(`Are you sure you want to log out?`, '', [
-        {text: 'Cancel', onPress: () => {}},
-        {
-          text: "Yes", onPress: () => {
-            dispatch(logoutRequest())
-          }
-        },
-      ]);
+    switch (key) {
+      case 'logout':
+        Alert.alert(`Are you sure you want to log out?`, '', [
+          {
+            text: 'Cancel', onPress: () => {
+            }
+          },
+          {
+            text: "Yes", onPress: () => {
+              dispatch(logoutRequest())
+            }
+          },
+        ]);
+        break
+      case 'deleteAccount':
+        Alert.alert(`Are you sure you want to delete your account?`, '', [
+          {
+            text: 'Cancel', onPress: () => {
+            }
+          },
+          {
+            text: "Yes", onPress: () => {
+              dispatch(deleteAccountRequest(user.id))
+            }
+          },
+        ]);
+        break
+      default:
+        key && navigate(key)
     }
-    key && navigate(key)
   }
 
   return (

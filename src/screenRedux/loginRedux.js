@@ -24,6 +24,7 @@ const FORGOT_PASSWORD_REQUEST_STARTED = "FORGOT_PASSWORD_REQUEST_STARTED"
 const FORGOT_PASSWORD_REQUEST_COMPLETED = "FORGOT_PASSWORD_REQUEST_COMPLETED"
 const LOGIN_WITH_FACEBOOK_REQUEST_STARTED = "LOGIN_WITH_FACEBOOK_REQUEST_STARTED"
 const LOGIN_WITH_GOOGLE_REQUEST_STARTED = "LOGIN_WITH_GOOGLE_REQUEST_STARTED"
+const DELETE_ACCOUNT_REQUEST_STARTED = "DELETE_ACCOUNT_REQUEST_STARTED"
 
 const initialState = {
   loading: false,
@@ -74,7 +75,7 @@ export const changePassword = (data) => ({
 export const changePasswordCompleted = () => ({
   type: CHANGE_PASSWORD_REQUEST_COMPLETED,
 })
-export const logoutRequest = (data) => ({
+export const logoutRequest = () => ({
   type: LOGOUT_REQUEST_STARTED,
 })
 export const requestFailed = () => ({
@@ -89,12 +90,18 @@ export const forgotPasswordRequestCompleted = () => ({
   type: FORGOT_PASSWORD_REQUEST_COMPLETED,
 })
 
+export const deleteAccountRequest = (data) => ({
+  type: DELETE_ACCOUNT_REQUEST_STARTED,
+  payload: data,
+})
+
 //Reducers
 export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST_STARTED:
     case LOGIN_WITH_FACEBOOK_REQUEST_STARTED:
     case LOGIN_WITH_GOOGLE_REQUEST_STARTED:
+    case DELETE_ACCOUNT_REQUEST_STARTED:
       return {
         ...state,
         loading: true
@@ -249,6 +256,17 @@ async function changePasswordAPI(data) {
     },
     method: "POST",
     data: data
+  }
+  return XHR(URL, options)
+}
+
+async function deleteAccountAPI(data) {
+  const URL = `${appConfig.backendServerURL}/users/${data}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "DELETE",
   }
   return XHR(URL, options)
 }
@@ -449,6 +467,25 @@ function* forgotPasswordAction(data) {
   }
 }
 
+function* deleteAccountAction(data) {
+  try {
+    const resp = yield call(deleteAccountAPI, data.payload)
+    yield put(logoutRequest())
+    showMessage({
+      message: "Account Deleted",
+      type: "success"
+    })
+  } catch (e) {
+    const {response} = e
+    console.log('delete-account', response)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(LOGIN_REQUEST_STARTED, loginAction),
   takeLatest(SIGNUP_REQUEST_STARTED, signUpAction),
@@ -457,4 +494,5 @@ export default all([
   takeLatest(FORGOT_PASSWORD_REQUEST_STARTED, forgotPasswordAction),
   takeLatest(LOGIN_WITH_FACEBOOK_REQUEST_STARTED, loginWithFacebookAction),
   takeLatest(LOGIN_WITH_GOOGLE_REQUEST_STARTED, loginWithGoogleAction),
+  takeLatest(DELETE_ACCOUNT_REQUEST_STARTED, deleteAccountAction),
 ])

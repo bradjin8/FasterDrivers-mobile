@@ -47,7 +47,8 @@ export const restaurantSettingData = [
   },
   {
     title: "Delete Account",
-    icon: Images.DeleteAccount
+    icon: Images.DeleteAccount,
+    key: 'deleteAccount'
   },
   {
     title: "Log Out",
@@ -102,7 +103,8 @@ export const driverSettingData = [
   },
   {
     title: "Delete Account",
-    icon: Images.DeleteAccount
+    icon: Images.DeleteAccount,
+    key: 'deleteAccount'
   },
   {
     title: "Log Out",
@@ -148,7 +150,8 @@ export const customerSettingData = [
   },
   {
     title: "Delete Account",
-    icon: Images.DeleteAccount
+    icon: Images.DeleteAccount,
+    key: "deleteAccount"
   },
   {
     title: "Log Out",
