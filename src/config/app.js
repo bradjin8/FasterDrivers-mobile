@@ -22,3 +22,8 @@ export const STRIPE_PUBLISHABLE_KEY = "pk_test_51N0lDHHuKvl8e8x17JvdYH74CJRg0NL0
 export const STRIPE_MERCHANT_ID = "acct_1N0lDHHuKvl8e8x1"
 
 export const GOOGLE_MAPS_API_KEY = "AIzaSyCAcAhKPua5L2ewpRU_P6lmvI37lSIg6Hk"
+
+export const APPLE = {
+  SERVICE_ID: 'com.fasterdrivers.ios.appleauth',
+  REDIRECT_CALLBACK_URL: `${BASE_URL}/accounts/apple/login/callback/`,
+}

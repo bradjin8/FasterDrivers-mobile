@@ -82,6 +82,7 @@
 		21FDE656EDB7460F91E504DE /* Lato-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Light.ttf"; path = "../src/assets/fonts/Lato-Light.ttf"; sourceTree = "<group>"; };
 		23D287A37A89272AE3D5FD10 /* Pods-FasterDrivers-FasterDriversTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FasterDrivers-FasterDriversTests.release.xcconfig"; path = "Target Support Files/Pods-FasterDrivers-FasterDriversTests/Pods-FasterDrivers-FasterDriversTests.release.xcconfig"; sourceTree = "<group>"; };
 		2F78639815D9453EAE71BAA1 /* Lato-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-LightItalic.ttf"; path = "../src/assets/fonts/Lato-LightItalic.ttf"; sourceTree = "<group>"; };
+		4346EC402A4B6F0300C8696D /* FasterDrivers.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FasterDrivers.entitlements; path = FasterDrivers/FasterDrivers.entitlements; sourceTree = "<group>"; };
 		43D82226B4B24062A2D7FF5E /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-ThinItalic.ttf"; path = "../src/assets/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; };
 		536BF50883064B24BAFE4A87 /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../src/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		61C8E8A4FC914BFE863BC118 /* Lato-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-BoldItalic.ttf"; path = "../src/assets/fonts/Lato-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 		13B07FAE1A68108700A75B9A /* FasterDrivers */ = {
 			isa = PBXGroup;
 			children = (
+				4346EC402A4B6F0300C8696D /* FasterDrivers.entitlements */,
 				041B650D299B6602005A0743 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -604,6 +606,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FasterDrivers/FasterDrivers.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U5235F2PBG;
 				ENABLE_BITCODE = NO;
@@ -636,6 +639,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FasterDrivers/FasterDrivers.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U5235F2PBG;
 				INFOPLIST_FILE = FasterDrivers/Info.plist;

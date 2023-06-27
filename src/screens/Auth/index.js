@@ -1,16 +1,17 @@
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
-import {Image, Pressable, StyleSheet, View} from "react-native";
+import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux"
 import {Images} from "src/theme"
 import {color, scale, scaleVertical} from "utils";
 import {toFormData} from "utils/useForm";
 import validator from "utils/validation";
-import BaseScreen from "../../components/BaseScreen";
-import {Button, CustomTextInput, Text} from "../../components/index";
-import {loginRequest, loginWithFacebook, requestFailed} from "../../screenRedux/loginRedux";
-import {Flex, Margin, Size} from "../../theme/Styles";
-import {authorizeWithFB} from "../../third-party/facebook";
+import BaseScreen from "src/components/BaseScreen";
+import {Button, CustomTextInput, Text} from "src/components/index";
+import {loginRequest, loginWithFacebook, requestFailed} from "src/screenRedux/loginRedux";
+import {Flex, Margin, Size} from "src/theme/Styles";
+import {authorizeWithApple} from "src/third-party/apple";
+import {authorizeWithFB} from "src/third-party/facebook";
 
 const SignIn = ({route}) => {
   const dispatch = useDispatch()
@@ -33,9 +34,17 @@ const SignIn = ({route}) => {
             dispatch(loginWithFacebook(toFormData({access_token, type: userType})))
           }
           break
+        case 'apple':
+          console.log(Platform.OS)
+          const apple_access_token = await authorizeWithApple()
+          console.log('apple-access_token', apple_access_token)
+          // if (apple_access_token) {
+          //   dispatch(loginWithFacebook(toFormData({access_token: apple_access_token, type: userType})))
+          // }
+          break
       }
     } catch (e) {
-
+      console.log('social-auth-error', e.message)
     }
   }
 
@@ -116,6 +125,9 @@ const SignIn = ({route}) => {
             <Text fontWeight={'600'} color={'primary'}>OR</Text>
             <Text>Sign in with Social Media</Text>
             <View style={[Flex.row, Flex.justifyEvenly, Margin.t10]}>
+              <Pressable onPress={() => loginWithSocial('apple')}>
+                <Image source={Images.IcApple} style={[Size.h50, Size.w50]}/>
+              </Pressable>
               <Pressable onPress={() => loginWithSocial('facebook')}>
                 <Image source={Images.IcFacebook} style={[Size.h50, Size.w50]}/>
               </Pressable>
