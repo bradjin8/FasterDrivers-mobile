@@ -13,8 +13,11 @@ import moment from "moment"
 import {enableLatestRenderer} from 'react-native-maps';
 import {StripeProvider} from "@stripe/stripe-react-native";
 import {appConfig, STRIPE_MERCHANT_ID, STRIPE_PUBLISHABLE_KEY} from "./src/config/app";
+import {Settings} from 'react-native-fbsdk-next'
 
 enableLatestRenderer();
+Settings.setAppID('1211726189503333')
+Settings.initializeSDK()
 
 const persistor = persistStore(store)
 

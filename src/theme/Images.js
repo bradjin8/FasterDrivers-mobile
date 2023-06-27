@@ -29,6 +29,9 @@ import VertLineDot from "src/assets/images/vert_line_dot.png"
 import Wallet from "src/assets/images/wallet.png"
 import History from "src/assets/images/history.png"
 import Home from "src/assets/images/home.png"
+import IcApple from "src/assets/images/ic_apple.png"
+import IcFacebook from "src/assets/images/ic_facebook.png"
+import IcGoogle from "src/assets/images/ic_google.png"
 
 export default {
   AppLogo,
@@ -62,4 +65,7 @@ export default {
   Home,
   History,
   Wallet,
+  IcApple,
+  IcFacebook,
+  IcGoogle,
 }

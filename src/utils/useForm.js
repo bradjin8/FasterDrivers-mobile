@@ -153,3 +153,11 @@ const useForm = (stateSchema = {}, validationSchema = {}, callback) => {
   }
 }
 export default useForm
+
+export const toFormData = (data) => {
+  const formData = new FormData()
+  Object.keys(data).forEach((key) => {
+    formData.append(key, data[key])
+  })
+  return formData
+}

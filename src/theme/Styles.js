@@ -152,3 +152,18 @@ export const Templates = StyleSheet.create({
     borderRadius: 10,
   }
 })
+
+export const Size = StyleSheet.create({
+  w10: {
+    width: scale(10)
+  },
+  w50: {
+    width: scale(50)
+  },
+  h10: {
+    height: scale(10)
+  },
+  h50: {
+    height: scale(50)
+  },
+})

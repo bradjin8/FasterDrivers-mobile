@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 import {showMessage} from "react-native-flash-message"
 
 // config
-import {appConfig} from "../config/app"
+import {appConfig, BASE_URL} from "../config/app"
 
 // utils
 import XHR from "../utils/XHR"
@@ -22,6 +22,7 @@ const LOGOUT_REQUEST_STARTED = "LOGOUT_REQUEST_STARTED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 const FORGOT_PASSWORD_REQUEST_STARTED = "FORGOT_PASSWORD_REQUEST_STARTED"
 const FORGOT_PASSWORD_REQUEST_COMPLETED = "FORGOT_PASSWORD_REQUEST_COMPLETED"
+const LOGIN_WITH_FACEBOOK_REQUEST_STARTED = "LOGIN_WITH_FACEBOOK_REQUEST_STARTED"
 
 const initialState = {
   loading: false,
@@ -38,6 +39,12 @@ export const setSignInData = (data) => ({
   type: LOGIN_REQUEST_COMPLETED,
   payload: data,
 })
+
+export const loginWithFacebook = (data) => ({
+  type: LOGIN_WITH_FACEBOOK_REQUEST_STARTED,
+  payload: data,
+})
+
 export const signUpRequestStarted = (data) => ({
   type: SIGNUP_REQUEST_STARTED,
   payload: data,
@@ -80,6 +87,7 @@ export const forgotPasswordRequestCompleted = () => ({
 export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST_STARTED:
+    case LOGIN_WITH_FACEBOOK_REQUEST_STARTED:
       return {
         ...state,
         loading: true
@@ -164,6 +172,18 @@ function loginAPI(data) {
   return XHR(URL, options)
 }
 
+function loginWithFacebookAPI(data) {
+  const URL = `${BASE_URL}/socials/facebook/login/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
 function signUpAPI(data) {
   const URL = `${appConfig.backendServerURL}/users/`
   const options = {
@@ -238,6 +258,35 @@ function* loginAction(data) {
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* loginWithFacebookAction(data) {
+  try {
+    const resp = yield call(loginWithFacebookAPI, data.payload)
+    if (resp?.data) {
+      yield put(setSignInData(resp.data))
+      AsyncStorage.setItem("userAccount", JSON.stringify(resp.data.user))
+      AsyncStorage.setItem("token", resp.data.token)
+      showMessage({
+        message: "Successfully user login",
+        type: "success"
+      })
+      if (resp?.data.user.type === "Restaurant") {
+        navigate('RestaurantBottomBar')
+      } else if (resp?.data.user.type === "Driver") {
+        navigate('DriverBottomBar')
+      } else {
+        navigate('CustomerBottomBar')
+      }
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
@@ -358,4 +407,5 @@ export default all([
   takeLatest(UPDATE_ACCOUNT_REQUEST_STARTED, accountUpdateAction),
   takeLatest(CHANGE_PASSWORD_REQUEST_STARTED, changePasswordAction),
   takeLatest(FORGOT_PASSWORD_REQUEST_STARTED, forgotPasswordAction),
+  takeLatest(LOGIN_WITH_FACEBOOK_REQUEST_STARTED, loginWithFacebookAction),
 ])
