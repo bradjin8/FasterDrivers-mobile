@@ -17,7 +17,7 @@ fastlane_require('httparty')
 default_platform(:ios)
 
 app_name = 'fancy-cherry-36842-id'
-base_name = 'fancy_cherry_36842'
+base_name = 'FasterDrivers'
 team_name = 'Crowdbotics Corporation'
 team_id = '6YKR59QXKM'
 filename = "#{base_name}.xcodeproj"
@@ -126,7 +126,7 @@ platform(:ios) do
   lane(:upload_release) do
     init_app
 
-    create_build    
+    create_build
 
     upload_to_app_store # configured in Deliverfile
   end
