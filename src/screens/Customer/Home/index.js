@@ -60,12 +60,19 @@ const Home = ({navigation}) => {
   }
 
   const pickCurrentLocation = () => {
-    hideMenu()
     getCurrentLocation()
       .then(async (loc) => {
         const address = await getAddressFromLocation(loc)
-        setCurrentAddress(address)
-        setAddress(address)
+        console.log('address', address)
+        if (address) {
+          setCurrentAddress(address)
+          setAddress(address)
+        } else {
+          showMessage({
+            message: 'Unable to get address',
+            type: "danger",
+          })
+        }
       })
       .catch((err) => {
         console.log('err', err)
@@ -73,6 +80,9 @@ const Home = ({navigation}) => {
           message: err.message,
           type: "danger",
         })
+      })
+      .finally(() => {
+        hideMenu()
       })
   }
 
@@ -153,10 +163,10 @@ const Home = ({navigation}) => {
       })
     )
   }
-  const renderLocation = () => {
-    if (address.zip_code) {
-      const {street, city, zip_code} = address
-      return `${street}, ${city} - ${zip_code}`
+  const renderLocation = (_address) => {
+    if (_address.zip_code) {
+      const {street, city, state, zip_code} = _address
+      return `${street}, ${city}, ${state} ${zip_code}`
     }
     return 'Choose an Address'
   }
@@ -179,8 +189,8 @@ const Home = ({navigation}) => {
               visible={visible}
               anchor={
                 <View style={styles.locationContain}>
-                  <Text variant="text" color="gray" fontSize={10} fontWeight="400">
-                    {renderLocation()}
+                  <Text variant="text" color="item" fontSize={10} fontWeight="400">
+                    {renderLocation(address)}
                   </Text>
                   <AntDesign name={'caretdown'} size={10} color={color.black} style={{marginLeft: scaleVertical(5)}}/>
                 </View>
@@ -195,22 +205,22 @@ const Home = ({navigation}) => {
                   <Icon onPress={() => hideMenu()} name="x" size={16} color={color.black}/>
                 </View>
               </MenuItem>
-              {addresses?.map((address, index) => {
+              {addresses?.map((_address, index) => {
                 return (
                   <MenuItem
                     style={{justifyContent: 'center', height: 35}}
                     key={"menu-" + index.toString()}
-                    onPress={() => setDefaultAddress(address)}>
-                    <Text variant="text" color="gray" fontSize={12} fontWeight="400">
-                      {address.street}, {address.state} - {address.zip_code}
+                    onPress={() => setDefaultAddress(_address)}>
+                    <Text variant="text" color="item" fontSize={12} fontWeight="400">
+                      {renderLocation(_address)}
                     </Text>
                   </MenuItem>
                 )
               })}
               {currentAddress ?
                 <MenuItem onPress={() => setDefaultAddress(currentAddress)} style={{justifyContent: 'center'}}>
-                  <Text variant="text" color="gray" fontSize={12} fontWeight="400">
-                    {address.street}, {address.state} - {address.zip_code} (Current)
+                  <Text variant="item" color="gray" fontSize={12} fontWeight="400">
+                    {renderLocation(currentAddress)}
                   </Text>
                 </MenuItem>
                 :

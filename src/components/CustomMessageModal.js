@@ -6,8 +6,6 @@ import {color, scale, scaleVertical} from "utils";
 import {Flex, Padding} from "../theme/Styles";
 
 const CustomMessageModal = ({data, visible, onOk, close}) => {
-  console.log('data', data)
-
   const title = data?.title ?? 'Custom Message'
   const message = data?.message ?? 'Lorem Ipsum Dolor Sit Amet Consectetur. Sagittis Adipiscing Plvinar Bibendum Sit Eget Eget Commodo. Risus Sed Urna Pellentesque'
   const onUnderstand = () => {

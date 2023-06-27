@@ -30,27 +30,52 @@ export const getRoute = async (start, end) => {
 }
 
 export const getAddressFromLocation = async (location) => {
-try {
-    const res = await axios.get("https://maps.googleapis.com/maps/api/geocode/json", {
-      params: {
-        latlng: `${location.latitude},${location.longitude}`,
-        key: GOOGLE_MAPS_API_KEY
+  try {
+    const URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_MAPS_API_KEY}`
+    // console.log('get-address-url', URL)
+    const res = await axios.get(URL)
+    for (let result of res.data.results) {
+      let route, street_number, city, state, country, zip_code, formatted_address
+      result.address_components.forEach(component => {
+        if (component.types.includes("postal_code")) {
+          zip_code = component.long_name
+        }
+        else if (component.types.includes("country")) {
+          country = component.short_name
+        }
+        else if (component.types.includes("administrative_area_level_1")) {
+          state = component.short_name
+        }
+        else if (component.types.includes("locality")) {
+          city = component.long_name
+        }
+        else if (component.types.includes("route")) {
+          route = component.long_name
+        }
+        else if (component.types.includes("street_number")) {
+          street_number = component.long_name
+        }
+
+      })
+      formatted_address = result.formatted_address
+      if (route && city && state && country && zip_code) {
+        console.log('get-address-success', formatted_address)
+        return {
+          street: street_number ? `${street_number} ${route}` : route,
+          city,
+          state,
+          country,
+          zip_code,
+          formatted_address
+        }
       }
-    })
-    // console.log('get-address-success', res.data.results[0].formatted_address)
-    return {
-      street: res.data.results[0].address_components[0].long_name,
-      city: res.data.results[0].address_components[3].long_name,
-      state: res.data.results[0].address_components[4].long_name,
-      zip_code: res.data.results[0].address_components[6].long_name,
-      address: res.data.results[0].formatted_address
     }
+    return ""
   } catch (e) {
     console.log('get-address-error', e.message)
     return ""
   }
 }
-
 
 
 GoogleSignin.configure({
