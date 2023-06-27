@@ -1,27 +1,24 @@
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+import {createStackNavigator} from "@react-navigation/stack"
 import React from "react"
-import { Image } from "react-native"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { createStackNavigator } from "@react-navigation/stack"
-import { Text } from "../components/index";
-import { color, scaleVertical, scale } from "utils";
-import { Images } from "src/theme"
-import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import Octicons from "react-native-vector-icons/Octicons";
-import AntDesign from "react-native-vector-icons/AntDesign";
+import {Image} from "react-native"
+
+import History from "screens/Driver/History"
+
+import Home from "screens/Driver/Home"
 
 import Settings from "screens/Driver/Settings"
 import AccountInformation from "screens/Driver/Settings/AccountInformation";
 import CarDetails from "screens/Driver/Settings/CarDetails";
-import TermCondition from "screens/Restaurant/Settings/TermCondition";
-import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
-import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
-import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
-
-import Home from "screens/Driver/Home"
-
-import History from "screens/Driver/History"
 
 import Wallet from "screens/Driver/Wallet"
+import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
+import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
+import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
+import TermCondition from "screens/Restaurant/Settings/TermCondition";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {Text} from "../components/index";
 
 
 const Tab = createBottomTabNavigator()
