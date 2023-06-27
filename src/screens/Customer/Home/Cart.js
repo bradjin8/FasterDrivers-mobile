@@ -43,16 +43,16 @@ const Cart = ({route}) => {
   }
 
   // useEffect(() => {
-    if (carts.length < 1)
-      setTimeout(() => {
-        navigate("Home")
-      }, 1000)
+  //   if (carts.length < 1)
+  //     setTimeout(() => {
+  //       navigate("Home")
+  //     }, 1000)
   // }, [carts])
 
-  const renderFinalTotal = () => {
-    return carts.length && carts.reduce((prev, curr) => {
+  const getTotal = () => {
+    return carts.length && Number(carts.reduce((prev, curr) => {
       return prev + (curr.quantity * curr.price)
-    }, 0).toFixed(2)
+    }, 0)) || 0
   }
 
   const renderHeader = (cart, index) => {
@@ -87,7 +87,7 @@ const Cart = ({route}) => {
       <View>
         <View style={styles.pricingView}>
           <Text variant="strong" color="black" fontSize={14} fontWeight="400">Price</Text>
-          <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">${getTotal().toFixed(2)}</Text>
         </View>
         <View style={styles.pricingView}>
           <Text variant="strong" color="black" fontSize={14} fontWeight="400">Fee</Text>
@@ -95,7 +95,7 @@ const Cart = ({route}) => {
         </View>
         <View style={styles.pricingView}>
           <Text variant="strong" color="black" fontSize={14} fontWeight="400">Total</Text>
-          <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+          <Text variant="strong" color="black" fontSize={14} fontWeight="400">${getTotal().toFixed(2)}</Text>
         </View>
         <View style={styles.items}>
           <Text variant="strong" color="black" fontSize={14} fontWeight="400">
@@ -124,7 +124,7 @@ const Cart = ({route}) => {
             onChangeText={(text) => setSearchText(text)}
             multiline={true}
           />
-          <Button loading={loading} text="Confirm" fontSize={18} fontWeight={'600'} onPress={createOrder}/>
+          <Button disabled={carts?.length < 1} loading={loading} text="Confirm" fontSize={18} fontWeight={'600'} onPress={createOrder}/>
         </View>
       </View>
     );
