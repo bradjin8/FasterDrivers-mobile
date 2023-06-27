@@ -1,6 +1,8 @@
 import axios from "axios"
 import Polyline from "@mapbox/polyline"
-import {GOOGLE_MAPS_API_KEY} from "../config/app"
+import {GOOGLE_MAPS_API_KEY} from "src/config/app"
+import {GoogleSignin} from "@react-native-google-signin/google-signin"
+
 
 const ROUTE_API_URL = "https://maps.googleapis.com/maps/api/directions/json"
 export const getRoute = async (start, end) => {
@@ -47,4 +49,28 @@ try {
     console.log('get-address-error', e.message)
     return ""
   }
+}
+
+
+
+GoogleSignin.configure({
+  iosClientId: '755672979117-20ntdnl9mmpssm6e50k9tt5sh1lp55go.apps.googleusercontent.com',
+  webClient: {
+    id: '755672979117-tjit6ab2k2edrf6caakf80p437dinntv.apps.googleusercontent.com',
+  },
+  scopes: [
+    'profile',
+    'email',
+  ],
+})
+
+export const authorizeWithGoogle = async () => {
+  if (await GoogleSignin.isSignedIn()) {
+    await GoogleSignin.signOut()
+  }
+  await GoogleSignin.hasPlayServices()
+  await GoogleSignin.signIn()
+  const tokens = await GoogleSignin.getTokens()
+  // console.log('tokens', tokens)
+  return tokens.accessToken
 }

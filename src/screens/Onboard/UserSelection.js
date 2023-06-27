@@ -15,6 +15,7 @@ const UserSelection = ({}) => {
       <Image
         source={Images.AppLogo}
         style={styles.icon}
+        resizeMode={'contain'}
       />
       <View>
         <Button isSecondary text='Restaurant' fontSize={16} onPress={() => redirectTo("Restaurant")} mt={30} fontWeight="700" />

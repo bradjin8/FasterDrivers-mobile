@@ -16,6 +16,7 @@ const SliderScreen = ({}) => {
         <Image
           source={Images.AppLogo}
           style={styles.icon}
+          resizeMode={'contain'}
         />
       </View>
     );

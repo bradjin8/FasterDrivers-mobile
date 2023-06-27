@@ -8,10 +8,11 @@ import {toFormData} from "utils/useForm";
 import validator from "utils/validation";
 import BaseScreen from "src/components/BaseScreen";
 import {Button, CustomTextInput, Text} from "src/components/index";
-import {loginRequest, loginWithFacebook, requestFailed} from "src/screenRedux/loginRedux";
+import {loginRequest, loginWithFacebook, loginWithGoogle, requestFailed} from "src/screenRedux/loginRedux";
 import {Flex, Margin, Size} from "src/theme/Styles";
 import {authorizeWithApple} from "src/third-party/apple";
 import {authorizeWithFB} from "src/third-party/facebook";
+import {authorizeWithGoogle} from "../../third-party/google";
 
 const SignIn = ({route}) => {
   const dispatch = useDispatch()
@@ -41,6 +42,13 @@ const SignIn = ({route}) => {
           // if (apple_access_token) {
           //   dispatch(loginWithFacebook(toFormData({access_token: apple_access_token, type: userType})))
           // }
+          break
+        case 'google':
+          const google_access_token = await authorizeWithGoogle()
+          console.log('google-access_token', google_access_token)
+          if (google_access_token) {
+            dispatch(loginWithGoogle(toFormData({access_token: google_access_token, type: userType})))
+          }
           break
       }
     } catch (e) {
@@ -125,6 +133,9 @@ const SignIn = ({route}) => {
             <Text fontWeight={'600'} color={'primary'}>OR</Text>
             <Text>Sign in with Social Media</Text>
             <View style={[Flex.row, Flex.justifyEvenly, Margin.t10]}>
+              <Pressable onPress={() => loginWithSocial('google')}>
+                <Image source={Images.IcGoogle} style={[Size.h50, Size.w50]}/>
+              </Pressable>
               <Pressable onPress={() => loginWithSocial('apple')}>
                 <Image source={Images.IcApple} style={[Size.h50, Size.w50]}/>
               </Pressable>

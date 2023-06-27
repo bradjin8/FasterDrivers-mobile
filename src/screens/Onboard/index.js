@@ -11,6 +11,7 @@ const Onboard = ({}) => {
       <Image
         source={Images.AppLogo}
         style={styles.icon}
+        resizeMode={'contain'}
       />
       <View style={{width: '100%'}}>
         <Button text='Get Started' fontSize={16} onPress={() => navigate("UserSelection")} />
