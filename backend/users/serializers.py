@@ -38,8 +38,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         email = validated_data.get('email')
         validated_data['username'] = email
         user = User.objects.create(**validated_data)
-        user.set_password(password)
-        user.save()
+
         if user.type == "Customer":
             Customer.objects.create(
                 user=user
@@ -48,10 +47,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
             Driver.objects.create(
                 user=user
             )
+            user.is_active = False
+            user.save()
         elif user.type == "Restaurant":
             Restaurant.objects.create(
                 user=user
             )
+
+        user.set_password(password)
+        user.save()
         return user
 
     def update(self, instance, validated_data):

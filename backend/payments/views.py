@@ -17,6 +17,8 @@ from orders.serializers import OrderSerializer
 from users.models import User
 from users.serializers import UserProfileSerializer
 
+from users.authentication import ExpiringTokenAuthentication
+
 from .serializers import SubscriptionSetupSerializer
 from .models import SubscriptionSetup
 
@@ -38,6 +40,7 @@ else:
 class PaymentViewSet(ModelViewSet):
     serializer_class = PaymentSerializer
     permission_classes = (IsAuthenticated,)
+    authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Payment.objects.all()
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
@@ -466,6 +469,7 @@ class PaymentViewSet(ModelViewSet):
 class SubscriptionsViewSet(ModelViewSet):
     serializer_class = SubscriptionSetupSerializer
     permission_classes = (IsAuthenticated,)
+    authentication_classes  = [ExpiringTokenAuthentication]
     queryset = SubscriptionSetup.objects.all()
 
 
@@ -473,18 +477,33 @@ class SubscriptionsViewSet(ModelViewSet):
     def plans(self, request):
         if request.user.type == "Restaurant":
             product_name = "Restaurant Subscription"
-        else:
+        elif request.user.type == "Driver":
             product_name = "Driver Subscription"
+        else:
+            product_name = "All"
 
         products = stripe.Product.list()
-        for product in products:
-            if product['name'] == product_name:
-                product = product
-                break
+        if product_name == "All":
+            plans = dict()
+            for product in products:
+                if product.name == "Driver Subscription":
+                    product = product
+                    break
+            stripe_plans = stripe.Plan.list(product=product['id'], active=True)
+            plans['driver'] = stripe_plans['data']
+            for product in products:
+                if product.name == "Restaurant Subscription":
+                    product = product
+                    break
+            plans['restaurant'] = stripe_plans['data']
 
-        plans = stripe.Plan.list(product=product['id'], active=True)
-        for plan in plans:
-            djstripe.models.Plan.sync_from_stripe_data(plan)
+        else:
+            for product in products:
+                if product['name'] == product_name:
+                    product = product
+                    break
+            plans = stripe.Plan.list(product=product['id'], active=True)
+
         return Response(plans)
 
     @action(detail=False, methods=['patch'], permission_classes=[IsAuthenticated])
@@ -583,3 +602,29 @@ class SubscriptionsViewSet(ModelViewSet):
             'subscription': subscription
         }
         return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['patch'])
+    def update_price(self, request):
+        price = int(Decimal(request.data.get('price', 0)) * 100)
+        price_id = request.data.get('price_id', None)
+
+        if price is None:
+            return Response({'error': 'No new price provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch the Stripe Price object using the Stripe API
+        stripe_price = stripe.Price.retrieve(price_id)
+
+        # Create a new Stripe Price with the new price
+        new_stripe_price = stripe.Price.create(
+            unit_amount=price,
+            currency=stripe_price.currency,
+            recurring=stripe_price.recurring,
+            product=stripe_price.product,
+        )
+
+        # Set the old price to inactive
+        stripe.Price.modify(
+            stripe_price.id,
+            active=False
+        )
+        return Response({'status': 'Price updated'}, status=status.HTTP_200_OK)

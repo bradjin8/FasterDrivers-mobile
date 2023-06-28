@@ -1,6 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authtoken.models import Token
@@ -10,7 +11,6 @@ from rest_framework.permissions import IsAuthenticated
 from fancy_cherry_36842.settings import SECRET_KEY
 
 from .models import User
-from .authentication import ExpiringTokenAuthentication
 from .serializers import ChangePasswordSerializer, CustomAuthTokenSerializer, UserProfileSerializer
 
 from home.permissions import IsPostOrIsAuthenticated
@@ -20,7 +20,7 @@ from home.utility import auth_token, send_password_reset_email
 class UserViewSet(ModelViewSet):
     serializer_class = UserProfileSerializer
     permission_classes = (IsPostOrIsAuthenticated,)
-    authentication_classes  = [ExpiringTokenAuthentication]
+    authentication_classes  = [TokenAuthentication]
     queryset = User.objects.all()
 
     # Create User and return Token + Profile

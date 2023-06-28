@@ -81,7 +81,8 @@ LOCAL_APPS = [
     'reviews',
     'orders',
     'payments',
-    'socials'
+    'socials',
+    'customadmin'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',

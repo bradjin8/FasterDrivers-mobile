@@ -30,4 +30,5 @@ router.register("driver-reviews", DriverReviewViewSet, basename="driver_reviews"
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("admin/", include("customadmin.urls"))
 ]
