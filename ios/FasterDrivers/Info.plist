@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fb-messenger</string>
+		<string>instagram</string>
+		<string>fb</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -22,16 +28,16 @@
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
-    <dict>
-      <key>CFBundleTypeRole</key>
-      <string>Editor</string>
-      <key>CFBundleURLName</key>
-      <string>google-auth</string>
-      <key>CFBundleURLSchemes</key>
-      <array>
-        <string>com.googleusercontent.apps.755672979117-20ntdnl9mmpssm6e50k9tt5sh1lp55go</string>
-      </array>
-    </dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>google-auth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.755672979117-20ntdnl9mmpssm6e50k9tt5sh1lp55go</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -58,8 +64,8 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>FacebookClientToken</key>
-  <string>77f9c8577086a1cea16648e00601d3fd</string>
+	<key>FacebookClientToken</key>
+	<string>77f9c8577086a1cea16648e00601d3fd</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>We need access to your media library to show you relevant results for app.</string>
 	<key>NSCameraUsageDescription</key>

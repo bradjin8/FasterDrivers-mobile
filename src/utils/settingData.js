@@ -18,7 +18,8 @@ export const restaurantSettingData = [
   },
   {
     title: "Invite Friends",
-    icon: Images.InviteFriends
+    icon: Images.InviteFriends,
+    key: "InviteFriends"
   },
   {
     title: "Order Acceptance",
@@ -75,7 +76,8 @@ export const driverSettingData = [
   },
   {
     title: "Invite Friends",
-    icon: Images.InviteFriends
+    icon: Images.InviteFriends,
+    key: "InviteFriends"
   },
   {
     title: "Feedback",
@@ -126,7 +128,8 @@ export const customerSettingData = [
   },
   {
     title: "Invite Friends",
-    icon: Images.InviteFriends
+    icon: Images.InviteFriends,
+    key: "InviteFriends"
   },
   {
     title: "Feedback",

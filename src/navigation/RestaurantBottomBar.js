@@ -6,6 +6,7 @@ import {widthPercentageToDP} from "react-native-responsive-screen";
 import Feather from "react-native-vector-icons/Feather";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import ViewDish from "screens/Restaurant/Menu/ViewDish";
+import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
 import Wallet from "screens/Restaurant/Settings/Wallet";
 import { Text } from "../components/index";
 import { color, scaleVertical, scale } from "utils";
@@ -126,6 +127,7 @@ const SettingTab = () => {
         <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
+        <settingStack.Screen name="InviteFriends" component={InviteFriends} />
       </settingStack.Navigator>
     </>
   )

@@ -32,6 +32,11 @@ import Home from "src/assets/images/home.png"
 import IcApple from "src/assets/images/ic_apple.png"
 import IcFacebook from "src/assets/images/ic_facebook.png"
 import IcGoogle from "src/assets/images/ic_google.png"
+import IcMessage from "src/assets/images/ic_message.png"
+import IcInstagram from "src/assets/images/ic_instagram.png"
+import IcFacebook2 from "src/assets/images/ic_facebook2.png"
+import IcMessager from "src/assets/images/ic_messager.png"
+
 
 export default {
   AppLogo,
@@ -68,4 +73,8 @@ export default {
   IcApple,
   IcFacebook,
   IcGoogle,
+  IcMessage,
+  IcInstagram,
+  IcFacebook2,
+  IcMessager,
 }
