@@ -20,11 +20,13 @@ const CHANGE_PASSWORD_REQUEST_STARTED = "CHANGE_PASSWORD_REQUEST_STARTED"
 const CHANGE_PASSWORD_REQUEST_COMPLETED = "CHANGE_PASSWORD_REQUEST_COMPLETED"
 const LOGOUT_REQUEST_STARTED = "LOGOUT_REQUEST_STARTED"
 const REQUEST_FAILED = "REQUEST_FAILED"
+const REQUEST_COMPLETED = "REQUEST_COMPLETED"
 const FORGOT_PASSWORD_REQUEST_STARTED = "FORGOT_PASSWORD_REQUEST_STARTED"
 const FORGOT_PASSWORD_REQUEST_COMPLETED = "FORGOT_PASSWORD_REQUEST_COMPLETED"
 const LOGIN_WITH_FACEBOOK_REQUEST_STARTED = "LOGIN_WITH_FACEBOOK_REQUEST_STARTED"
 const LOGIN_WITH_GOOGLE_REQUEST_STARTED = "LOGIN_WITH_GOOGLE_REQUEST_STARTED"
 const DELETE_ACCOUNT_REQUEST_STARTED = "DELETE_ACCOUNT_REQUEST_STARTED"
+const SEND_FEEDBACK_REQUEST_STARTED = "SEND_FEEDBACK_REQUEST_STARTED"
 
 const initialState = {
   loading: false,
@@ -82,6 +84,10 @@ export const requestFailed = () => ({
   type: REQUEST_FAILED,
 })
 
+export const requestCompleted = () => ({
+  type: REQUEST_COMPLETED,
+})
+
 export const forgotPasswordRequest = (data) => ({
   type: FORGOT_PASSWORD_REQUEST_STARTED,
   payload: data,
@@ -95,13 +101,23 @@ export const deleteAccountRequest = (data) => ({
   payload: data,
 })
 
+export const sendFeedbackRequest = (data) => ({
+  type: SEND_FEEDBACK_REQUEST_STARTED,
+  payload: data,
+})
+
 //Reducers
 export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST_STARTED:
+    case SIGNUP_REQUEST_STARTED:
     case LOGIN_WITH_FACEBOOK_REQUEST_STARTED:
     case LOGIN_WITH_GOOGLE_REQUEST_STARTED:
+    case UPDATE_ACCOUNT_REQUEST_STARTED:
     case DELETE_ACCOUNT_REQUEST_STARTED:
+    case SEND_FEEDBACK_REQUEST_STARTED:
+    case CHANGE_PASSWORD_REQUEST_STARTED:
+    case FORGOT_PASSWORD_REQUEST_STARTED:
       return {
         ...state,
         loading: true
@@ -113,11 +129,6 @@ export const loginReducer = (state = initialState, action) => {
         accessToken: action.payload.token,
         user: action.payload.user
       }
-    case SIGNUP_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true
-      }
     case SIGNUP_REQUEST_COMPLETED:
       return {
         ...state,
@@ -125,27 +136,15 @@ export const loginReducer = (state = initialState, action) => {
         accessToken: action.payload.token,
         user: action.payload.user
       }
-    case UPDATE_ACCOUNT_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true
-      }
     case UPDATE_ACCOUNT_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
         user: action.payload
       }
-    case CHANGE_PASSWORD_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true,
-      }
     case CHANGE_PASSWORD_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
-      }
+    case FORGOT_PASSWORD_REQUEST_COMPLETED:
+    case REQUEST_COMPLETED:
     case REQUEST_FAILED:
       return {
         ...state,
@@ -157,16 +156,6 @@ export const loginReducer = (state = initialState, action) => {
         ...state,
         user: null,
         accessToken: null
-      }
-    case FORGOT_PASSWORD_REQUEST_STARTED:
-      return {
-        ...state,
-        loading: true
-      }
-    case FORGOT_PASSWORD_REQUEST_COMPLETED:
-      return {
-        ...state,
-        loading: false,
       }
     default:
       return state
@@ -267,6 +256,18 @@ async function deleteAccountAPI(data) {
       Accept: "application/json",
     },
     method: "DELETE",
+  }
+  return XHR(URL, options)
+}
+
+async function sendFeedbackAPI(data) {
+  const URL = `${appConfig.backendServerURL}/admin/feedback/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
   }
   return XHR(URL, options)
 }
@@ -486,6 +487,26 @@ function* deleteAccountAction(data) {
   }
 }
 
+function* sendFeedbackAction(data) {
+  try {
+    const resp = yield call(sendFeedbackAPI, data.payload)
+    yield put(requestCompleted())
+    showMessage({
+      message: "Feedback sent Successfully",
+      type: "success"
+    })
+    goBack()
+  } catch (e) {
+    const {response} = e
+    console.log('send-feedback', response)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(LOGIN_REQUEST_STARTED, loginAction),
   takeLatest(SIGNUP_REQUEST_STARTED, signUpAction),
@@ -495,4 +516,5 @@ export default all([
   takeLatest(LOGIN_WITH_FACEBOOK_REQUEST_STARTED, loginWithFacebookAction),
   takeLatest(LOGIN_WITH_GOOGLE_REQUEST_STARTED, loginWithGoogleAction),
   takeLatest(DELETE_ACCOUNT_REQUEST_STARTED, deleteAccountAction),
+  takeLatest(SEND_FEEDBACK_REQUEST_STARTED, sendFeedbackAction),
 ])
