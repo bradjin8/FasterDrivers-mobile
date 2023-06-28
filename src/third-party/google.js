@@ -1,6 +1,6 @@
 import axios from "axios"
 import Polyline from "@mapbox/polyline"
-import {GOOGLE_MAPS_API_KEY} from "src/config/app"
+import {GOOGLE} from "src/config/app"
 import {GoogleSignin} from "@react-native-google-signin/google-signin"
 
 
@@ -11,7 +11,7 @@ export const getRoute = async (start, end) => {
       params: {
         origin: `${start.latitude},${start.longitude}`,
         destination: `${end.latitude},${end.longitude}`,
-        key: GOOGLE_MAPS_API_KEY
+        key: GOOGLE.MAP_API_KEY,
       }
     })
     const points = Polyline.decode(res.data.routes[0].overview_polyline.points)
@@ -31,7 +31,7 @@ export const getRoute = async (start, end) => {
 
 export const getAddressFromLocation = async (location) => {
   try {
-    const URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE_MAPS_API_KEY}`
+    const URL = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${GOOGLE.MAP_API_KEY}`
     // console.log('get-address-url', URL)
     const res = await axios.get(URL)
     for (let result of res.data.results) {
@@ -79,9 +79,10 @@ export const getAddressFromLocation = async (location) => {
 
 
 GoogleSignin.configure({
-  iosClientId: '755672979117-20ntdnl9mmpssm6e50k9tt5sh1lp55go.apps.googleusercontent.com',
+  iosClientId: GOOGLE.IOS_CLIENT_ID,
   webClient: {
-    id: '755672979117-tjit6ab2k2edrf6caakf80p437dinntv.apps.googleusercontent.com',
+    id: GOOGLE.WEB_CLIENT_ID,
+    secret: GOOGLE.WEB_CLIENT_SECRET,
   },
   scopes: [
     'profile',

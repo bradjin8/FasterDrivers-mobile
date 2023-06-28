@@ -12,18 +12,16 @@ export const appConfig = {
   webAppUrl: 'https://fasterdrivers.vercel.app'
 }
 
-export const GOOGLE_CLIENT_ID =
-  "1058498708613-ka83b2vp2p2gaqhor4u0soko17tv72eu.apps.googleusercontent.com"
-
-export const GOOGLE_CLIENT_ID_IOS =
-  "1058498708613-ka83b2vp2p2gaqhor4u0soko17tv72eu.apps.googleusercontent.com"
-
-export const GOOGLE_API_KEY = "AIzaSyDfNY4fo8l6HPiUFFuPSrCnOz4HjP9S9kA"
+export const GOOGLE = {
+  WEB_CLIENT_ID: '592134203023-94uubclul41i4er7mkadi0266pepi6oa.apps.googleusercontent.com',
+  WEB_CLIENT_SECRET: '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',
+  IOS_CLIENT_ID: '592134203023-r2s6smi9hf7v7l1eebolk97r3fk1ticq.apps.googleusercontent.com',
+  MAP_API_KEY: "AIzaSyCAcAhKPua5L2ewpRU_P6lmvI37lSIg6Hk",
+}
 
 export const STRIPE_PUBLISHABLE_KEY = "pk_test_51N0lDHHuKvl8e8x17JvdYH74CJRg0NL0J7HkA3zCX01uL9hznDEUH8R78GeJjzZ76OC0dzF4RiUaPPB8Uu43zJHC00DPzy6QUK"
 export const STRIPE_MERCHANT_ID = "acct_1N0lDHHuKvl8e8x1"
 
-export const GOOGLE_MAPS_API_KEY = "AIzaSyCAcAhKPua5L2ewpRU_P6lmvI37lSIg6Hk"
 
 export const APPLE = {
   SERVICE_ID: 'com.fasterdrivers.ios.appleauth',
