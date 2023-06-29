@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">FasterDrivers</string>
+    <string name="app_name">Faster Drivers</string>
+    <string name="intent_scheme">fasterdrivers</string>
+    <string name="intent_host">fasterdrivers.vercel.app</string>
 </resources>
