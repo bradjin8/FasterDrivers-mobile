@@ -44,7 +44,7 @@ const Subscription = ({}) => {
       })
   }
 
-  console.log('activeSubscription', activeSubscription, subscriptions)
+  // console.log('activeSubscription', activeSubscription, subscriptions)
 
   const subscribe = () => {
     if (activeSubscription) {
