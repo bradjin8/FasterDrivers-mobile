@@ -19,6 +19,7 @@ import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
 import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import RestaurantProfile from "screens/Restaurant/Settings/RestaurantProfile"
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
+import Subscription from "screens/Restaurant/Settings/Subscription"
 
 import Menu from "screens/Restaurant/Menu"
 import AddNewDish from "screens/Restaurant/Menu/AddNewDish"
@@ -128,6 +129,7 @@ const SettingTab = () => {
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
         <settingStack.Screen name="InviteFriends" component={InviteFriends} />
+        <settingStack.Screen name="Subscription" component={Subscription} />
       </settingStack.Navigator>
     </>
   )

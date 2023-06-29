@@ -16,6 +16,7 @@ import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
 import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
 import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
+import Subscription from "screens/Restaurant/Settings/Subscription";
 import TermCondition from "screens/Restaurant/Settings/TermCondition";
 import {Images} from "src/theme"
 import {color, scale, scaleVertical} from "utils";
@@ -128,6 +129,7 @@ const SettingTab = () => {
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
         <settingStack.Screen name="InviteFriends" component={InviteFriends} />
+        <settingStack.Screen name="Subscription" component={Subscription} />
       </settingStack.Navigator>
     </>
   )

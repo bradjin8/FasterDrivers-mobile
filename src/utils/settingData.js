@@ -1,4 +1,4 @@
-import { Images } from "src/theme"
+import {Images} from "src/theme"
 
 export const restaurantSettingData = [
   {
@@ -14,7 +14,7 @@ export const restaurantSettingData = [
   {
     title: "Change Password",
     icon: Images.ChangePassword,
-    key:"ChangePassword",
+    key: "ChangePassword",
   },
   {
     title: "Invite Friends",
@@ -32,14 +32,19 @@ export const restaurantSettingData = [
     key: "SendFeedback"
   },
   {
+    title: "Subscription",
+    icon: Images.Subscription,
+    key: "Subscription",
+  },
+  {
     title: "My Restaurant",
     icon: Images.MyRestaurant,
-    key:"RestaurantProfile",
+    key: "RestaurantProfile",
   },
   {
     title: "My Account",
     icon: Images.MyRestaurant,
-    key:"AccountInformation",
+    key: "AccountInformation",
   },
   {
     title: "My Wallet",
@@ -72,7 +77,7 @@ export const driverSettingData = [
   {
     title: "Change Password",
     icon: Images.ChangePassword,
-    key:"ChangePassword",
+    key: "ChangePassword",
   },
   {
     title: "Invite Friends",
@@ -92,12 +97,12 @@ export const driverSettingData = [
   {
     title: "Subscription",
     icon: Images.Subscription,
-    key:"RestaurantProfile",
+    key: "Subscription",
   },
   {
     title: "My Account",
     icon: Images.MyRestaurant,
-    key:"AccountInformation",
+    key: "AccountInformation",
   },
   {
     title: "My Wallet",
@@ -119,12 +124,12 @@ export const customerSettingData = [
   {
     title: "My Account",
     icon: Images.MyRestaurant,
-    key:"AccountInformation",
+    key: "AccountInformation",
   },
   {
     title: "Change Password",
     icon: Images.ChangePassword,
-    key:"ChangePassword",
+    key: "ChangePassword",
   },
   {
     title: "Invite Friends",

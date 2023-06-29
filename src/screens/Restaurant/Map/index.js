@@ -24,7 +24,7 @@ const Map = ({navigation, route}) => {
 
   const dispatch = useDispatch()
   const mapView = useRef(null)
-  console.log('restaurant', myOrders)
+  // console.log('restaurant', myOrders)
 
   const fetchNearbyDrivers = () => {
     dispatch(getNearByDriversRequest())
@@ -100,25 +100,25 @@ const Map = ({navigation, route}) => {
         title="Map"
         showBackIcon={true}
       />
-      {resPoint && driverLocs.length > 0 && <MapView
+      {resPoint && <MapView
         ref={mapView}
         style={styles.container}
         initialRegion={{
-          latitude: resPoint.latitude,
-          longitude: resPoint.longitude,
+          latitude: resPoint?.latitude,
+          longitude: resPoint?.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01
         }}
         onMapReady={() => {
-          // mapView.current.fitToCoordinates([resPoint, ...driverLocs], {
-          //   edgePadding: {
-          //     top: 100,
-          //     right: 100,
-          //     bottom: 100,
-          //     left: 100
-          //   },
-          //   animated: true,
-          // })
+          driverLocs.length > 0 && mapView.current.fitToCoordinates([resPoint, ...driverLocs], {
+            edgePadding: {
+              top: 100,
+              right: 100,
+              bottom: 100,
+              left: 100
+            },
+            animated: true,
+          })
         }}
       >
         <Marker

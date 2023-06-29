@@ -62,6 +62,9 @@ export const Margin = StyleSheet.create({
   v10: {
     marginVertical: scaleVertical(10),
   },
+  v20: {
+    marginVertical: scaleVertical(20),
+  },
   h5: {
     marginHorizontal: scale(5)
   },
@@ -73,6 +76,9 @@ export const Margin = StyleSheet.create({
   },
   b5: {
     marginBottom: scaleVertical(5)
+  },
+  t30: {
+    marginTop: scaleVertical(30)
   },
   t10: {
     marginTop: scaleVertical(10)
@@ -91,6 +97,9 @@ export const Padding = StyleSheet.create({
   },
   v10: {
     paddingVertical: scaleVertical(10),
+  },
+  v20: {
+    paddingVertical: scaleVertical(20),
   },
   h5: {
     paddingHorizontal: scale(5)

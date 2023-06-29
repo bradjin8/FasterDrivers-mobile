@@ -51,7 +51,7 @@ const Settings = ({}) => {
         title="Settings"
         showBackIcon={true}
       />
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} contentContainerStyle={{paddingVertical: 10}}>
         {restaurantSettingData.map((setting, index) => {
           return (
             <Pressable onPress={() => redirectTo(setting.key)} key={index.toString()}>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white
   },
-  container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
+  container: {backgroundColor: color.white, paddingHorizontal: scaleVertical(25), marginVertical: 5,},
   listContain: {
     flexDirection: 'row',
     paddingVertical: scaleVertical(16),

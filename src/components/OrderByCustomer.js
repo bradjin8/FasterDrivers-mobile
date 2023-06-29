@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     marginVertical: scaleVertical(5),
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 3,
     },
     shadowOpacity: 0.7,
     shadowRadius: 5,
@@ -179,7 +179,6 @@ const styles = StyleSheet.create({
   item: {
     marginVertical: scale(10),
     width: widthPercentageToDP(100),
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
     backgroundColor: color.white,
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -272,6 +272,17 @@ async function sendFeedbackAPI(data) {
   return XHR(URL, options)
 }
 
+export async function fetchSubscriptionsAPI () {
+  const URL = `${appConfig.backendServerURL}/subscriptions/plans/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 function* loginAction(data) {
   try {
     const resp = yield call(loginAPI, data.payload)
