@@ -573,6 +573,7 @@ function* getPaymentsAction() {
     }
   } catch (e) {
     const {response} = e
+    console.log('get-payments', response.data)
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",

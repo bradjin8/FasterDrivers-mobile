@@ -12,8 +12,10 @@ import AccountInformation from "screens/Driver/Settings/AccountInformation";
 import CarDetails from "screens/Driver/Settings/CarDetails";
 
 import Wallet from "screens/Driver/Wallet"
+import AddCard from "screens/Restaurant/Settings/AddCard";
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
 import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
+import Payment from "screens/Restaurant/Settings/Payment";
 import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
 import Subscription from "screens/Restaurant/Settings/Subscription";
@@ -47,10 +49,10 @@ const DriverBottomBar = props => {
           tabBarLabel: ({focused, color, size}) => (
             <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Home</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={Images.Home}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
               resizeMode={'contain'}
             />
           ),
@@ -64,27 +66,27 @@ const DriverBottomBar = props => {
           tabBarLabel: ({focused, color, size}) => (
             <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">History</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={Images.History}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
               resizeMode={'contain'}
             />
           ),
           header: () => null
         }}
       />
-     <Tab.Screen
+      <Tab.Screen
         name="Wallet"
         component={WalletTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
             <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Wallet</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={Images.Wallet}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
               resizeMode={'contain'}
             />
           ),
@@ -98,10 +100,10 @@ const DriverBottomBar = props => {
           tabBarLabel: ({focused, color, size}) => (
             <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Settings</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={Images.Settings}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
               resizeMode={'contain'}
             />
           ),
@@ -118,18 +120,20 @@ const SettingTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="Settings"
       >
-        <settingStack.Screen name="Settings" component={Settings} />
-        <settingStack.Screen name="ChangePassword" component={ChangePassword} />
-        <settingStack.Screen name="AccountInformation" component={AccountInformation} />
-        <settingStack.Screen name="CarDetails" component={CarDetails} />
-        <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-        <settingStack.Screen name="TermCondition" component={TermCondition} />
-        <settingStack.Screen name="SendFeedback" component={SendFeedback} />
-        <settingStack.Screen name="InviteFriends" component={InviteFriends} />
-        <settingStack.Screen name="Subscription" component={Subscription} />
+        <settingStack.Screen name="Settings" component={Settings}/>
+        <settingStack.Screen name="ChangePassword" component={ChangePassword}/>
+        <settingStack.Screen name="AccountInformation" component={AccountInformation}/>
+        <settingStack.Screen name="CarDetails" component={CarDetails}/>
+        <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy}/>
+        <settingStack.Screen name="TermCondition" component={TermCondition}/>
+        <settingStack.Screen name="SendFeedback" component={SendFeedback}/>
+        <settingStack.Screen name="InviteFriends" component={InviteFriends}/>
+        <settingStack.Screen name="Subscription" component={Subscription}/>
+        <settingStack.Screen name="Payment" component={Payment}/>
+        <settingStack.Screen name="AddCard" component={AddCard}/>
       </settingStack.Navigator>
     </>
   )
@@ -139,10 +143,10 @@ const HomeTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="Home"
       >
-        <settingStack.Screen name="Home" component={Home} />
+        <settingStack.Screen name="Home" component={Home}/>
       </settingStack.Navigator>
     </>
   )
@@ -152,10 +156,10 @@ const HistoryTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="History"
       >
-        <settingStack.Screen name="History" component={History} />
+        <settingStack.Screen name="History" component={History}/>
       </settingStack.Navigator>
     </>
   )
@@ -165,10 +169,10 @@ const WalletTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="Wallet"
       >
-        <settingStack.Screen name="Wallet" component={Wallet} />
+        <settingStack.Screen name="Wallet" component={Wallet}/>
       </settingStack.Navigator>
     </>
   )

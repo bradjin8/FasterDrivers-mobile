@@ -1,23 +1,23 @@
 import BaseScreen from "components/BaseScreen";
-import OrDivider from "components/OrDivider";
+import ConfirmModal from "components/ConfirmModal";
 import {goBack} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
-import {Pressable, StyleSheet, View, Image, Share, Linking, ActivityIndicator} from "react-native";
+import {ActivityIndicator, Image, Pressable, StyleSheet, View} from "react-native";
 import {showMessage} from "react-native-flash-message";
-import {widthPercentageToDP} from "react-native-responsive-screen";
 import {useDispatch, useSelector} from "react-redux";
+import {Button, Text} from "src/components/index";
+import SimpleHeader from "src/components/SimpleHeader";
+import {fetchSubscriptionsAPI, unsubscribeRequest} from "src/screenRedux/loginRedux";
+import Images from "src/theme/Images";
+import {Border, Flex, Margin, Padding} from "src/theme/Styles";
 import {color, scale, scaleVertical} from "utils";
-import {Button, Text} from "../../../components/index";
-import SimpleHeader from "../../../components/SimpleHeader";
-import {appConfig} from "../../../config/app";
-import {fetchSubscriptionsAPI} from "../../../screenRedux/loginRedux";
-import Images from "../../../theme/Images";
-import {Border, Flex, Margin, Padding} from "../../../theme/Styles";
 
-const Subscription = ({}) => {
+const Subscription = ({navigation}) => {
   const {user, accessToken} = useSelector(state => state.loginReducer)
+  const dispatch = useDispatch()
 
   const [loading, setLoading] = useState(false)
+  const [openConfirmModal, setOpenConfirmModal] = useState(false)
   const [subscriptions, setSubscriptions] = useState([])
   const [selectedSubscriptionIndex, setSelectedSubscriptionIndex] = useState(-1)
 
@@ -46,24 +46,33 @@ const Subscription = ({}) => {
 
   // console.log('activeSubscription', activeSubscription, subscriptions)
 
+  const tryUnsubscribe = () => {
+    if (activeSubscription !== null && isSubscribedPlan) {
+      dispatch(unsubscribeRequest())
+    }
+    setOpenConfirmModal(false)
+  }
   const subscribe = () => {
     if (activeSubscription) {
       if (isSubscribedPlan) {
-        showMessage({
-          message: 'Implement unsubscribe here...',
-          type: 'info',
-        })
+        setOpenConfirmModal(true)
+        // showMessage({
+        //   message: 'Implement unsubscribe here...',
+        //   type: 'info',
+        // })
       } else {
-        showMessage({
-          message: 'Implement payment selection screen here...',
-          type: 'info',
-        })
+        // showMessage({
+        //   message: 'Implement payment selection screen here...',
+        //   type: 'info',
+        // })
+        navigation.navigate('Payment', {subscription: activeSubscription})
       }
     } else {
-      showMessage({
-        message: 'Please select a subscription plan',
-        type: 'danger',
-      })
+
+      // showMessage({
+      //   message: 'Please select a subscription plan',
+      //   type: 'danger',
+      // })
     }
   }
 
@@ -127,7 +136,15 @@ const Subscription = ({}) => {
           {userSubscription === null && <Button isSecondary={true} text={'Continue Free Trial'} fontSize={18} style={[Border.round10, Margin.t10, {width: '100%'}]} onPress={continueFreeTrial}/>}
         </View>
       </View>
-
+      <ConfirmModal
+        visible={openConfirmModal}
+        title={'Are You Sure?'}
+        message={'Are you sure you want to unsubscribe?'}
+        onOk={tryUnsubscribe}
+        onCancel={() => setOpenConfirmModal(false)}
+        okCaption={'Cancel Subscription'}
+        cancelCaption={'Don\'t Cancel'}
+      />
     </BaseScreen>
   )
 }

@@ -27,6 +27,10 @@ const LOGIN_WITH_FACEBOOK_REQUEST_STARTED = "LOGIN_WITH_FACEBOOK_REQUEST_STARTED
 const LOGIN_WITH_GOOGLE_REQUEST_STARTED = "LOGIN_WITH_GOOGLE_REQUEST_STARTED"
 const DELETE_ACCOUNT_REQUEST_STARTED = "DELETE_ACCOUNT_REQUEST_STARTED"
 const SEND_FEEDBACK_REQUEST_STARTED = "SEND_FEEDBACK_REQUEST_STARTED"
+const SUBSCRIBE_REQUEST_STARTED = "SUBSCRIBE_REQUEST_STARTED"
+const CHANGE_SUBSCRIPTION_REQUEST_STARTED = "CHANGE_SUBSCRIPTION_REQUEST_STARTED"
+const UNSUBSCRIBE_REQUEST_STARTED = "UNSUBSCRIBE_REQUEST_STARTED"
+const UNSUBSCRIBE_REQUEST_COMPLETED = "UNSUBSCRIBE_REQUEST_COMPLETED"
 
 const initialState = {
   loading: false,
@@ -106,6 +110,25 @@ export const sendFeedbackRequest = (data) => ({
   payload: data,
 })
 
+export const subscribeRequest = (data) => ({
+  type: SUBSCRIBE_REQUEST_STARTED,
+  payload: data,
+})
+
+export const changeSubscriptionRequest = (data) => ({
+  type: CHANGE_SUBSCRIPTION_REQUEST_STARTED,
+  payload: data,
+})
+
+export const unsubscribeRequest = (data) => ({
+  type: UNSUBSCRIBE_REQUEST_STARTED,
+  payload: data,
+})
+
+export const unsubscribeRequestCompleted = () => ({
+  type: UNSUBSCRIBE_REQUEST_COMPLETED,
+})
+
 //Reducers
 export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -118,6 +141,9 @@ export const loginReducer = (state = initialState, action) => {
     case SEND_FEEDBACK_REQUEST_STARTED:
     case CHANGE_PASSWORD_REQUEST_STARTED:
     case FORGOT_PASSWORD_REQUEST_STARTED:
+    case SUBSCRIBE_REQUEST_STARTED:
+    case UNSUBSCRIBE_REQUEST_STARTED:
+    case CHANGE_SUBSCRIPTION_REQUEST_STARTED:
       return {
         ...state,
         loading: true
@@ -149,6 +175,18 @@ export const loginReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
+      }
+    case UNSUBSCRIBE_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        user: {
+          ...state.user,
+          [state.user.type.toLowerCase()]: {
+            ...state.user[state.user.type.toLowerCase()],
+            subscription: null
+          }
+        }
       }
     case LOGOUT_REQUEST_STARTED:
       AsyncStorage.clear()
@@ -272,13 +310,48 @@ async function sendFeedbackAPI(data) {
   return XHR(URL, options)
 }
 
-export async function fetchSubscriptionsAPI () {
+export async function fetchSubscriptionsAPI() {
   const URL = `${appConfig.backendServerURL}/subscriptions/plans/`
   const options = {
     headers: {
       Accept: "application/json",
     },
     method: "GET",
+  }
+  return XHR(URL, options)
+}
+
+export async function subscribeAPI(data) {
+  const URL = `${appConfig.backendServerURL}/subscriptions/subscribe/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
+export async function unsubscribeAPI() {
+  const URL = `${appConfig.backendServerURL}/subscriptions/unsubscribe/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET"
+  }
+  return XHR(URL, options)
+}
+
+export async function changeSubscriptionAPI(data) {
+  const URL = `${appConfig.backendServerURL}/subscriptions/change_subscription/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "PATCH",
+    data: data
   }
   return XHR(URL, options)
 }
@@ -518,6 +591,66 @@ function* sendFeedbackAction(data) {
   }
 }
 
+function* subscribeAction(data) {
+  try {
+    const resp = yield call(subscribeAPI, data.payload)
+    yield put(requestCompleted())
+    showMessage({
+      message: "Subscribed Successfully",
+      type: "success"
+    })
+    goBack()
+  } catch (e) {
+    const {response} = e
+    console.log('subscribe', response)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* changeSubscriptionAction(data) {
+  try {
+    const resp = yield call(changeSubscriptionAPI, data.payload)
+    yield put(requestCompleted())
+    showMessage({
+      message: "Subscription Changed Successfully",
+      type: "success"
+    })
+    goBack()
+  } catch (e) {
+    const {response} = e
+    console.log('change-subscription', response)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* unsubscribeAction() {
+  try {
+    const resp = yield call(unsubscribeAPI)
+    yield put(unsubscribeRequestCompleted())
+    showMessage({
+      message: "Unsubscribed Successfully",
+      type: "success"
+    })
+    goBack()
+  } catch (e) {
+    const {response} = e
+    console.log('unsubscribe', response)
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(LOGIN_REQUEST_STARTED, loginAction),
   takeLatest(SIGNUP_REQUEST_STARTED, signUpAction),
@@ -528,4 +661,7 @@ export default all([
   takeLatest(LOGIN_WITH_GOOGLE_REQUEST_STARTED, loginWithGoogleAction),
   takeLatest(DELETE_ACCOUNT_REQUEST_STARTED, deleteAccountAction),
   takeLatest(SEND_FEEDBACK_REQUEST_STARTED, sendFeedbackAction),
+  takeLatest(SUBSCRIBE_REQUEST_STARTED, subscribeAction),
+  takeLatest(CHANGE_SUBSCRIPTION_REQUEST_STARTED, changeSubscriptionAction),
+  takeLatest(UNSUBSCRIBE_REQUEST_STARTED, unsubscribeAction),
 ])
