@@ -17,11 +17,13 @@ import {Border, Flex, Margin, Padding} from "../../../theme/Styles";
 const Subscription = ({}) => {
   const {user, accessToken} = useSelector(state => state.loginReducer)
 
-  const userSubscription = user[user.type.toLowerCase()]?.subscription
   const [loading, setLoading] = useState(false)
   const [subscriptions, setSubscriptions] = useState([])
   const [selectedSubscriptionIndex, setSelectedSubscriptionIndex] = useState(-1)
+
+  const userSubscription = user[user.type.toLowerCase()]?.subscription // || subscriptions[0]
   const activeSubscription = selectedSubscriptionIndex > -1 ? subscriptions[selectedSubscriptionIndex] : null
+  const isSubscribedPlan = activeSubscription && activeSubscription?.id === userSubscription?.id
   const fetchSubscription = () => {
     setLoading(true)
     fetchSubscriptionsAPI()
@@ -46,10 +48,17 @@ const Subscription = ({}) => {
 
   const subscribe = () => {
     if (activeSubscription) {
-      showMessage({
-        message: 'Implement payment selection screen here...',
-        type: 'info',
-      })
+      if (isSubscribedPlan) {
+        showMessage({
+          message: 'Implement unsubscribe here...',
+          type: 'info',
+        })
+      } else {
+        showMessage({
+          message: 'Implement payment selection screen here...',
+          type: 'info',
+        })
+      }
     } else {
       showMessage({
         message: 'Please select a subscription plan',
@@ -109,8 +118,13 @@ const Subscription = ({}) => {
         </Pressable>)}
 
         <View style={[styles.buttons, Margin.t30]}>
-          <Button text={'Subscribe'} fontSize={18} style={[Border.round10]} onPress={subscribe}/>
-          <Button isSecondary={true} text={'Continue Free Trial'} fontSize={18} style={[Border.round10, Margin.t10, {width: '100%'}]} onPress={continueFreeTrial}/>
+          {activeSubscription && <Button
+            text={isSubscribedPlan ? 'Unsubscribe' : 'Subscribe'}
+            fontSize={18}
+            style={{...Border.round10, backgroundColor: isSubscribedPlan ? color.error : color.primary}}
+            onPress={subscribe}
+          />}
+          {userSubscription === null && <Button isSecondary={true} text={'Continue Free Trial'} fontSize={18} style={[Border.round10, Margin.t10, {width: '100%'}]} onPress={continueFreeTrial}/>}
         </View>
       </View>
 
@@ -131,8 +145,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    width: scale(120),
-    height: scaleVertical(80)
+    width: scale(200),
+    height: scaleVertical(100),
+    marginBottom: scaleVertical(20),
   },
   card: {
     backgroundColor: 'white',
