@@ -2,30 +2,55 @@ import SimpleHeader from "components/SimpleHeader";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
 import {FlatList, Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
 import {useDispatch, useSelector} from "react-redux";
 import {color, scale, scaleVertical} from "utils";
 import {truncateString} from "utils/utils";
 import {Button, CustomTextInput, Text} from "../../../components/index";
-import {getDishesRequest} from "../../../screenRedux/restaurantRedux";
+import {ORDER_STATUS} from "../../../consts/orders";
+import {getDishesRequest, viewMyOrdersRequest} from "../../../screenRedux/restaurantRedux";
 
 const Menu = ({navigation, route}) => {
   const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState('');
   const {loading, dishes} = useSelector(state => state.restaurantReducer)
-  const {accessToken} = useSelector(state => state.loginReducer)
+  const {accessToken, user: {restaurant: restaurant}} = useSelector(state => state.loginReducer)
 
   const fetchDishes = () => {
     dispatch(getDishesRequest())
   }
 
   useEffect(() => {
+    const checkStatus = () => {
+      if (restaurant?.name) {
+        if (restaurant.subscription) {
+          fetchDishes()
+        } else {
+          showMessage({
+            message: 'You need to subscribe to view this page',
+            type: 'info',
+            icon: 'info',
+          })
+          navigation.navigate('Settings', {screen: 'Subscription'})
+        }
+      } else {
+        showMessage({
+          message: 'Please configure your restaurant details first',
+          type: 'info',
+          icon: 'info',
+        })
+        navigation.navigate('Settings', {screen: 'RestaurantProfile'})
+      }
+    }
+
     const unsubscribe = navigation.addListener('focus', () => {
-      fetchDishes()
+      checkStatus()
     })
-    fetchDishes()
-    return unsubscribe
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
   const filterDishes = () => {
