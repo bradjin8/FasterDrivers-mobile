@@ -322,6 +322,7 @@ class PaymentViewSet(ModelViewSet):
             djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
             profile.stripe_account = djstripe_customer
             profile.stripe_account.save()
+            profile.save()
             customer_id = djstripe_customer.id
         payment_method_id = request.data.get('payment_method', None)
         if payment_method_id is None:
@@ -339,6 +340,12 @@ class PaymentViewSet(ModelViewSet):
                 },
                 "name": billing_details["name"],
             }
+        )
+        stripe.Customer.modify(
+            customer_id,
+            invoice_settings={
+                'default_payment_method': payment_method['id'],
+            },
         )
         djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
         payment_methods = stripe.PaymentMethod.list(customer=customer_id, type='card')
@@ -575,12 +582,12 @@ class SubscriptionsViewSet(ModelViewSet):
         payment_method = request.data.get('payment_method', None)
         plan_id = request.data.get('plan_id', None)
 
-        customers_data = stripe.Customer.list().data
-        customer = None
-        for customer_data in customers_data:
-            if customer_data.email == email:
-                customer = customer_data
-                break
+        # customers_data = stripe.Customer.list().data
+        customer = profile.stripe_account
+        # for customer_data in customers_data:
+        #     if customer_data.email == email:
+        #         customer = customer_data
+        #         break
         try:
             if payment_method is not None:
                     payment_method = stripe.PaymentMethod.retrieve(payment_method)
@@ -597,7 +604,6 @@ class SubscriptionsViewSet(ModelViewSet):
             else:
                 return Response({'detail': 'Missing Payment Method'}, status=status.HTTP_400_BAD_REQUEST)
 
-            djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
             if request.data.get('trial', None) == "True" or request.data.get('trial', None) == "true":
                 subscription = stripe.Subscription.create(
                     customer=customer.id,
@@ -618,19 +624,19 @@ class SubscriptionsViewSet(ModelViewSet):
                         },
                     ],
                     expand=['latest_invoice.payment_intent'],
-                    )
+                )
             djstripe_subscription = djstripe.models.Subscription.sync_from_stripe_data(subscription)
         except stripe.error.CardError as e:
             return Response({'detail': 'Card Declined'})
 
         # associate customer and subscription with the user
-        profile.stripe_account = djstripe_customer
+        # profile.stripe_account = djstripe_customer
         profile.subscription = djstripe_subscription
         profile.save()
 
         # return information back to the front end
         data = {
-            'customer': customer,
+            # 'customer': customer,
             'subscription': subscription
         }
         return Response(data, status=status.HTTP_201_CREATED)
