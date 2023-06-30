@@ -10,7 +10,7 @@ def auth_token(user):
 def send_password_reset_email(user):
     email = user.email
     token, created = Token.objects.get_or_create(user=user)
-    link = "https://fancy_cherry_36842.botics.co/reset-password?token={}".format(token)
+    link = "https://fasterdrivers.vercel.app/reset-password?token={}".format(token)
     email_body = """\
             <html>
             <head></head>
