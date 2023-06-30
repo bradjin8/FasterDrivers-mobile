@@ -2,4 +2,6 @@
     <string name="app_name">Faster Drivers</string>
     <string name="intent_scheme">fasterdrivers</string>
     <string name="intent_host">fasterdrivers.vercel.app</string>
+    <string name="facebook_app_id">1211726189503333</string>
+    <string name="facebook_client_token">77f9c8577086a1cea16648e00601d3fd</string>
 </resources>

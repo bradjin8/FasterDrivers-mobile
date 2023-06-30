@@ -1,3 +1,4 @@
+import 'react-native-get-random-values'
 import {Platform} from "react-native";
 import {v4 as uuid} from "uuid"
 import {

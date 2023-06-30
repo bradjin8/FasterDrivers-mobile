@@ -75,7 +75,7 @@ const InviteFriends = ({}) => {
       <View style={styles.container}>
         <View style={[Margin.v10]}>
           <View style={styles.codeContainer}>
-            <Text variant={'strong'}>
+            <Text variant={'strong'} style={{flex: 1}} numberOfLines={1}>
               {inviteLink}
             </Text>
             <Button style={styles.copyButton} text={'Copy Link'} fontSize={16}/>
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 10,
     position: "relative",
-    height: scaleVertical(70)
   },
   copyButton: {
     position: "absolute",
@@ -127,7 +126,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     paddingHorizontal: 10,
-    height: scaleVertical(70),
     borderRadius: 0,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,

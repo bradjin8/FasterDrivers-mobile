@@ -80,6 +80,7 @@ export const getAddressFromLocation = async (location) => {
 
 GoogleSignin.configure({
   iosClientId: GOOGLE.IOS_CLIENT_ID,
+  webClientId: GOOGLE.WEB_CLIENT_ID,
   webClient: {
     id: GOOGLE.WEB_CLIENT_ID,
     secret: GOOGLE.WEB_CLIENT_SECRET,
@@ -97,6 +98,6 @@ export const authorizeWithGoogle = async () => {
   await GoogleSignin.hasPlayServices()
   await GoogleSignin.signIn()
   const tokens = await GoogleSignin.getTokens()
-  // console.log('tokens', tokens)
+  console.log('tokens', tokens)
   return tokens.accessToken
 }

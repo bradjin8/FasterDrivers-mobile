@@ -31,6 +31,7 @@ const SUBSCRIBE_REQUEST_STARTED = "SUBSCRIBE_REQUEST_STARTED"
 const CHANGE_SUBSCRIPTION_REQUEST_STARTED = "CHANGE_SUBSCRIPTION_REQUEST_STARTED"
 const UNSUBSCRIBE_REQUEST_STARTED = "UNSUBSCRIBE_REQUEST_STARTED"
 const UNSUBSCRIBE_REQUEST_COMPLETED = "UNSUBSCRIBE_REQUEST_COMPLETED"
+const SUBSCRIPTION_UPDATED = "SUBSCRIPTION_UPDATED"
 
 const initialState = {
   loading: false,
@@ -120,6 +121,11 @@ export const changeSubscriptionRequest = (data) => ({
   payload: data,
 })
 
+export const subscriptionUpdated = (data) => ({
+  type: SUBSCRIPTION_UPDATED,
+  payload: data,
+})
+
 export const unsubscribeRequest = (data) => ({
   type: UNSUBSCRIBE_REQUEST_STARTED,
   payload: data,
@@ -185,6 +191,18 @@ export const loginReducer = (state = initialState, action) => {
           [state.user.type.toLowerCase()]: {
             ...state.user[state.user.type.toLowerCase()],
             subscription: null
+          }
+        }
+      }
+    case SUBSCRIPTION_UPDATED:
+      return {
+        ...state,
+        loading: false,
+        user: {
+          ...state.user,
+          [state.user.type.toLowerCase()]: {
+            ...state.user[state.user.type.toLowerCase()],
+            subscription: action.payload
           }
         }
       }
