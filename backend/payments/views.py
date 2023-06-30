@@ -598,15 +598,27 @@ class SubscriptionsViewSet(ModelViewSet):
                 return Response({'detail': 'Missing Payment Method'}, status=status.HTTP_400_BAD_REQUEST)
 
             djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
-            subscription = stripe.Subscription.create(
-                customer=customer.id,
-                items=[
-                    {
-                        'plan': plan_id,
-                    },
-                ],
-                expand=['latest_invoice.payment_intent'],
-                )
+            if request.data.get('trial', None) == "True" or request.data.get('trial', None) == "true":
+                subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    items=[
+                        {
+                            'plan': plan_id,
+                        },
+                    ],
+                    expand=['latest_invoice.payment_intent'],
+                    trial_period_days=30
+                    )
+            else:
+                subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    items=[
+                        {
+                            'plan': plan_id,
+                        },
+                    ],
+                    expand=['latest_invoice.payment_intent'],
+                    )
             djstripe_subscription = djstripe.models.Subscription.sync_from_stripe_data(subscription)
         except stripe.error.CardError as e:
             return Response({'detail': 'Card Declined'})
