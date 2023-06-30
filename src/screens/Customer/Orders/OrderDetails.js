@@ -4,20 +4,18 @@ import OrderStatusIndicator from "components/OrderStatusIndicator";
 import RateModal from "components/RateModal";
 import {goBack, navigate} from "navigation/NavigationService";
 import React, {useEffect, useState} from "react";
-import {Image, Linking, Pressable, ScrollView, StyleSheet, TextInput, View} from "react-native";
-import {showMessage} from "react-native-flash-message";
+import {Image, Pressable, StyleSheet, View} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import StarRating from "react-native-star-rating-new";
 import Icon from "react-native-vector-icons/dist/Feather";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {useDispatch, useSelector} from "react-redux";
 import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenWidth} from "utils";
 import {truncateString} from "utils/utils";
-import {ActivityIndicators, Button, Text} from "../../../components/index";
-import {ORDER_REVIEW_MODE, ORDER_STATUS} from "../../../consts/orders";
-import {getDishById} from "../../../screenRedux/customerRedux";
-import {Flex, Margin, Padding} from "../../../theme/Styles";
+import {ActivityIndicators, Button, Text} from "src/components/index";
+import {ORDER_REVIEW_MODE, ORDER_STATUS} from "src/consts/orders";
+import {getDishById} from "src/screenRedux/customerRedux";
+import {Flex, Margin} from "src/theme/Styles";
 
 const OrderDetails = ({route}) => {
   const dispatch = useDispatch();
@@ -153,6 +151,7 @@ const OrderDetails = ({route}) => {
               onPress={() => {
                 navigate('Payment', {order})
               }}
+              fontSize={20}
               text="Pay Now"
               style={{marginHorizontal: scaleVertical(25), marginVertical: scaleVertical(10)}}
             />

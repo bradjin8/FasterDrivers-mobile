@@ -1,16 +1,14 @@
 import PaymentCard from "components/PaymentCard";
 import {navigate} from "navigation/NavigationService";
 import React, {useEffect} from "react";
-import {Alert, Image, Pressable, ScrollView, StyleSheet, View} from "react-native";
+import {Alert, ScrollView, StyleSheet, View} from "react-native";
 import {widthPercentageToDP} from "react-native-responsive-screen";
-import FontAwesomeIcons from 'react-native-vector-icons/dist/FontAwesome';
 import {useDispatch, useSelector} from "react-redux";
-import {color, scale, scaleVertical} from "utils";
-import {Button, Text} from "../../../components/index";
-import SimpleHeader from "../../../components/SimpleHeader";
-import {deletePaymentRequest, getPaymentsRequest, payOrderRequest} from "../../../screenRedux/customerRedux";
-import {Images} from "../../../theme";
-import {Flex} from "../../../theme/Styles";
+import {Button, Text} from "src/components/index";
+import SimpleHeader from "src/components/SimpleHeader";
+import {deletePaymentRequest, getPaymentsRequest, payOrderRequest} from "src/screenRedux/customerRedux";
+import {Flex, Margin} from "src/theme/Styles";
+import {color, scaleVertical} from "utils";
 
 const Payment = ({route}) => {
   const dispatch = useDispatch()
@@ -61,15 +59,15 @@ const Payment = ({route}) => {
   return (
     <View style={styles.mainWrapper}>
       <SimpleHeader
-        title="Payment"
+        title={order !== null ? "Payment" : "Wallet"}
         showBackIcon={true}
       />
       <View style={styles.container}>
         <ScrollView>
-          <View style={styles.pricingView}>
+          {order && <View style={styles.pricingView}>
             <Text variant="strong" color="black" fontSize={14} fontWeight="400">Total</Text>
             <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
-          </View>
+          </View>}
           <View style={styles.innerContain}>
             {payments?.map((payment, index) => <PaymentCard payment={payment} key={index} onPress={() => setPaymentId(payment.id)} active={paymentId === payment.id}/>)}
             <Button
@@ -84,9 +82,9 @@ const Payment = ({route}) => {
             />
           </View>
         </ScrollView>
-        {paymentId && <View style={[Flex.row, Flex.justifyBetween]}>
-          <Button loading={loading} text="Remove" fontSize={18} fontWeight={'600'} mt={20} onPress={removePaymentMethod} width={widthPercentageToDP(40)} style={{backgroundColor: 'red'}}/>
-          <Button loading={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay} width={widthPercentageToDP(40)}/>
+        {paymentId && <View style={[Margin.t10]}>
+          <Button loading={loading} text="Remove" fontSize={18} fontWeight={'600'} onPress={removePaymentMethod} style={{backgroundColor: 'red'}}/>
+          {order && <Button loading={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay}/>}
         </View>}
       </View>
     </View>

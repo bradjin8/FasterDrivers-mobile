@@ -49,7 +49,7 @@ export const restaurantSettingData = [
   {
     title: "My Wallet",
     icon: Images.OrderAcceptance,
-    key: "Wallet"
+    key: "Payment"
   },
   {
     title: "Delete Account",
@@ -106,7 +106,8 @@ export const driverSettingData = [
   },
   {
     title: "My Wallet",
-    icon: Images.OrderAcceptance
+    icon: Images.OrderAcceptance,
+    key: "Payment"
   },
   {
     title: "Delete Account",
@@ -144,7 +145,7 @@ export const customerSettingData = [
   {
     title: "My Wallet",
     icon: Images.OrderAcceptance,
-    key: "Wallet "
+    key: "Wallet"
   },
   {
     title: "Privacy Policy",

@@ -7,7 +7,7 @@ import {showMessage} from "react-native-flash-message";
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Text} from "src/components/index";
 import SimpleHeader from "src/components/SimpleHeader";
-import {fetchSubscriptionsAPI, unsubscribeRequest} from "src/screenRedux/loginRedux";
+import {fetchProfileRequest, fetchSubscriptionsAPI, loginReducer, unsubscribeRequest} from "src/screenRedux/loginRedux";
 import Images from "src/theme/Images";
 import {Border, Flex, Margin, Padding} from "src/theme/Styles";
 import {color, scale, scaleVertical} from "utils";
@@ -23,7 +23,7 @@ const Subscription = ({navigation}) => {
 
   const userSubscription = user[user.type.toLowerCase()]?.subscription // || subscriptions[0]
   const activeSubscription = selectedSubscriptionIndex > -1 ? subscriptions[selectedSubscriptionIndex] : null
-  const isSubscribedPlan = activeSubscription && activeSubscription?.id === userSubscription?.id
+  const isSubscribed = userSubscription?.status === 'active' || false
   const fetchSubscription = () => {
     setLoading(true)
     fetchSubscriptionsAPI()
@@ -44,17 +44,18 @@ const Subscription = ({navigation}) => {
       })
   }
 
-  // console.log('activeSubscription', activeSubscription, subscriptions)
+  console.log('activeSubscription', userSubscription)
+  console.log('token', accessToken, isSubscribed)
 
   const tryUnsubscribe = () => {
-    if (activeSubscription !== null && isSubscribedPlan) {
+    if (activeSubscription !== null && isSubscribed) {
       dispatch(unsubscribeRequest())
     }
     setOpenConfirmModal(false)
   }
   const subscribe = () => {
     if (activeSubscription) {
-      if (isSubscribedPlan) {
+      if (isSubscribed) {
         setOpenConfirmModal(true)
         // showMessage({
         //   message: 'Implement unsubscribe here...',
@@ -82,6 +83,7 @@ const Subscription = ({navigation}) => {
 
   useEffect(() => {
     fetchSubscription()
+    dispatch(fetchProfileRequest())
   }, [])
 
   useEffect(() => {
@@ -93,6 +95,7 @@ const Subscription = ({navigation}) => {
       }
     }
   }, [subscriptions])
+
 
   return (
     <BaseScreen style={styles.mainWrapper}>
@@ -128,9 +131,9 @@ const Subscription = ({navigation}) => {
 
         <View style={[styles.buttons, Margin.t30]}>
           {activeSubscription && <Button
-            text={isSubscribedPlan ? 'Unsubscribe' : 'Subscribe'}
+            text={isSubscribed ? 'Unsubscribe' : 'Subscribe'}
             fontSize={18}
-            style={{...Border.round10, backgroundColor: isSubscribedPlan ? color.error : color.primary}}
+            style={{...Border.round10, backgroundColor: isSubscribed ? color.error : color.primary}}
             onPress={subscribe}
           />}
           {userSubscription === null && <Button isSecondary={true} text={'Continue Free Trial'} fontSize={18} style={[Border.round10, Margin.t10, {width: '100%'}]} onPress={continueFreeTrial}/>}

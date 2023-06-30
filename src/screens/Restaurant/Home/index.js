@@ -1,6 +1,8 @@
 import StatusFilter from "components/StatusFilter";
+import {navigate} from "navigation/NavigationService";
 import React, {useEffect} from "react";
 import {FlatList, Pressable, StyleSheet, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import Octicons from "react-native-vector-icons/Octicons";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,7 +12,7 @@ import OrderByCustomer from "../../../components/OrderByCustomer";
 import {ORDER_STATUS} from "../../../consts/orders";
 import {viewMyOrdersRequest} from "../../../screenRedux/restaurantRedux";
 
-const Home = ({route}) => {
+const Home = ({navigation, route}) => {
   const dispatch = useDispatch()
   const {user, accessToken} = useSelector((state) => state.loginReducer)
   const {myOrders, loading, needToRefreshOrders} = useSelector((state) => state.restaurantReducer)
@@ -44,6 +46,38 @@ const Home = ({route}) => {
   useEffect(() => {
     fetchMyOrders()
   }, [tab, needToRefreshOrders])
+
+  useEffect(() => {
+    const checkStatus = () => {
+      if (restaurant?.name) {
+        if (!restaurant.subscription) {
+          showMessage({
+            message: 'You need to subscribe to a plan to start receiving orders',
+            type: 'warning',
+            icon: 'warning',
+            duration: 3000,
+          })
+          navigation?.navigate('Settings', {screen: 'Subscription'})
+        }
+      } else {
+        showMessage({
+          message: 'You need to add a restaurant to start receiving orders',
+          type: 'warning',
+          icon: 'warning',
+          duration: 3000,
+        })
+        navigation?.navigate('Settings', {screen: 'RestaurantProfile'})
+      }
+    }
+
+    const _unsub = navigation.addListener('focus', () => {
+      checkStatus()
+    })
+
+    return () => {
+      _unsub()
+    }
+  }, [])
 
   return (
     <View style={styles.mainWrapper}>

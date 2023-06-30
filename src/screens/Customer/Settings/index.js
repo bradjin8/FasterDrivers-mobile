@@ -39,6 +39,9 @@ const Settings = ({}) => {
           },
         ]);
         break
+      case 'Wallet':
+        navigate('Orders', {screen: 'Payment'})
+        break
       default:
         key && navigate(key)
     }

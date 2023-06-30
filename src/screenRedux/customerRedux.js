@@ -630,6 +630,7 @@ function* payOrderAction(data) {
     navigate("Orders")
   } catch (e) {
     const {response} = e
+    console.log('pay-order-api-res', response)
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail ?? "Something went wrong, Please try again!",

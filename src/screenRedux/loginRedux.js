@@ -32,6 +32,8 @@ const CHANGE_SUBSCRIPTION_REQUEST_STARTED = "CHANGE_SUBSCRIPTION_REQUEST_STARTED
 const UNSUBSCRIBE_REQUEST_STARTED = "UNSUBSCRIBE_REQUEST_STARTED"
 const UNSUBSCRIBE_REQUEST_COMPLETED = "UNSUBSCRIBE_REQUEST_COMPLETED"
 const SUBSCRIPTION_UPDATED = "SUBSCRIPTION_UPDATED"
+const FETCH_PROFILE_REQUEST_STARTED = "FETCH_PROFILE_REQUEST_STARTED"
+const FETCH_PROFILE_REQUEST_COMPLETED = "FETCH_PROFILE_REQUEST_COMPLETED"
 
 const initialState = {
   loading: false,
@@ -135,6 +137,15 @@ export const unsubscribeRequestCompleted = () => ({
   type: UNSUBSCRIBE_REQUEST_COMPLETED,
 })
 
+export const fetchProfileRequest = () => ({
+  type: FETCH_PROFILE_REQUEST_STARTED,
+})
+
+export const fetchProfileRequestCompleted = (data) => ({
+  type: FETCH_PROFILE_REQUEST_COMPLETED,
+  payload: data,
+})
+
 //Reducers
 export const loginReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -150,9 +161,16 @@ export const loginReducer = (state = initialState, action) => {
     case SUBSCRIBE_REQUEST_STARTED:
     case UNSUBSCRIBE_REQUEST_STARTED:
     case CHANGE_SUBSCRIPTION_REQUEST_STARTED:
+    case FETCH_PROFILE_REQUEST_STARTED:
       return {
         ...state,
         loading: true
+      }
+    case FETCH_PROFILE_REQUEST_COMPLETED:
+      return {
+        ...state,
+        loading: false,
+        user: action.payload
       }
     case LOGIN_REQUEST_COMPLETED:
       return {
@@ -278,6 +296,19 @@ async function accountUpdateAPI(data) {
   return XHR(URL, options)
 }
 
+export async function getProfileAPI() {
+  const userAccount = await AsyncStorage.getItem("userAccount")
+  const userData = JSON.parse(userAccount)
+  const URL = `${appConfig.backendServerURL}/users/${userData.id}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "GET",
+  }
+  return XHR(URL, options)
+}
+
 export function forgotPasswordAPI(data) {
   const URL = `${appConfig.backendServerURL}/users/reset/`
   console.log("data", data)
@@ -340,6 +371,7 @@ export async function fetchSubscriptionsAPI() {
 }
 
 export async function subscribeAPI(data) {
+  // console.log("subscribe-data", data)
   const URL = `${appConfig.backendServerURL}/subscriptions/subscribe/`
   const options = {
     headers: {
@@ -529,6 +561,22 @@ function* accountUpdateAction(data) {
   }
 }
 
+function* getProfileAction () {
+  try {
+    const resp = yield call(getProfileAPI)
+    if (resp?.data) {
+      yield put(fetchProfileRequestCompleted(resp.data))
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 function* changePasswordAction(data) {
   try {
     const resp = yield call(changePasswordAPI, data.payload)
@@ -612,7 +660,7 @@ function* sendFeedbackAction(data) {
 function* subscribeAction(data) {
   try {
     const resp = yield call(subscribeAPI, data.payload)
-    yield put(requestCompleted())
+    yield put(fetchProfileRequest())
     showMessage({
       message: "Subscribed Successfully",
       type: "success"
@@ -632,7 +680,7 @@ function* subscribeAction(data) {
 function* changeSubscriptionAction(data) {
   try {
     const resp = yield call(changeSubscriptionAPI, data.payload)
-    yield put(requestCompleted())
+    yield put(fetchProfileRequest())
     showMessage({
       message: "Subscription Changed Successfully",
       type: "success"
@@ -652,7 +700,7 @@ function* changeSubscriptionAction(data) {
 function* unsubscribeAction() {
   try {
     const resp = yield call(unsubscribeAPI)
-    yield put(unsubscribeRequestCompleted())
+    yield put(fetchProfileRequest())
     showMessage({
       message: "Unsubscribed Successfully",
       type: "success"
@@ -682,4 +730,5 @@ export default all([
   takeLatest(SUBSCRIBE_REQUEST_STARTED, subscribeAction),
   takeLatest(CHANGE_SUBSCRIPTION_REQUEST_STARTED, changeSubscriptionAction),
   takeLatest(UNSUBSCRIBE_REQUEST_STARTED, unsubscribeAction),
+  takeLatest(FETCH_PROFILE_REQUEST_STARTED, getProfileAction),
 ])

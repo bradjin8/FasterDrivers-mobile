@@ -1,6 +1,7 @@
 import SimpleHeader from "components/SimpleHeader";
 import React, {useEffect, useRef, useState} from "react";
 import {Image, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
 import MapView, {Marker} from "react-native-maps";
 import {widthPercentageToDP} from "react-native-responsive-screen";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -24,7 +25,7 @@ const Map = ({navigation, route}) => {
 
   const dispatch = useDispatch()
   const mapView = useRef(null)
-  // console.log('restaurant', myOrders)
+  console.log('restaurant', restaurant)
 
   const fetchNearbyDrivers = () => {
     dispatch(getNearByDriversRequest())
@@ -51,21 +52,49 @@ const Map = ({navigation, route}) => {
   }, [restaurant?.location])
 
   useEffect(() => {
-    dispatch(viewMyOrdersRequest({
-      restaurant: restaurant.id,
-      status: [ORDER_STATUS.Accepted],
-    }))
-    const unsubscribe = navigation.addListener('focus', () => {
-      fetchNearbyDrivers()
+    const checkStatus = () => {
+      if (restaurant?.name) {
+        if (restaurant.subscription) {
+          dispatch(viewMyOrdersRequest({
+            restaurant: restaurant.id,
+            status: [ORDER_STATUS.Accepted],
+          }))
+          const unsubscribe = navigation.addListener('focus', () => {
+            fetchNearbyDrivers()
+          })
+
+          const interval = setInterval(() => {
+            fetchNearbyDrivers()
+          }, 60000)
+
+          return () => {
+            clearInterval(interval)
+            unsubscribe()
+          }
+        } else {
+          showMessage({
+            message: 'You need to subscribe to view this page',
+            type: 'info',
+            icon: 'info',
+          })
+          navigation.navigate('Settings', {screen: 'Subscription'})
+        }
+      } else {
+        showMessage({
+          message: 'Please configure your restaurant details first',
+          type: 'info',
+          icon: 'info',
+        })
+        navigation.navigate('Settings', {screen: 'RestaurantProfile'})
+      }
+    }
+
+    const _unsub = navigation.addListener('focus', () => {
+      checkStatus()
     })
 
-    const interval = setInterval(() => {
-      fetchNearbyDrivers()
-    }, 60000)
-
     return () => {
-      clearInterval(interval)
-      unsubscribe()
+      _unsub()
     }
   }, [])
 
