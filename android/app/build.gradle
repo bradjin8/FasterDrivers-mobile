@@ -148,6 +148,10 @@ android {
     }
     signingConfigs {
         release {
+            storeFile file('release')
+            storePassword 'fasterdrivers'
+            keyAlias 'fasterdrivers-release'
+            keyPassword 'fasterdrivers'
             if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
                 storeFile file(MYAPP_UPLOAD_STORE_FILE)
                 storePassword MYAPP_UPLOAD_STORE_PASSWORD
