@@ -198,7 +198,12 @@ class PaymentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def my_cards(self, request):
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
         else:
@@ -222,7 +227,12 @@ class PaymentViewSet(ModelViewSet):
         payment_method_id = request.data.get('payment_method', None)
         if payment_method_id is None:
             return Response({'detail': 'Missing Payment Method ID'}, status=status.HTTP_400_BAD_REQUEST)
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
         else:
@@ -259,7 +269,12 @@ class PaymentViewSet(ModelViewSet):
         payment_method_id = request.data.get('payment_method', None)
         if payment_method_id is None:
             return Response({'detail': 'Missing Payment Method ID'}, status=status.HTTP_400_BAD_REQUEST)
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
         else:
@@ -284,7 +299,12 @@ class PaymentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def add_payment_method(self, request):
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         billing_details = request.data.get('billing_details')
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
@@ -592,7 +612,7 @@ class SubscriptionsViewSet(ModelViewSet):
             return Response({'detail': 'Card Declined'})
 
         # associate customer and subscription with the user
-        profile.account = djstripe_customer
+        profile.stripe_account = djstripe_customer
         profile.subscription = djstripe_subscription
         profile.save()
 

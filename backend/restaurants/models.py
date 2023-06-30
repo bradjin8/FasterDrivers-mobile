@@ -61,7 +61,7 @@ class Restaurant(UUIDModel):
         decimal_places=2,
         default=0
     )
-    account = models.ForeignKey(
+    stripe_account = models.ForeignKey(
         'djstripe.Customer',
         null=True,
         blank=True,

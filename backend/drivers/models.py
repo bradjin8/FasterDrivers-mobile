@@ -67,7 +67,7 @@ class Driver(UUIDModel):
         blank=True,
         null=True
     )
-    account = models.ForeignKey(
+    stripe_account = models.ForeignKey(
         'djstripe.Customer',
         null=True,
         blank=True,
