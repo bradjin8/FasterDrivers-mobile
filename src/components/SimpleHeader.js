@@ -1,11 +1,8 @@
-import {StyleSheet, View, Image, TouchableOpacity, Pressable, ActivityIndicator} from "react-native"
-import React from "react"
 import {useNavigation} from "@react-navigation/native"
+import React from "react"
+import {ActivityIndicator, Image, Pressable, StyleSheet, TouchableOpacity, View} from "react-native"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {color, scale, scaleVertical} from "utils";
-//Themes
-import Images from "../theme/Images"
-//Components
 import {Text} from "./text"
 
 const SimpleHeader = props => {
@@ -26,7 +23,8 @@ const SimpleHeader = props => {
     temporarilyStopRightIcon,
     refRBSheet,
     enterChallange,
-    rightComponent
+    rightComponent,
+    onBackPress,
   } = props
 
   const navigation = useNavigation()
@@ -44,7 +42,7 @@ const SimpleHeader = props => {
           <TouchableOpacity
             style={styles.backIconView}
             onPress={() => {
-              showBackIcon && navigation.goBack()
+              onBackPress ? onBackPress() : navigation.goBack()
             }}
           >
             <MaterialIcons name={'arrow-back'} size={scale(20)} color={color.white}/>

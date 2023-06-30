@@ -36,6 +36,7 @@ import IcMessage from "src/assets/images/ic_message.png"
 import IcInstagram from "src/assets/images/ic_instagram.png"
 import IcFacebook2 from "src/assets/images/ic_facebook2.png"
 import IcMessager from "src/assets/images/ic_messager.png"
+import Pencil from "src/assets/images/pencil.png"
 
 
 export default {
@@ -77,4 +78,5 @@ export default {
   IcInstagram,
   IcFacebook2,
   IcMessager,
+  Pencil,
 }

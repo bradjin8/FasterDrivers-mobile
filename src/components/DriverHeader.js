@@ -1,6 +1,7 @@
 import React from 'react'
 import {Image, StyleSheet, View} from "react-native"
 import {widthPercentageToDP} from "react-native-responsive-screen"
+import {appConfig} from "../config/app";
 import {Images} from "../theme"
 import {color} from "../utils/color"
 import {scale} from "../utils/scale"
@@ -12,7 +13,7 @@ const DriverHeader = ({photo, name, showAppName = false}) => {
     <Text style={styles.name} color={'gray'} fontSize={12} variant={'strong'}>{name}</Text>
     <View style={styles.logoContainer}>
       <Image source={Images.Logo} style={styles.logo}/>
-      {showAppName && <Text variant={'h5'} color={'primary'} fontWeight={'700'}>Fast Drivers</Text>}
+      {showAppName && <Text variant={'h5'} color={'primary'} fontWeight={'700'}>{appConfig.name}</Text>}
     </View>
   </View>
 }

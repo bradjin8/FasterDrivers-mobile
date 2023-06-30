@@ -2,6 +2,7 @@ import DriverHeader from "components/DriverHeader";
 import {navigate} from "navigation/NavigationService";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ActivityIndicator, Image, Linking, Pressable, SafeAreaView, StyleSheet, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
 import MapView, {Marker, Polyline} from "react-native-maps";
 import {heightPercentageToDP, widthPercentageToDP} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -107,13 +108,36 @@ const Home = ({navigation}) => {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      refresh()
-    }, 10 * 1000)
+    let interval
 
     const unsubscribe = navigation.addListener('focus', () => {
-      refresh()
+      checkStatus()
     })
+
+    const checkStatus = () => {
+      if (driver?.name) {
+        if (driver?.subscription?.status === 'active') {
+          interval = setInterval(() => {
+            refresh()
+          }, 10 * 1000)
+        } else {
+          showMessage({
+            message: 'Your need to subscribe a plan to continue',
+            type: 'warning',
+            icon: 'warning',
+          })
+          navigation.navigate('Settings', 'Subscription')
+        }
+      } else {
+        showMessage({
+          message: 'Please complete your profile',
+          type: 'warning',
+          icon: 'warning',
+        })
+        navigation.navigate('Settings', 'AccountInformation')
+      }
+    }
+
     return () => {
       clearInterval(interval)
       unsubscribe()

@@ -78,7 +78,7 @@ const Subscription = ({navigation}) => {
   }
 
   const continueFreeTrial = () => {
-    goBack()
+    // goBack()
   }
 
   useEffect(() => {
@@ -102,6 +102,9 @@ const Subscription = ({navigation}) => {
       <SimpleHeader
         title="Subscription"
         showBackIcon={true}
+        onBackPress={() => {
+          navigation.navigate('Settings')
+        }}
       />
 
       <View style={styles.container}>
@@ -136,7 +139,7 @@ const Subscription = ({navigation}) => {
             style={{...Border.round10, backgroundColor: isSubscribed ? color.error : color.primary}}
             onPress={subscribe}
           />}
-          {userSubscription === null && <Button isSecondary={true} text={'Continue Free Trial'} fontSize={18} style={[Border.round10, Margin.t10, {width: '100%'}]} onPress={continueFreeTrial}/>}
+          {false && <Button isSecondary={true} text={'Continue Free Trial'} fontSize={18} style={[Border.round10, Margin.t10, {width: '100%'}]} onPress={continueFreeTrial}/>}
         </View>
       </View>
       <ConfirmModal

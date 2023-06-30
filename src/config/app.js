@@ -2,6 +2,7 @@ const HOST = "fancy-cherry-36842.botics.co"
 export const BASE_URL = `https://${HOST}`
 export const appConfig = {
   // todo add library to handle env variables
+  name: 'Faster Drivers',
   backendServerURL: `${BASE_URL}/api/v1`,
   websocketUrl: `ws://${HOST}/ws`,
   apiClientID: 'c789e448-1d21-48e9-a51a-d4c7b995af53',

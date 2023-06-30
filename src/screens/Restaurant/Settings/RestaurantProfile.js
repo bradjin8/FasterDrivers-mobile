@@ -10,7 +10,7 @@ import {Button, CustomTextInput, Text} from "../../../components";
 import BaseScreen from "../../../components/BaseScreen";
 import {updateAccount} from "../../../screenRedux/loginRedux";
 
-const RestaurantProfile = () => {
+const RestaurantProfile = ({navigation}) => {
   const actionSheet = useRef(null);
   const ImagePickerOptions = ["Take Photo", "Choose from Gallery", "Cancel"];
   const dispatch = useDispatch();
@@ -64,13 +64,14 @@ const RestaurantProfile = () => {
       <SimpleHeader
         title="My Restaurant"
         showBackIcon={true}
+        onBackPress={() => navigation.navigate('Settings')}
       />
       <View style={styles.container}>
 
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
             <View style={styles.pencilView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
+              <Image source={Images.Pencil} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
             </View>
             {pickImage ?
              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />

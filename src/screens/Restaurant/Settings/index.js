@@ -49,7 +49,7 @@ const Settings = ({}) => {
     <View style={styles.mainWrapper}>
       <SimpleHeader
         title="Settings"
-        showBackIcon={true}
+        showBackIcon={false}
       />
       <ScrollView style={styles.container} contentContainerStyle={{paddingVertical: 10}}>
         {restaurantSettingData.map((setting, index) => {
