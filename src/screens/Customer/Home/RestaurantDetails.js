@@ -132,7 +132,7 @@ const RestaurantDetails = ({route}) => {
   }
 
   const renderDishes = () => {
-    const keys = Object.keys(restaurantDetails || {});
+    const keys = Object.keys(restaurantDetails?.dishes || {});
     if (keys.length === 0) {
       return <View>
         <Text variant="text" color="black" style={styles.noData}>
@@ -150,7 +150,7 @@ const RestaurantDetails = ({route}) => {
                 {type}
               </Text>
             </View>
-            {restaurantDetails[type].map((item, i) => renderItems(item, i))}
+            {restaurantDetails?.dishes[type].map((item, i) => renderItems(item, i))}
           </View>
         )
       })

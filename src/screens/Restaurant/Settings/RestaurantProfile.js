@@ -121,6 +121,7 @@ const RestaurantProfile = ({navigation}) => {
               <CustomTextInput
                 value={restaurantDetails["restaurant.zip_code"]}
                 onChangeText={(text) => onChangeText("restaurant.zip_code", text)}
+                keyboardType={'numeric'}
               />
             </View>
           </View>
@@ -138,6 +139,7 @@ const RestaurantProfile = ({navigation}) => {
           <CustomTextInput
             value={restaurantDetails["restaurant.ein_number"]}
             onChangeText={(text) => onChangeText("restaurant.ein_number", text)}
+            keyboardType={'numeric'}
           />
           <Text variant="text" color="black" >
             Phone Number

@@ -91,6 +91,7 @@ const AccountInformation = () => {
           <CustomTextInput
             value={customerDetails["email"]}
             onChangeText={(text) => onChangeText("email", text)}
+            keyboardType={'email-address'}
           />
           <Text variant="text" color="black" >
             Phone Number

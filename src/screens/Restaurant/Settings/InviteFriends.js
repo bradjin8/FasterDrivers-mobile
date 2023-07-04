@@ -1,14 +1,16 @@
+import Clipboard from '@react-native-clipboard/clipboard';
 import BaseScreen from "components/BaseScreen";
 import OrDivider from "components/OrDivider";
 import React from "react";
-import {Pressable, StyleSheet, View, Image, Share, Linking} from "react-native";
-import {useDispatch, useSelector} from "react-redux";
+import {Image, Linking, Pressable, Share, StyleSheet, View} from "react-native";
+import {showMessage} from "react-native-flash-message";
+import {useSelector} from "react-redux";
+import {Button, Text} from "src/components/index";
+import SimpleHeader from "src/components/SimpleHeader";
+import {appConfig} from "src/config/app";
+import Images from "src/theme/Images";
+import {Flex, Margin} from "src/theme/Styles";
 import {color, scaleVertical} from "utils";
-import {Button, Text} from "../../../components/index";
-import SimpleHeader from "../../../components/SimpleHeader";
-import {appConfig} from "../../../config/app";
-import Images from "../../../theme/Images";
-import {Flex, Margin} from "../../../theme/Styles";
 
 const InviteFriends = ({}) => {
   const user = useSelector(state => state.loginReducer.user)
@@ -78,7 +80,21 @@ const InviteFriends = ({}) => {
             <Text variant={'strong'} style={{flex: 1}} numberOfLines={1}>
               {inviteLink}
             </Text>
-            <Button style={styles.copyButton} text={'Copy Link'} fontSize={16}/>
+            <Button
+              style={styles.copyButton} text={'Copy Link'} fontSize={16}
+              onPress={() => {
+                try {
+
+                  Clipboard.setString(inviteLink)
+                  showMessage({
+                    message: 'Invite link copied to clipboard',
+                    type: 'success',
+                  })
+                } catch (error) {
+                  console.log(error.message);
+                }
+              }}
+            />
           </View>
         </View>
         <View style={[Margin.v10]}>

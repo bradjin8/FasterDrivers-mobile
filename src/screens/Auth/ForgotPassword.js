@@ -31,6 +31,7 @@ const ForgotPassword = ({navigation}) => {
           <Image
             source={Images.AppLogo}
             style={styles.icon}
+            resizeMode={'contain'}
           />
         </View>
         <View style={styles.passwordText}>
@@ -50,6 +51,7 @@ const ForgotPassword = ({navigation}) => {
             value={email}
             placeholder="email@domain.com"
             onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
           />
         </View>
         <View style={styles.buttonView}>

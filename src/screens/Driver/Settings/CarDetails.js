@@ -92,6 +92,7 @@ const CarDetails = () => {
           <CustomTextInput
             value={customerDetails["driver.car_vin"]}
             onChangeText={(text) => onChangeText("driver.car_vin", text)}
+            keyboardType={'numeric'}
           />
           <Text variant="text" color="black">
             Licence Number
@@ -99,6 +100,7 @@ const CarDetails = () => {
           <CustomTextInput
             value={customerDetails["driver.car_license_number"]}
             onChangeText={(text) => onChangeText("driver.car_license_number", text)}
+            keyboardType={'numeric'}
           />
         </View>
         <View style={{marginTop: scaleVertical(50)}}>

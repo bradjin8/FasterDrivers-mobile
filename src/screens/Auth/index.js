@@ -112,6 +112,7 @@ const SignIn = ({route}) => {
             onBlurText={onBlurUser}
             hasError={userError}
             errorMessage={"Enter valid email"}
+            keyboardType={'email-address'}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             Password

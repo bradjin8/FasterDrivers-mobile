@@ -12,11 +12,11 @@ const SignUp = ({ navigation, route }) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [userName, setUserName] = useState("test@gmail.com")
+  const [userName, setUserName] = useState("")
   const [userError, setUserError] = useState(null)
-  const [password, setPassword] = useState("test@123")
+  const [password, setPassword] = useState("")
   const [passwordError, setPasswordError] = useState(null)
-  const [rePassword, setRePassword] = useState("test@123")
+  const [rePassword, setRePassword] = useState("")
   const [rePasswordError, setRePasswordError] = useState(null)
   const userType = route?.params.userType;
 
@@ -66,6 +66,7 @@ const SignUp = ({ navigation, route }) => {
           <Image
             source={Images.AppLogo}
             style={styles.icon}
+            resizeMode="contain"
           />
         </View>
         <View style={{width: '100%'}}>
@@ -80,6 +81,7 @@ const SignUp = ({ navigation, route }) => {
             onBlurText={onBlurUser}
             hasError={userError}
             errorMessage={"Enter valid email"}
+            keyboardType={"email-address"}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             Password

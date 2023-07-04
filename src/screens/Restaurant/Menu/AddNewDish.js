@@ -144,6 +144,7 @@ const AddNewDish = ({route}) => {
           <CustomTextInput
             value={sku_number}
             onChangeText={(text) => onChangeText("sku_number", text)}
+            keyboardType={'numeric'}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             SKU NUMBER
@@ -152,6 +153,7 @@ const AddNewDish = ({route}) => {
           <CustomTextInput
             value={price}
             onChangeText={(text) => onChangeText("price", text)}
+            keyboardType={'numeric'}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             PRICE
@@ -265,9 +267,9 @@ const Addon = ({addon, onChange}) => {
           NUMBER OF ITEMS
         </Text>
         <CustomTextInput
-          keyboardType={'numeric'}
           value={number_of_items}
           onChangeText={(text) => setNumberOfItems(text)}
+          keyboardType={'numeric'}
         />
       </View>
 
