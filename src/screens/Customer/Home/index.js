@@ -252,8 +252,7 @@ const Home = ({navigation}) => {
           </ScrollView>
         }
       </View>
-      <CustomMessageModal data={{}} visible={visibleCustomModal} close={() => setVisibleCustomModal(false)} onOk={() => {
-      }}/>
+      <CustomMessageModal data={{}} visible={visibleCustomModal} close={() => setVisibleCustomModal(false)} onOk={() => {}}/>
     </SafeAreaView>);
 };
 

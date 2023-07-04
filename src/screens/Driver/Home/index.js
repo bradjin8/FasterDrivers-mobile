@@ -84,7 +84,7 @@ const Home = ({navigation}) => {
       .map((order) => {
         const {restaurant: {location}, user: {customer}, address} = order
         const deliveryAddress = customer?.addresses?.find(add => add.id === address) || {}
-        // console.log('restaurant-address', location, deliveryAddress.location)
+        // console.log('restaurant-address', location, deliveryAddress)
         desLoc.push(extractLatLong(deliveryAddress.location))
         resLoc.push(extractLatLong(location))
       })
@@ -115,7 +115,7 @@ const Home = ({navigation}) => {
     })
 
     const checkStatus = () => {
-      if (driver?.name) {
+      if (name) {
         if (driver?.subscription?.status === 'active') {
           interval = setInterval(() => {
             refresh()
@@ -167,7 +167,7 @@ const Home = ({navigation}) => {
   }, [assignedOrders])
 
   useEffect(() => {
-    // fitToCoordinates()
+    fitToCoordinates()
   }, [position, resLocs, desLocs])
 
   // console.log('assigned', assignedOrders)

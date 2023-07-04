@@ -49,12 +49,12 @@ const Home = ({navigation, route}) => {
 
   useEffect(() => {
     const checkStatus = () => {
-      if (restaurant?.name) {
+      if (restaurant?.id) {
         if (!restaurant.subscription) {
           showMessage({
             message: 'You need to subscribe to a plan to start receiving orders',
-            type: 'warning',
-            icon: 'warning',
+            type: 'info',
+            icon: 'info',
             duration: 3000,
           })
           navigation?.navigate('Settings', {screen: 'Subscription'})
@@ -62,8 +62,8 @@ const Home = ({navigation, route}) => {
       } else {
         showMessage({
           message: 'You need to add a restaurant to start receiving orders',
-          type: 'warning',
-          icon: 'warning',
+          type: 'info',
+          icon: 'info',
           duration: 3000,
         })
         navigation?.navigate('Settings', {screen: 'RestaurantProfile'})

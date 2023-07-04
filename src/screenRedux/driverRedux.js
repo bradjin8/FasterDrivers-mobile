@@ -46,9 +46,8 @@ export const deliverOrder = (data) => ({
   payload: data,
 })
 
-const deliverOrderCompleted = (data) => ({
+const deliverOrderCompleted = () => ({
   type: DELIVER_ORDER_COMPLETED,
-  payload: data,
 })
 
 export const rejectOrder = (data) => ({
@@ -210,7 +209,7 @@ function* deliverOrderAction(data) {
   try {
     const resp = yield call(deliverOrderAPI, data.payload)
     if (resp?.data) {
-      yield put(deliverOrderCompleted(resp?.data))
+      yield put(deliverOrderCompleted())
       showMessage({
         message: "Order delivered",
         type: "success",

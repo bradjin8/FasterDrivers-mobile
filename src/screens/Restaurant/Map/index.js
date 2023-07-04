@@ -53,7 +53,7 @@ const Map = ({navigation, route}) => {
 
   useEffect(() => {
     const checkStatus = () => {
-      if (restaurant?.name) {
+      if (restaurant?.id) {
         if (restaurant.subscription) {
           dispatch(viewMyOrdersRequest({
             restaurant: restaurant.id,

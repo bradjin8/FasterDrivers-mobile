@@ -83,8 +83,8 @@ const Payment = ({route}) => {
           </View>
         </ScrollView>
         {paymentId && <View style={[Margin.t10]}>
-          <Button loading={loading} text="Remove" fontSize={18} fontWeight={'600'} onPress={removePaymentMethod} style={{backgroundColor: 'red'}}/>
-          {order && <Button loading={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay}/>}
+          <Button disabled={loading} text="Remove" fontSize={18} fontWeight={'600'} onPress={removePaymentMethod} style={{backgroundColor: 'red'}}/>
+          {order && <Button disabled={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay}/>}
         </View>}
       </View>
     </View>

@@ -17,6 +17,8 @@ const AddCard = ({}) => {
   const [cardNumber, setCardNumber] = useState('')
   const [cardDate, setCardDate] = useState('')
   const [cvv, setCvv] = useState('')
+  const [creating, setCreating] = useState(false)
+
   const defaultAddress = addresses?.find(o => o.default) || addresses[0]
 
   const {createPaymentMethod} = useStripe();
@@ -50,6 +52,9 @@ const AddCard = ({}) => {
     //   cvc: cvv,
     // }
     // console.log('card', card)
+    if (creating)
+      return
+    setCreating(true)
     createPaymentMethod({
       paymentMethodType: 'Card',
       paymentMethodData: {
@@ -83,6 +88,8 @@ const AddCard = ({}) => {
       })))
     }).catch(e => {
       console.log('create-payment-error', e.message);
+    }).finally(() => {
+      setCreating(false)
     })
   }
 
@@ -173,7 +180,7 @@ const AddCard = ({}) => {
             </View>
           </View>*/}
         </View>
-        <Button loading={loading} text="Add Card" mt={20} onPress={addCard}/>
+        <Button loading={creating || loading} text="Add Card" mt={20} onPress={addCard}/>
       </View>
     </BaseScreen>
   )
