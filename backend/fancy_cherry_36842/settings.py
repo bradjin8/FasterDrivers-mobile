@@ -353,5 +353,25 @@ SOCIALACCOUNT_PROVIDERS = {
             'public_profile'
         ],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    },
+    "apple": {
+        "APP": {
+            # Your service identifier.
+            "client_id": "com.fasterdrivers.ios.appleauth",
+            # The Key ID (visible in the "View Key Details" page).
+            "secret": "A67A664R26",
+             # Member ID/App ID Prefix -- you can find it below your name
+             # at the top right corner of the page, or it’s your App ID
+             # Prefix in your App ID.
+            "key": "U5235F2PBG",
+            # The certificate you downloaded when generating the key.
+            "certificate_key": """-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgLqPDbEIdlVH1ALAV
+NjraJDGwuMLQ5Yztpov3I9ats02gCgYIKoZIzj0DAQehRANCAAT30UXBmfWgzjFf
+JoIzQIGI/MFwpm1tvjSf5syWY0xY5iN9KMkTM+CPkgX36i31BmuRKZSpCnBCQ1fB
+vcpc4UqY
+-----END PRIVATE KEY-----
+"""
+        }
     }
 }
