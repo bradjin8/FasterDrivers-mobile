@@ -135,7 +135,10 @@ class RestaurantSerializer(serializers.ModelSerializer):
             url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={GOOGLE_API_KEY}"
             response = requests.post(url)
             response = response.json()
-            result = response.get('results')[0]
+            try:
+                result = response.get('results')[0]
+            except Exception as e:
+                raise serializers.ValidationError("Unable to find address")
             location = result.get('geometry', {}).get('location')
             lat = location.get('lat')
             lng = location.get('lng')
