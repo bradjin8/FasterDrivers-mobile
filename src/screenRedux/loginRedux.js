@@ -25,6 +25,7 @@ const FORGOT_PASSWORD_REQUEST_STARTED = "FORGOT_PASSWORD_REQUEST_STARTED"
 const FORGOT_PASSWORD_REQUEST_COMPLETED = "FORGOT_PASSWORD_REQUEST_COMPLETED"
 const LOGIN_WITH_FACEBOOK_REQUEST_STARTED = "LOGIN_WITH_FACEBOOK_REQUEST_STARTED"
 const LOGIN_WITH_GOOGLE_REQUEST_STARTED = "LOGIN_WITH_GOOGLE_REQUEST_STARTED"
+const LOGIN_WITH_APPLE_REQUEST_STARTED = "LOGIN_WITH_APPLE_REQUEST_STARTED"
 const DELETE_ACCOUNT_REQUEST_STARTED = "DELETE_ACCOUNT_REQUEST_STARTED"
 const SEND_FEEDBACK_REQUEST_STARTED = "SEND_FEEDBACK_REQUEST_STARTED"
 const SUBSCRIBE_REQUEST_STARTED = "SUBSCRIBE_REQUEST_STARTED"
@@ -58,6 +59,11 @@ export const loginWithFacebook = (data) => ({
 
 export const loginWithGoogle = (data) => ({
   type: LOGIN_WITH_GOOGLE_REQUEST_STARTED,
+  payload: data,
+})
+
+export const loginWithApple = (data) => ({
+  type: LOGIN_WITH_APPLE_REQUEST_STARTED,
   payload: data,
 })
 
@@ -153,6 +159,7 @@ export const loginReducer = (state = initialState, action) => {
     case SIGNUP_REQUEST_STARTED:
     case LOGIN_WITH_FACEBOOK_REQUEST_STARTED:
     case LOGIN_WITH_GOOGLE_REQUEST_STARTED:
+    case LOGIN_WITH_APPLE_REQUEST_STARTED:
     case UPDATE_ACCOUNT_REQUEST_STARTED:
     case DELETE_ACCOUNT_REQUEST_STARTED:
     case SEND_FEEDBACK_REQUEST_STARTED:
@@ -263,6 +270,18 @@ function loginWithFacebookAPI(data) {
 
 function loginWithGoogleAPI(data) {
   const URL = `${BASE_URL}/socials/google/login/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "POST",
+    data: data
+  }
+  return XHR(URL, options)
+}
+
+function loginWithAppleAPI(data) {
+  const URL = `${BASE_URL}/socials/apple/login/`
   const options = {
     headers: {
       Accept: "application/json",
@@ -459,6 +478,36 @@ function* loginWithGoogleAction(data) {
     yield put(requestFailed())
     showMessage({
       message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
+function* loginWithAppleAction(data) {
+  try {
+    const resp = yield call(loginWithAppleAPI, data.payload)
+    if (resp?.data) {
+      yield put(setSignInData(resp.data))
+      AsyncStorage.setItem("userAccount", JSON.stringify(resp.data.user))
+      AsyncStorage.setItem("token", resp.data.token)
+      showMessage({
+        message: "Successfully user login",
+        type: "success"
+      })
+      if (resp?.data.user.type === "Restaurant") {
+        navigate('RestaurantBottomBar')
+      } else if (resp?.data.user.type === "Driver") {
+        navigate('DriverBottomBar')
+      } else {
+        navigate('CustomerBottomBar')
+      }
+    }
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    console.log(response.data)
+    showMessage({
+      message: response?.data?.non_field_errors?.[0] ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }
@@ -725,6 +774,7 @@ export default all([
   takeLatest(FORGOT_PASSWORD_REQUEST_STARTED, forgotPasswordAction),
   takeLatest(LOGIN_WITH_FACEBOOK_REQUEST_STARTED, loginWithFacebookAction),
   takeLatest(LOGIN_WITH_GOOGLE_REQUEST_STARTED, loginWithGoogleAction),
+  takeLatest(LOGIN_WITH_APPLE_REQUEST_STARTED, loginWithAppleAction),
   takeLatest(DELETE_ACCOUNT_REQUEST_STARTED, deleteAccountAction),
   takeLatest(SEND_FEEDBACK_REQUEST_STARTED, sendFeedbackAction),
   takeLatest(SUBSCRIBE_REQUEST_STARTED, subscribeAction),

@@ -40,7 +40,7 @@ const RestaurantBottomBar = props => {
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.restaurant,
           height: scaleVertical(65),
           tabBarActiveTintColor: color.primary,
           tabBarInactiveTintColor: color.black,

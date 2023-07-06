@@ -23,7 +23,7 @@ export default DriverHeader
 const styles = StyleSheet.create({
   header: {
     height: scale(60),
-    backgroundColor: color.white,
+    backgroundColor: color.driver,
     alignItems: "center",
     flexDirection: "row",
     paddingHorizontal: scale(20),

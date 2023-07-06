@@ -8,7 +8,7 @@ import {toFormData} from "utils/useForm";
 import validator from "utils/validation";
 import BaseScreen from "src/components/BaseScreen";
 import {Button, CustomTextInput, Text} from "src/components/index";
-import {loginRequest, loginWithFacebook, loginWithGoogle, requestFailed} from "src/screenRedux/loginRedux";
+import {loginRequest, loginWithApple, loginWithFacebook, loginWithGoogle, requestFailed} from "src/screenRedux/loginRedux";
 import {Flex, Margin, Size} from "src/theme/Styles";
 import {authorizeWithApple} from "src/third-party/apple";
 import {authorizeWithFB} from "src/third-party/facebook";
@@ -39,9 +39,9 @@ const SignIn = ({route}) => {
           console.log(Platform.OS)
           const apple_access_token = await authorizeWithApple()
           console.log('apple-access_token', apple_access_token)
-          // if (apple_access_token) {
-          //   dispatch(loginWithFacebook(toFormData({access_token: apple_access_token, type: userType})))
-          // }
+          if (apple_access_token) {
+            dispatch(loginWithApple(toFormData({...apple_access_token, type: userType})))
+          }
           break
         case 'google':
           const google_access_token = await authorizeWithGoogle()

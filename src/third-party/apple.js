@@ -37,7 +37,11 @@ async function android() {
 
   // Open the browser window for user sign in
   try {
-    return await appleAuthAndroid.signIn()
+    const res = await appleAuthAndroid.signIn()
+    return {
+      access_token: res.code,
+      id_token: res.id_token,
+    }
   } catch (error) {
     if (error && error.message) {
       switch (error.message) {
@@ -59,7 +63,7 @@ async function iOS() {
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
     })
 
-    console.log('appleAuthRequestResponse', appleAuthRequestResponse)
+    // console.log('appleAuthRequestResponse', appleAuthRequestResponse)
     const {
       user,
       email,
@@ -69,11 +73,13 @@ async function iOS() {
       realUserStatus /* etc */,
     } = appleAuthRequestResponse
 
+    console.log('appleAuthRequestResponse', appleAuthRequestResponse)
+
     const credentialState = await appleAuth.getCredentialStateForUser(user)
     if (credentialState === appleAuth.State.AUTHORIZED) {
       return {
         access_token: authorizationCode,
-        code: authorizationCode,
+        // code: authorizationCode,
         id_token: identityToken,
       }
     }

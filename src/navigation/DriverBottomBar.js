@@ -34,12 +34,12 @@ const DriverBottomBar = props => {
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.driver,
           height: scaleVertical(65),
           tabBarActiveTintColor: color.black,
           tabBarInactiveTintColor: color.gray,
           tabBarLabelPosition: 'below-icon',
-        }
+        },
       }}
     >
       <Tab.Screen

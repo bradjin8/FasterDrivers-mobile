@@ -19,4 +19,7 @@ export const palette = {
   info: '#17A400',
   success: '#00B300',
   cyan: 'cyan',
+
+  driver: '#fff9b8',
+  restaurant: '#cae3ff',
 };
