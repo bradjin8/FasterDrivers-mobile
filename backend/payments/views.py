@@ -21,14 +21,19 @@ from users.authentication import ExpiringTokenAuthentication
 
 from .serializers import SubscriptionSetupSerializer
 from .models import SubscriptionSetup
+from django.conf import settings
 
 import stripe
 import djstripe
 from djstripe import webhooks
 
 from decimal import Decimal
+from mixpanel import Mixpanel
 
 from fancy_cherry_36842.settings import STRIPE_LIVE_MODE, STRIPE_LIVE_SECRET_KEY, STRIPE_TEST_SECRET_KEY, CONNECTED_SECRET
+
+
+mp = Mixpanel(settings.MIXPANEL_TOKEN)
 
 
 if STRIPE_LIVE_MODE == True:
@@ -565,6 +570,7 @@ class SubscriptionsViewSet(ModelViewSet):
         subscription = profile.subscription
         sub = stripe.Subscription.delete(subscription.id)
         djstripe.models.Subscription.sync_from_stripe_data(sub)
+        mp.track(str(request.user.id), 'Subscription Cancelled')
         return Response("You've successfully unsubscribed", status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
@@ -633,6 +639,8 @@ class SubscriptionsViewSet(ModelViewSet):
         # profile.stripe_account = djstripe_customer
         profile.subscription = djstripe_subscription
         profile.save()
+
+        mp.track(str(request.user.id), 'Subscription Created')
 
         # return information back to the front end
         data = {

@@ -6,7 +6,7 @@ name = "pypi"
 [dev-packages]
 
 [requires]
-python_version = "*"
+python_version = "3.8"
 
 [packages]
 cryptography = "~=37.0.2"
@@ -38,5 +38,7 @@ pyotp = "*"
 googlemaps = "*"
 channels = "*"
 channels_redis = "*"
+autobahn = "==21.3.1"
 daphne = "==3.0.2"
 dj-stripe = "==2.5.1"
+mixpanel = "*"

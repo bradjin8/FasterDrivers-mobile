@@ -10,6 +10,12 @@ from restaurants.serializers import RestaurantSerializer
 from drivers.models import Driver
 from drivers.serializers import DriverSerializer
 
+from mixpanel import Mixpanel
+
+
+mp = Mixpanel("6497f30c7613848065fe93754c5f55d7")
+
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """
@@ -56,6 +62,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         user.set_password(password)
         user.save()
+
         return user
 
     def update(self, instance, validated_data):

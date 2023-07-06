@@ -119,6 +119,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'fancy_cherry_36842.middleware.ActiveUserMiddleware',
 ]
 
 ROOT_URLCONF = 'fancy_cherry_36842.urls'
@@ -375,3 +376,6 @@ BJPSft4cRmPAnZ1wjY33FEpBqn+gCgYIKoZIzj0DAQehRANCAAQkRbv7YW8s/L5Q
         }
     }
 }
+
+MIXPANEL_TOKEN = env.str("MIXPANEL_TOKEN", "")
+MIXPANEL_SECRET = env.str("MIXPANEL_SECRET", "")

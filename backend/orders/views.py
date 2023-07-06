@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 
 from users.authentication import ExpiringTokenAuthentication
@@ -20,6 +21,11 @@ import djstripe
 from django.utils import timezone
 
 from fancy_cherry_36842.settings import STRIPE_LIVE_MODE, STRIPE_LIVE_SECRET_KEY, STRIPE_TEST_SECRET_KEY, CONNECTED_SECRET
+
+from mixpanel import Mixpanel
+
+
+mp = Mixpanel(settings.MIXPANEL_TOKEN)
 
 
 if STRIPE_LIVE_MODE == True:
@@ -38,6 +44,7 @@ class OrderViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        mp.track(str(self.request.user.id), 'Order Created')
 
     def create(self, request, *args, **kwargs):
         if Order.objects.filter(user=request.user, status="Unpaid").exists():
