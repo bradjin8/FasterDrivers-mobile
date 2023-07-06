@@ -359,17 +359,17 @@ SOCIALACCOUNT_PROVIDERS = {
             # Your service identifier.
             "client_id": "com.fasterdrivers.ios.appleauth",
             # The Key ID (visible in the "View Key Details" page).
-            "secret": "A67A664R26",
+            "secret": "GPU647CQ3D",
              # Member ID/App ID Prefix -- you can find it below your name
              # at the top right corner of the page, or it’s your App ID
              # Prefix in your App ID.
             "key": "U5235F2PBG",
             # The certificate you downloaded when generating the key.
             "certificate_key": """-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgLqPDbEIdlVH1ALAV
-NjraJDGwuMLQ5Yztpov3I9ats02gCgYIKoZIzj0DAQehRANCAAT30UXBmfWgzjFf
-JoIzQIGI/MFwpm1tvjSf5syWY0xY5iN9KMkTM+CPkgX36i31BmuRKZSpCnBCQ1fB
-vcpc4UqY
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQguis0kr9aO/FsjgK/
+BJPSft4cRmPAnZ1wjY33FEpBqn+gCgYIKoZIzj0DAQehRANCAAQkRbv7YW8s/L5Q
+0P6a6wvu9fsTRNO2Fh7v0b3UW4dIga+N0DSgDeatZqoQAl4igQA0a6U3z4/Ac/iB
+/onq/gfR
 -----END PRIVATE KEY-----
 """
         }
