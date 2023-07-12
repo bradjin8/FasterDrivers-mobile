@@ -15,7 +15,7 @@ from .models import User
 from .serializers import ChangePasswordSerializer, CustomAuthTokenSerializer, UserProfileSerializer
 
 from home.permissions import IsPostOrIsAuthenticated, IsAdmin
-from home.utility import auth_token, send_password_reset_email
+from home.utility import auth_token, send_password_reset_email, send_invitation_email
 
 from mixpanel import Mixpanel
 import requests
@@ -121,6 +121,12 @@ class UserViewSet(ModelViewSet):
 
         # Print the results
         return Response(data)
+
+    @action(detail=False, methods=['get'], permission_classes=[IsPostOrIsAuthenticated])
+    def invitation(self, request):
+        email = request.query_params.get('email')
+        send_invitation_email(email)
+        return Response(status=status.HTTP_200_OK)
 
     # Reset Password Email
     @action(detail=False, methods=['post'])
