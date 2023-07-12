@@ -18,7 +18,7 @@ const Home = ({navigation, route}) => {
   const {myOrders, loading, needToRefreshOrders} = useSelector((state) => state.restaurantReducer)
   const [tab, setTab] = React.useState(route.params?.tab || 0)
 
-  // console.log('myOrders', myOrders)
+  // console.log('myOrders', accessToken)
 
   const {name, restaurant} = user
 
@@ -49,7 +49,7 @@ const Home = ({navigation, route}) => {
 
   useEffect(() => {
     const checkStatus = () => {
-      if (restaurant?.id) {
+      if (restaurant?.name) {
         if (!restaurant.subscription) {
           showMessage({
             message: 'You need to subscribe to a plan to start receiving orders',

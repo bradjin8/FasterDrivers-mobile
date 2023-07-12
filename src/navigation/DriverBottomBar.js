@@ -18,6 +18,7 @@ import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
 import Payment from "screens/Restaurant/Settings/Payment";
 import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
+import StripeConnect from "screens/Restaurant/Settings/StripeConnect";
 import Subscription from "screens/Restaurant/Settings/Subscription";
 import TermCondition from "screens/Restaurant/Settings/TermCondition";
 import {Images} from "src/theme"
@@ -134,6 +135,7 @@ const SettingTab = () => {
         <settingStack.Screen name="Subscription" component={Subscription}/>
         <settingStack.Screen name="Payment" component={Payment}/>
         <settingStack.Screen name="AddCard" component={AddCard}/>
+        <settingStack.Screen name="StripeConnect" component={StripeConnect} />
       </settingStack.Navigator>
     </>
   )

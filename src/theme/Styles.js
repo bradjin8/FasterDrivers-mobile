@@ -107,6 +107,9 @@ export const Padding = StyleSheet.create({
   h10: {
     paddingHorizontal: scale(10)
   },
+  h20: {
+    paddingHorizontal: scale(20)
+  },
   t5: {
     paddingTop: scaleVertical(5)
   },

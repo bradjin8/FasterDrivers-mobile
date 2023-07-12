@@ -49,7 +49,12 @@ export const restaurantSettingData = [
   {
     title: "My Wallet",
     icon: Images.OrderAcceptance,
-    key: "Payment"
+    key: "Wallet"
+  },
+  {
+    title: "Stripe Payment",
+    icon: Images.OrderAcceptance,
+    key: "StripeConnect"
   },
   {
     title: "Delete Account",
@@ -108,6 +113,11 @@ export const driverSettingData = [
     title: "My Wallet",
     icon: Images.OrderAcceptance,
     key: "Payment"
+  },
+  {
+    title: "Stripe Payment",
+    icon: Images.OrderAcceptance,
+    key: "StripeConnect"
   },
   {
     title: "Delete Account",

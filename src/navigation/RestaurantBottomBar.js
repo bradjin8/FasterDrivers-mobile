@@ -9,7 +9,7 @@ import ViewDish from "screens/Restaurant/Menu/ViewDish";
 import AddCard from "screens/Restaurant/Settings/AddCard";
 import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
 import Payment from "screens/Restaurant/Settings/Payment";
-import Wallet from "screens/Restaurant/Settings/Wallet";
+import StripeConnect from "screens/Restaurant/Settings/StripeConnect";
 import { Text } from "../components/index";
 import { color, scaleVertical, scale } from "utils";
 
@@ -125,14 +125,14 @@ const SettingTab = () => {
         <settingStack.Screen name="RestaurantProfile" component={RestaurantProfile} />
         <settingStack.Screen name="ChangePassword" component={ChangePassword} />
         <settingStack.Screen name="AccountInformation" component={AccountInformation} />
-        <settingStack.Screen name="Wallet" component={Wallet} />
+        <settingStack.Screen name="StripeConnect" component={StripeConnect} />
         <settingStack.Screen name="OrderAcceptance" component={OrderAcceptance} />
         <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
         <settingStack.Screen name="InviteFriends" component={InviteFriends} />
         <settingStack.Screen name="Subscription" component={Subscription} />
-        <settingStack.Screen name="Payment" component={Payment} />
+        <settingStack.Screen name="Wallet" component={Payment} />
         <settingStack.Screen name="AddCard" component={AddCard} />
       </settingStack.Navigator>
     </>

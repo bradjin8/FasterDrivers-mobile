@@ -25,7 +25,7 @@ const Map = ({navigation, route}) => {
 
   const dispatch = useDispatch()
   const mapView = useRef(null)
-  console.log('restaurant', restaurant)
+  // console.log('restaurant', restaurant)
 
   const fetchNearbyDrivers = () => {
     dispatch(getNearByDriversRequest())

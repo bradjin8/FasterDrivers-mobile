@@ -57,7 +57,7 @@ const SimpleHeader = props => {
           marginLeft: enterChallange ? 30 : 0,
         }}
       >
-        <Text variant={'h5'} color={'black'} fontSize={14}>
+        <Text variant={'h5'} color={'black'} fontSize={18}>
           {title}
         </Text>
       </View>

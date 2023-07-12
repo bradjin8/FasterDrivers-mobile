@@ -117,9 +117,9 @@ const Home = ({navigation}) => {
     const checkStatus = () => {
       if (name) {
         if (driver?.subscription?.status === 'active') {
-          interval = setInterval(() => {
+          // interval = setInterval(() => {
             refresh()
-          }, 10 * 1000)
+          // }, 10 * 1000)
         } else {
           showMessage({
             message: 'Your need to subscribe a plan to continue',
@@ -139,7 +139,7 @@ const Home = ({navigation}) => {
     }
 
     return () => {
-      clearInterval(interval)
+      // clearInterval(interval)
       unsubscribe()
     }
   }, [])

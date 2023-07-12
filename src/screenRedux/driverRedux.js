@@ -150,10 +150,10 @@ function* getAssignedOrdersAction(data) {
   } catch (e) {
     const {response} = e
     yield put(requestFailed())
-    showMessage({
-      message: response?.data ?? "Something went wrong",
-      type: "danger",
-    })
+    // showMessage({
+    //   message: response?.data ?? "Something went wrong",
+    //   type: "danger",
+    // })
   } finally {
   }
 }

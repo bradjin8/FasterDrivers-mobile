@@ -557,14 +557,14 @@ function* signUpAction(data) {
         navigate('RestaurantBottomBar', {
           screen: 'Settings',
           params: {
-            screen: 'AccountInformation',
+            screen: 'StripeConnect',
           }
         })
       } else if (resp?.data.user.type === "Driver") {
         navigate('DriverBottomBar', {
           screen: 'Settings',
           params: {
-            screen: 'AccountInformation',
+            screen: 'StripeConnect',
           }
         })
       } else {

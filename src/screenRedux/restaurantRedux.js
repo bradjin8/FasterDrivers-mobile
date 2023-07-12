@@ -260,7 +260,7 @@ function* viewMyOrdersAction(data) {
     const {response} = e
     yield put(requestFailed())
     showMessage({
-      message: response?.data?.detail?.[0] ?? "Something went wrong, Please try again!",
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
       type: "danger"
     })
   }

@@ -10,7 +10,7 @@ import {CustomTextInput} from "../../../components/CustomTextInput"
 import {Text} from "../../../components/text"
 import {getDeliveredOrders} from "../../../screenRedux/driverRedux"
 import {Images} from "../../../theme"
-import {Flex, Margin} from "../../../theme/Styles";
+import {Flex, Margin, Padding} from "../../../theme/Styles";
 
 const History = ({navigation}) => {
   const {user: {id, name, driver: driver}} = useSelector((state) => state.loginReducer)
@@ -150,7 +150,7 @@ const History = ({navigation}) => {
         data={Object.keys(ordersByDate)}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={<Text>No orders</Text>}
+        ListEmptyComponent={<View style={[Padding.h20]}><Text>No orders</Text></View>}
         refreshing={false}
         onRefresh={fetchHistory}
       />

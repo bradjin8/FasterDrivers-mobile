@@ -49,7 +49,7 @@ const Settings = ({}) => {
   return (
     <View style={styles.mainWrapper}>
       <DriverHeader photo={driver?.photo} name={name}/>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} contentContainerStyle={{paddingVertical: 10}}>
         {driverSettingData.map((setting, index) => {
           return(
             <Pressable onPress={() =>  redirectTo(setting.key)} key={index.toString()}>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white
   },
-  container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
+  container: {flex: 1, backgroundColor: color.white, paddingHorizontal: scaleVertical(25), marginVertical: 5},
   listContain: {
     flexDirection: 'row',
     paddingVertical: scaleVertical(16),

@@ -75,15 +75,11 @@ async function iOS() {
 
     console.log('appleAuthRequestResponse', appleAuthRequestResponse)
 
-    const credentialState = await appleAuth.getCredentialStateForUser(user)
-    if (credentialState === appleAuth.State.AUTHORIZED) {
-      return {
-        access_token: authorizationCode,
-        // code: authorizationCode,
-        id_token: identityToken,
-      }
+    return {
+      access_token: authorizationCode,
+      // code: authorizationCode,
+      id_token: identityToken,
     }
-    return null
   } catch (error) {
     if (error && error.code === appleAuth.Error.CANCELED) {
       throw new Error("The user canceled the signin request.")
