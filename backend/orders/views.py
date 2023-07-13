@@ -141,4 +141,7 @@ class OrderViewSet(ModelViewSet):
         payment.driver_transfer = dj_driver_transfer
         payment.save()
 
+        order.driver.driver.earnings += order.driver_payout
+        order.driver.driver.save()
+
         return Response(serializer)

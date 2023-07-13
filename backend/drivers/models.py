@@ -85,6 +85,12 @@ class Driver(UUIDModel):
         blank=True,
         help_text="The Driver's Stripe Connect Account object, if it exists"
     )
+    earnings = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00,
+        help_text="The Driver's earnings"
+    )
 
     @property
     def assigned_orders(self):
