@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.mail import EmailMessage
 
+from home.permissions import IsAuthenticatedOrActivatedDriver
 from customadmin.models import HotKeyword, FlaggedItem
 from reviews.models import Review, DriverReview
 from reviews.serializers import ReviewSerializer, DriverReviewSerializer
@@ -12,7 +13,7 @@ from fancy_cherry_36842.settings import SENDGRID_SENDER
 
 class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Review.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -36,7 +37,7 @@ class ReviewViewSet(ModelViewSet):
 
 class DriverReviewViewSet(ModelViewSet):
     serializer_class = DriverReviewSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = DriverReview.objects.all()
     filter_backends = [DjangoFilterBackend]

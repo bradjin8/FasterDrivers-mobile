@@ -410,8 +410,9 @@ class PaymentViewSet(ModelViewSet):
         djstripe_account = djstripe.models.Account.sync_from_stripe_data(account)
         profile.connect_account = djstripe_account
         profile.save()
-        serializer = UserProfileSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if profile.connect_account.payouts_enabled:
+            return Response(status=status.HTTP_200_OK)
+        return Response("Account payouts not enabled. Reattempt account creation to add additional details.", status=status.HTTP_400_BAD_REQUEST)
 
     # Business Account
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])

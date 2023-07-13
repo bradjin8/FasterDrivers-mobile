@@ -17,12 +17,14 @@ import logging
 import json
 import base64
 import binascii
+import ssl
 import google.auth
 from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
 from modules.manifest import get_modules
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -319,17 +321,27 @@ SENDGRID_SENDER = env.str("SENDGRID_SENDER", "sallar.rezaie@crowdbotics.com")
 
 ASGI_APPLICATION = 'fancy_cherry_36842.asgi.application'
 
-host = os.environ.get('REDIS_URL', 'redis://localhost:6379') if not IS_LOCAL else ('0.0.0.0', 6379)
+REDIS_URL = env.str("REDIS_URL", "rediss://localhost:6379/0")
+
+CHANNEL_REDIS_HOST = {
+    "address": REDIS_URL,
+}
+
+if urlparse(REDIS_URL).scheme == "rediss":
+    CHANNEL_REDIS_HOST.update(
+        {
+            "ssl": ssl.SSLContext()
+        }
+    )
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [host],
+            "hosts": [CHANNEL_REDIS_HOST],
         },
     },
 }
-
-REDIS_URL = [host]
 
 CONNECTED_SECRET = env.str("CONNECTED_SECRET", "")
 STRIPE_TEST_SECRET_KEY = env.str("STRIPE_TEST_SECRET_KEY", "")

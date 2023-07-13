@@ -54,6 +54,21 @@ class IsGetOrAdmin(permissions.BasePermission):
         return False
 
 
+class IsAuthenticatedOrActivatedDriver(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+
+        if user and user.is_authenticated:
+            if user.type == "Driver":
+                if user.activated_profile:
+                    return True
+                return False
+            else:
+                return request.user and request.user.is_authenticated
+
+        return False                
+
+
 class HasActiveSubscription(permissions.BasePermission):
     def has_permission(self, request, view):
         user = request.user

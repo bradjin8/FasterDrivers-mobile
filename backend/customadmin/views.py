@@ -21,7 +21,7 @@ class AdminUserViewSet(ModelViewSet):
     permission_classes = (IsAdmin,)
     queryset = User.objects.all()
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ['is_active', 'flagged', 'type']
+    filterset_fields = ['activated_profile', 'flagged', 'type']
     search_fields = ['name', 'first_name', 'last_name', 'email']
     ordering_fields = ['name', 'email', 'flagged_until']
 
@@ -42,7 +42,7 @@ class AdminUserViewSet(ModelViewSet):
     @action(detail=False, methods=['post'])
     def approve(self, request):
         user = User.objects.get(pk=request.data['user'])
-        user.is_active = True
+        user.activated_profile = True
         user.save()
 
         email_body = """

@@ -4,9 +4,11 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from django.db.models import Q
 from django.contrib.gis.measure import Distance  
 from django.utils import timezone
 
+from home.permissions import IsAuthenticatedOrActivatedDriver
 from users.serializers import UserProfileSerializer
 from users.models import User
 from users.authentication import ExpiringTokenAuthentication
@@ -20,7 +22,7 @@ from orders.models import Order
 
 class DishViewSet(ModelViewSet):
     serializer_class = DishSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Dish.objects.all()
 
@@ -30,21 +32,21 @@ class DishViewSet(ModelViewSet):
 
 class AddOnViewSet(ModelViewSet):
     serializer_class = AddOnSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = AddOn.objects.all()
 
 
 class ItemViewSet(ModelViewSet):
     serializer_class = ItemSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Item.objects.all()
 
 
 class RestaurantViewSet(ModelViewSet):
     serializer_class = RestaurantSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes = [ExpiringTokenAuthentication]
     queryset = Restaurant.objects.all()
     filter_backends = [filters.SearchFilter]
@@ -54,6 +56,15 @@ class RestaurantViewSet(ModelViewSet):
         if self.action == 'list':
             return ListRestaurantSerializer
         return RestaurantSerializer
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'restaurant'):
+            return Restaurant.objects.filter(
+                Q(user=self.request.user) | 
+                Q(subscription__status="active", connect_account__payouts_enabled=True)
+            )
+        return Restaurant.objects.filter(subscription__status="active", connect_account__payouts_enabled=True)
+
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -70,7 +81,14 @@ class RestaurantViewSet(ModelViewSet):
     @action(detail=False, methods=['GET'])
     def nearby_drivers(self, request):
         restaurant_location = request.user.restaurant.location
-        nearby_users = User.objects.filter(driver__location__distance_lt=(restaurant_location, Distance(km=20)))
+        nearby_users = User.objects.filter(
+            activated_profile=True,
+            driver__subscription__status="active",
+            driver__connect_account__payouts_enabled=True,
+            driver__location__distance_lt=(
+                restaurant_location, Distance(km=20)
+            )
+        )
         serializer = UserProfileSerializer(nearby_users, many=True).data
         return Response(serializer)
 

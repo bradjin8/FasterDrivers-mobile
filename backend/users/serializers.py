@@ -31,7 +31,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
                     'id', 'name', 'first_name', 'last_name', 'email', 'password', 
-                    'is_admin', 'type', 'customer', 'driver', 'restaurant'
+                    'is_admin', 'type', 'customer', 'driver', 'restaurant', 'activated_profile'
                 )
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5},
                         'email': {'required': True},
@@ -49,16 +49,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
             Customer.objects.create(
                 user=user
             )
+            user.activated_profile = True
         elif user.type == "Driver":
             Driver.objects.create(
                 user=user
             )
-            user.is_active = False
-            user.save()
+            user.activated_profile = False
         elif user.type == "Restaurant":
             Restaurant.objects.create(
                 user=user
             )
+            user.activated_profile = True
 
         user.set_password(password)
         user.save()

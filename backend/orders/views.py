@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 
+from home.permissions import IsAuthenticatedOrActivatedDriver
 from users.authentication import ExpiringTokenAuthentication
 
 from payments.models import Payment
@@ -36,7 +37,7 @@ else:
 
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Order.objects.all()
     filter_backends = [DjangoFilterBackend]
