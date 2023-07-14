@@ -39,7 +39,7 @@ const CarDetails = () => {
       data.append('driver.car_image', {
         name: `rnd-${pickImage.path}`,
         type: pickImage.mime,
-        uri: Platform.OS === 'ios' ? pickImage.sourceURL.replace('file://', '') : pickImage.path,
+        uri: pickImage.path,
         data: pickImage.data
       });
     }
@@ -64,7 +64,7 @@ const CarDetails = () => {
               <SimpleLineIcons name={'pencil'} size={scale(12)} color={color.black}/>
             </View>
             {pickImage ?
-              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} resizeMode={'contain'}/>
+              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} resizeMode={'cover'}/>
               :
               <Image source={Images.Capture} defaultSource={Images.Capture} style={styles.icon} resizeMode={'contain'}/>
             }

@@ -71,16 +71,30 @@ const AddCard = ({}) => {
         })
         return
       }
+      let billingAddress = defaultAddress
+      console.log('billingAddress', billingAddress)
+      if (!billingAddress) {
+        const profile = user[user.type.toLowerCase()]
+        billingAddress = {
+          city: profile.city,
+          country: profile.country,
+          state: profile.state,
+          street: profile.street,
+          zip_code: profile.zip_code,
+        }
+      }
+
+
       dispatch(addPaymentRequest(JSON.stringify({
         payment_method: paymentMethod.id,
         billing_details: {
           name: cardHolder,
           address: {
-            city: defaultAddress?.city,
-            country: defaultAddress?.country || "US",
-            line1: defaultAddress?.street,
-            postal_code: defaultAddress?.zip_code,
-            state: defaultAddress?.state,
+            city: billingAddress?.city,
+            country: billingAddress?.country || "US",
+            line1: billingAddress?.street,
+            postal_code: billingAddress?.zip_code,
+            state: billingAddress?.state,
           }
         },
       })))

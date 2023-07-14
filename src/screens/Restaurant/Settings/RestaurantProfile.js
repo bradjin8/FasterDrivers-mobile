@@ -147,6 +147,7 @@ const RestaurantProfile = ({navigation}) => {
           <CustomTextInput
             value={restaurantDetails["restaurant.phone"]}
             onChangeText={(text) => onChangeText("restaurant.phone", text)}
+            keyboardType={'phone-pad'}
           />
           <Text variant="text" color="black" >
             Type of the restaurant

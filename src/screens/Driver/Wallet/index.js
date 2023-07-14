@@ -13,7 +13,7 @@ import {Button} from "../../../components/button";
 const Wallet = () => {
   const {user: {name, driver: driver}} = useSelector((state) => state.loginReducer)
   const {isWithdrawing} = useSelector(state => state.driverReducer)
-  // console.log('driver', driver)
+  console.log('driver', driver.earnings)
 
   const onWithdraw = () => {
 
@@ -25,7 +25,7 @@ const Wallet = () => {
       <View style={styles.container}>
         <View style={[Flex.itemsCenter]}>
           <Text variant={'h5'} color={'primary'} fontSize={16}>Total Earnings</Text>
-          <Text variant={'h5'} color={'primary'} fontWeight={'700'}>$47.65</Text>
+          <Text variant={'h5'} color={'primary'} fontWeight={'700'}>$ {driver?.earnings}</Text>
         </View>
         <View style={[Margin.v10]}>
           <PaymentCard payment={mockPayment} active={true}/>
