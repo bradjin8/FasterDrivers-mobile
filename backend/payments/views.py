@@ -88,19 +88,22 @@ class PaymentViewSet(ModelViewSet):
         if order.status != 'Unpaid':
             return Response({'detail': 'Order needs to be in Unpaid status'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get the Stripe Customer Infomration
-        customers_data = stripe.Customer.list().data
-        customer = None
-        for customer_data in customers_data:
-            if customer_data.email == request.user.email:
-                customer = customer_data
-                break
-        if customer is None:
-            customer = stripe.Customer.create(email=request.user.email)
+        try:
+            # Get the Stripe Customer Infomration
+            customers_data = stripe.Customer.list().data
+            customer = None
+            for customer_data in customers_data:
+                if customer_data.email == request.user.email:
+                    customer = customer_data
+                    break
+            if customer is None:
+                customer = stripe.Customer.create(email=request.user.email)
 
-        djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
-        payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
-        djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
+            djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
+            payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
+            djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         request.user.customer.stripe_account = djstripe_customer
         request.user.customer.stripe_account.save()
@@ -123,29 +126,6 @@ class PaymentViewSet(ModelViewSet):
         # Sync with djstripe models
         dj_customer_payment_intent = djstripe.models.PaymentIntent.sync_from_stripe_data(customer_payment_intent)
 
-        # Transfer appropriate amounts to restaurant and driver
-        # try:
-        #     restaurant_transfer = stripe.Transfer.create(
-        #         amount=int(restaurant_payout * 100),
-        #         currency='usd',
-        #         destination=order.restaurant.connect_account.id,
-        #         source_transaction=charge_id
-        #     )
-        # except Exception as e:
-        #     return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # try:
-        #     driver_transfer = stripe.Transfer.create(
-        #         amount=int(driver_payout * 100),
-        #         currency='usd',
-        #         destination=order.driver.driver.connect_account.id,
-        #         source_transaction=charge_id
-        #     )
-        # except Exception as e:
-        #     return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # dj_restaurant_transfer = djstripe.models.Transfer.sync_from_stripe_data(restaurant_transfer)
-        # dj_driver_transfer = djstripe.models.Transfer.sync_from_stripe_data(driver_transfer)
         Payment.objects.create(
             order=order,
             user=request.user,
