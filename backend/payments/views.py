@@ -401,15 +401,27 @@ class PaymentViewSet(ModelViewSet):
             profile = request.user.restaurant
         elif request.user.type == "Driver":
             profile = request.user.driver
+        device = request.query_params.get('device', False)
         if profile.connect_account:
             account_id = profile.connect_account.id
-            link = stripe.AccountLink.create(
-                account=account_id,
-                refresh_url="http://localhost:8080/reauth/",
-                return_url="http://localhost:8080/success/",
-                type="account_onboarding",
-            )
-            return Response({'link': link})
+            if device == "mobile":
+                link = stripe.AccountLink.create(
+                    account=account_id,
+                    refresh_url="http://localhost:8080/reauth/",
+                    return_url="http://localhost:8080/return/",
+                    type="account_onboarding",
+                )
+                return Response({'link': link})
+
+            else:
+                link = stripe.AccountLink.create(
+                    account=account_id,
+                    refresh_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?reauth=true",
+                    return_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?return=true",
+                    type="account_onboarding",
+                )
+                return Response({'link': link})
+
         business_name = 'Fast Drivers'
         account = stripe.Account.create(
             country="US",
@@ -423,13 +435,23 @@ class PaymentViewSet(ModelViewSet):
         djstripe_account = djstripe.models.Account.sync_from_stripe_data(account)
         profile.connect_account = djstripe_account
         profile.save()
-        link = stripe.AccountLink.create(
-            account=account['id'],
-            refresh_url="http://localhost:8080/reauth/",
-            return_url="http://localhost:8080/success/",
-            type="account_onboarding",
-        )
-        return Response({'link': link}, status=status.HTTP_201_CREATED)
+        if device == "mobile":
+            link = stripe.AccountLink.create(
+                account=account['id'],
+                refresh_url="http://localhost:8080/reauth/",
+                return_url="http://localhost:8080/return/",
+                type="account_onboarding",
+            )
+            return Response({'link': link})
+
+        else:
+            link = stripe.AccountLink.create(
+                account=account['id'],
+                refresh_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?reauth=true",
+                return_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?return=true",
+                type="account_onboarding",
+            )
+            return Response({'link': link})
 
     @action(detail=False, methods=['POST'])
     def connected(self, request):
