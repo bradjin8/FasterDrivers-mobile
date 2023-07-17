@@ -10,29 +10,25 @@ import {checkStripeStatus, setUpStripeAccount} from "../../../screenRedux/restau
 import {Flex, Margin, Padding} from "../../../theme/Styles";
 import {color} from "../../../utils/color";
 
-const StripeConnect = ({navigation}) => {
+const StripeConnect = ({navigation, route}) => {
   const [enabled, setEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [webUrl, setWebUrl] = useState('')
   const {user} = useSelector(state => state.loginReducer)
+  const params = route?.params
 
   const type = user?.type?.toLowerCase() || 'restaurant'
 
   const fetchStripeStatus = () => {
     setLoading(true)
     checkStripeStatus()
-      .then(res => res.data)
-      .then(data => {
-        const {
-          [type]: {
-            connect_account: {
-              charges_enabled: chargesEnabled,
-              payouts_enabled: payoutsEnabled,
-            }
-          }
-        } = data
-        console.log('chargesEnabled', chargesEnabled)
-        console.log('payoutsEnabled', payoutsEnabled)
-        setEnabled(payoutsEnabled === true)
+      .then(res => {
+        // console.log('stripe-status', res.status)
+        if (res.status === 200) {
+          setEnabled(true)
+        } else {
+          setEnabled(false)
+        }
       })
       .finally(() => setLoading(false))
   }
@@ -49,7 +45,8 @@ const StripeConnect = ({navigation}) => {
           }
         } = data
         if (stripeUrl) {
-          Linking.openURL(stripeUrl)
+          // Linking.openURL(stripeUrl)
+          navigation.navigate('StripeWebView', {url: stripeUrl})
         }
       })
       .finally(() => setLoading(false))
@@ -60,8 +57,16 @@ const StripeConnect = ({navigation}) => {
       fetchStripeStatus()
     });
     // fetchStripeStatus()
-    return unsubscribe
+    return () => {
+      unsubscribe()
+    }
   }, [])
+
+  useEffect(() => {
+    if (params?.type === 'reauth' && !enabled) {
+      setUpBilling()
+    }
+  }, [params])
 
   return (
     <View style={styles.mainWrapper}>
@@ -103,6 +108,14 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     padding: scaleVertical(25),
   },
+  webView: {
+    flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  }
 })
 
 export default StripeConnect;

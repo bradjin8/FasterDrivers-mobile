@@ -1,6 +1,7 @@
 import React from "react"
 import {StyleSheet, Linking} from "react-native"
 import {createStackNavigator} from "@react-navigation/stack"
+import StripeWebView from "screens/Restaurant/Settings/StripeWebView";
 
 //Screens
 import RestaurantBottomBar from "./RestaurantBottomBar"
@@ -23,6 +24,7 @@ const ApplicationStack = props => {
           initialRouteName="RestaurantBottomBar"
         >
           <mainStack.Screen name="RestaurantBottomBar" component={RestaurantBottomBar}/>
+          <mainStack.Screen name="StripeWebView" component={StripeWebView}/>
         </mainStack.Navigator>
       </>
     )
@@ -45,6 +47,7 @@ const ApplicationStack = props => {
           initialRouteName="DriverBottomBar"
         >
           <mainStack.Screen name="DriverBottomBar" component={DriverBottomBar}/>
+          <mainStack.Screen name="StripeWebView" component={StripeWebView}/>
         </mainStack.Navigator>
       </>
     )

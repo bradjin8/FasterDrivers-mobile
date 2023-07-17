@@ -364,7 +364,7 @@ export const checkStripeStatus = () => {
 }
 
 export const setUpStripeAccount = () => {
-  const URL = `${appConfig.backendServerURL}/payments/account/`
+  const URL = `${appConfig.backendServerURL}/payments/account/?device=mobile`
   const options = {
     headers: {
       Accept: "application/json",
