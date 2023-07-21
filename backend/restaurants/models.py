@@ -81,6 +81,17 @@ class Restaurant(UUIDModel):
     )
 
 
+class Category(UUIDModel):
+    restaurant = models.ForeignKey(
+        Restaurant,
+        on_delete=models.CASCADE,
+        related_name='categories'
+    )
+    name = models.CharField(
+        max_length=64
+    )
+    
+
 class Dish(UUIDModel):
     restaurant = models.ForeignKey(
         Restaurant,
@@ -90,8 +101,11 @@ class Dish(UUIDModel):
     name = models.CharField(
         max_length=64
     )
-    category = models.CharField(
-        max_length=64
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='dishes'
     )
     description = models.TextField()
     price = models.DecimalField(

@@ -13,8 +13,9 @@ from users.serializers import UserProfileSerializer
 from users.models import User
 from users.authentication import ExpiringTokenAuthentication
 from .serializers import DishSerializer, AddOnSerializer, ItemSerializer, \
-                         RestaurantSerializer, ListRestaurantSerializer
-from .models import Dish, AddOn, Item, Restaurant
+                         RestaurantSerializer, ListRestaurantSerializer, \
+                         CategorySerializer
+from .models import Dish, AddOn, Item, Restaurant, Category
 from .utils import sort_by_type, sort_by_category
 
 from orders.models import Order
@@ -44,6 +45,20 @@ class ItemViewSet(ModelViewSet):
     queryset = Item.objects.all()
 
 
+class CategoryViewSet(ModelViewSet):
+    serializer_class = CategorySerializer
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
+    authentication_classes  = [ExpiringTokenAuthentication]
+    queryset = Category.objects.all()
+    filterset_fields = ['restaurant']
+
+    def get_queryset(self):
+        return Category.objects.filter(restaurant=self.request.user.restaurant)
+
+    def perform_create(self, serializer):
+        serializer.save(restaurant=self.request.user.restaurant)
+
+
 class RestaurantViewSet(ModelViewSet):
     serializer_class = RestaurantSerializer
     permission_classes = (IsAuthenticatedOrActivatedDriver,)
@@ -63,7 +78,8 @@ class RestaurantViewSet(ModelViewSet):
                 Q(user=self.request.user) | 
                 Q(subscription__status="active", connect_account__payouts_enabled=True)
             )
-        return Restaurant.objects.filter(subscription__status="active", connect_account__payouts_enabled=True)
+        # return Restaurant.objects.filter(subscription__status="active", connect_account__payouts_enabled=True)
+        return super().get_queryset()
 
 
     def list(self, request, *args, **kwargs):

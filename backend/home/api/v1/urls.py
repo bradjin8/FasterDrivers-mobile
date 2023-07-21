@@ -7,7 +7,7 @@ from home.api.v1.viewsets import (
 )
 from customers.views import CustomerAddressViewSet
 from users.viewsets import UserViewSet
-from restaurants.views import DishViewSet, AddOnViewSet, ItemViewSet, RestaurantViewSet
+from restaurants.views import DishViewSet, AddOnViewSet, ItemViewSet, RestaurantViewSet, CategoryViewSet
 from orders.views import OrderViewSet
 from payments.views import PaymentViewSet, SubscriptionsViewSet
 from reviews.views import ReviewViewSet, DriverReviewViewSet
@@ -21,6 +21,7 @@ router.register("orders", OrderViewSet, basename="orders")
 router.register("customers/address", CustomerAddressViewSet, basename="customer_addresses")
 router.register("restaurants", RestaurantViewSet, basename="restuarants")
 router.register("dishes", DishViewSet, basename="dishes")
+router.register("categories", CategoryViewSet, basename="categories")
 router.register("addons", AddOnViewSet, basename="addons")
 router.register("items", ItemViewSet, basename="items")
 router.register("payments", PaymentViewSet, basename="payments")
