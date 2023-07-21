@@ -96,22 +96,34 @@ class RestaurantViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def nearby_drivers(self, request):
+        ongoing_statuses = ["Accepted", "In Progress", "Driver Assigned", "In Transit"]
         restaurant_location = request.user.restaurant.location
+        if restaurant_location is None:
+            return Response({"detail": "The restaurant's location is not set."}, status=400)
+
         nearby_users = User.objects.filter(
+            # Only include drivers that do not have any ongoing orders
+            ~Q(driver_orders__status__in=ongoing_statuses),
             activated_profile=True,
             driver__subscription__status="active",
             driver__connect_account__payouts_enabled=True,
             driver__location__distance_lt=(
                 restaurant_location, Distance(km=20)
             )
-        )
+        ).distinct()
         serializer = UserProfileSerializer(nearby_users, many=True).data
         return Response(serializer)
 
     @action(detail=False, methods=['POST'])
     def request_driver(self, request):
+        ongoing_statuses = ["Accepted", "In Progress", "Driver Assigned", "In Transit"]
         order = Order.objects.get(id=request.data.get('order'))
         driver_user = User.objects.get(id=request.data.get('driver'))
+
+        # Check if driver already has an ongoing order
+        if Order.objects.filter(driver=driver_user, status__in=ongoing_statuses).exists():
+            return Response("Driver is currently assigned to an ongoing order", status=400)
+
         order.driver = driver_user
         order.driver_assigned_at = timezone.now()
         order.status = "Driver Assigned"
