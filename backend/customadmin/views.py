@@ -93,9 +93,10 @@ class AdminFeedbackViewSet(ModelViewSet):
         feedback = Feedback.objects.get(pk=request.data['feedback'])
         if not feedback.responded:
             # Use feedback's subject and message for the email
-            subject = feedback.subject
-            message = feedback.message
-
+            subject = request.data.get('subject', 'Feedback Response - Faster Drivers')
+            message = request.data.get('message')
+            if not message:
+                return Response("Message cannot be empty", status=status.HTTP_400_BAD_REQUEST)
             # construct email and send
             email_msg = EmailMessage(subject, message, from_email=SENDGRID_SENDER, to=[feedback.user.email])
             email_msg.content_subtype = "html"

@@ -45,6 +45,11 @@ class FeedbackSerializer(serializers.ModelSerializer):
             }
         }
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['user'] = AdminUserSerializer(instance.user).data
+        return rep
+
 
 class HotKeywordSerializer(serializers.ModelSerializer):
     class Meta:
