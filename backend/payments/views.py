@@ -100,8 +100,14 @@ class PaymentViewSet(ModelViewSet):
                 customer = stripe.Customer.create(email=request.user.email)
 
             djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
-            payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
-            djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
+            payment_method = stripe.PaymentMethod.retrieve(payment_method)
+            if payment_method.customer is None:
+                if payment_method.customer != djstripe_customer.id:
+                    payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
+                    djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
+                else:
+                    return Response({"detail": "Payment method belongs to another cusomter"}, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
