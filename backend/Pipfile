@@ -6,7 +6,7 @@ name = "pypi"
 [dev-packages]
 
 [requires]
-python_version = "*"
+python_version = "3.8"
 
 [packages]
 cryptography = "~=37.0.2"
@@ -36,7 +36,10 @@ django-cors-headers = "==3.11.0"
 django-cleanup = "*"
 pyotp = "*"
 googlemaps = "*"
-channels = "*"
-channels_redis = "*"
+redis = "==4.5.1"
+channels = "==3.0.3"
+channels-redis = "==3.3.1"
+autobahn = "==21.3.1"
 daphne = "==3.0.2"
 dj-stripe = "==2.5.1"
+mixpanel = "*"

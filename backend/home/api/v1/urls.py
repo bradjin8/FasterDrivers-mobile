@@ -9,7 +9,7 @@ from customers.views import CustomerAddressViewSet
 from users.viewsets import UserViewSet
 from restaurants.views import DishViewSet, AddOnViewSet, ItemViewSet, RestaurantViewSet
 from orders.views import OrderViewSet
-from payments.views import PaymentViewSet
+from payments.views import PaymentViewSet, SubscriptionsViewSet
 from reviews.views import ReviewViewSet, DriverReviewViewSet
 
 
@@ -24,9 +24,11 @@ router.register("dishes", DishViewSet, basename="dishes")
 router.register("addons", AddOnViewSet, basename="addons")
 router.register("items", ItemViewSet, basename="items")
 router.register("payments", PaymentViewSet, basename="payments")
+router.register("subscriptions", SubscriptionsViewSet, basename="subscriptions")
 router.register("reviews", ReviewViewSet, basename="reviews")
 router.register("driver-reviews", DriverReviewViewSet, basename="driver_reviews")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("admin/", include("customadmin.urls"))
 ]

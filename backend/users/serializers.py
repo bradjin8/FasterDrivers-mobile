@@ -10,6 +10,12 @@ from restaurants.serializers import RestaurantSerializer
 from drivers.models import Driver
 from drivers.serializers import DriverSerializer
 
+from mixpanel import Mixpanel
+
+
+mp = Mixpanel("6497f30c7613848065fe93754c5f55d7")
+
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """
@@ -25,7 +31,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
                     'id', 'name', 'first_name', 'last_name', 'email', 'password', 
-                    'is_admin', 'type', 'customer', 'driver', 'restaurant'
+                    'is_admin', 'type', 'customer', 'driver', 'restaurant', 'activated_profile'
                 )
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5},
                         'email': {'required': True},
@@ -38,20 +44,26 @@ class UserProfileSerializer(serializers.ModelSerializer):
         email = validated_data.get('email')
         validated_data['username'] = email
         user = User.objects.create(**validated_data)
-        user.set_password(password)
-        user.save()
+
         if user.type == "Customer":
             Customer.objects.create(
                 user=user
             )
+            user.activated_profile = True
         elif user.type == "Driver":
             Driver.objects.create(
                 user=user
             )
+            user.activated_profile = False
         elif user.type == "Restaurant":
             Restaurant.objects.create(
                 user=user
             )
+            user.activated_profile = True
+
+        user.set_password(password)
+        user.save()
+
         return user
 
     def update(self, instance, validated_data):

@@ -4,6 +4,7 @@ from django.utils import timezone
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import exceptions
 
+
 EXPIRE_HOURS = getattr(settings, 'REST_FRAMEWORK_TOKEN_EXPIRE_HOURS', 24)
 
 
@@ -15,6 +16,14 @@ class ExpiringTokenAuthentication(TokenAuthentication):
             raise exceptions.AuthenticationFailed('Invalid token')
 
         if not token.user.is_active:
-            raise exceptions.AuthenticationFailed('User inactive or deleted')
+                raise exceptions.AuthenticationFailed('User is currently inactive')
+
+        if token.user.flagged:
+            if token.user.flagged_until and timezone.now() > token.user.flagged_until:
+                token.user.flagged = False
+                token.user.flagged_until = None
+                token.user.save()
+            else:
+                 raise exceptions.AuthenticationFailed('User has been flagged. Contact your administrator')
 
         return token.user, token

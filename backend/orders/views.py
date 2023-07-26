@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
+from django.conf import settings
 from django_filters.rest_framework import DjangoFilterBackend
 
+from home.permissions import IsAuthenticatedOrActivatedDriver
 from users.authentication import ExpiringTokenAuthentication
 
 from payments.models import Payment
@@ -21,6 +23,11 @@ from django.utils import timezone
 
 from fancy_cherry_36842.settings import STRIPE_LIVE_MODE, STRIPE_LIVE_SECRET_KEY, STRIPE_TEST_SECRET_KEY, CONNECTED_SECRET
 
+from mixpanel import Mixpanel
+
+
+mp = Mixpanel(settings.MIXPANEL_TOKEN)
+
 
 if STRIPE_LIVE_MODE == True:
     stripe.api_key = STRIPE_LIVE_SECRET_KEY
@@ -30,7 +37,7 @@ else:
 
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Order.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -38,6 +45,7 @@ class OrderViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        mp.track(str(self.request.user.id), 'Order Created')
 
     def create(self, request, *args, **kwargs):
         if Order.objects.filter(user=request.user, status="Unpaid").exists():
@@ -132,5 +140,8 @@ class OrderViewSet(ModelViewSet):
         payment.restaurant_transfer = dj_restaurant_transfer
         payment.driver_transfer = dj_driver_transfer
         payment.save()
+
+        order.driver.driver.earnings += order.driver_payout
+        order.driver.driver.save()
 
         return Response(serializer)

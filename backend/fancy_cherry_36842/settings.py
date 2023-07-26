@@ -17,12 +17,14 @@ import logging
 import json
 import base64
 import binascii
+import ssl
 import google.auth
 from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
 from modules.manifest import get_modules
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,7 +82,9 @@ LOCAL_APPS = [
     'restaurants',
     'reviews',
     'orders',
-    'payments'
+    'payments',
+    'socials',
+    'customadmin'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -92,6 +96,8 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.apple',
     'django_extensions',
     'drf_yasg',
     'storages',
@@ -115,6 +121,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'fancy_cherry_36842.middleware.ActiveUserMiddleware',
 ]
 
 ROOT_URLCONF = 'fancy_cherry_36842.urls'
@@ -314,17 +321,27 @@ SENDGRID_SENDER = env.str("SENDGRID_SENDER", "sallar.rezaie@crowdbotics.com")
 
 ASGI_APPLICATION = 'fancy_cherry_36842.asgi.application'
 
-host = os.environ.get('REDIS_URL', 'redis://localhost:6379') if not IS_LOCAL else ('0.0.0.0', 6379)
+REDIS_URL = env.str("REDIS_URL", "rediss://localhost:6379/0")
+
+CHANNEL_REDIS_HOST = {
+    "address": REDIS_URL,
+}
+
+if urlparse(REDIS_URL).scheme == "rediss":
+    CHANNEL_REDIS_HOST.update(
+        {
+            "ssl": ssl.SSLContext()
+        }
+    )
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [host],
+            "hosts": [CHANNEL_REDIS_HOST],
         },
     },
 }
-
-REDIS_URL = [host]
 
 CONNECTED_SECRET = env.str("CONNECTED_SECRET", "")
 STRIPE_TEST_SECRET_KEY = env.str("STRIPE_TEST_SECRET_KEY", "")
@@ -332,3 +349,45 @@ STRIPE_LIVE_SECRET_KEY = os.environ.get("STRIPE_LIVE_SECRET_KEY", "")
 STRIPE_LIVE_MODE = env.bool("STRIPE_LIVE_MODE", False)
 DJSTRIPE_WEBHOOK_SECRET = env.str("DJSTRIPE_WEBHOOK_SECRET", "")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'facebook': {
+        'SCOPE': [
+            'email',
+            'public_profile'
+        ],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+    },
+    "apple": {
+        "APP": {
+            # Your service identifier.
+            "client_id": "com.fasterdrivers.ios.appleauth",
+            # The Key ID (visible in the "View Key Details" page).
+            "secret": "GPU647CQ3D",
+             # Member ID/App ID Prefix -- you can find it below your name
+             # at the top right corner of the page, or it’s your App ID
+             # Prefix in your App ID.
+            "key": "U5235F2PBG",
+            # The certificate you downloaded when generating the key.
+            "certificate_key": """-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQguis0kr9aO/FsjgK/
+BJPSft4cRmPAnZ1wjY33FEpBqn+gCgYIKoZIzj0DAQehRANCAAQkRbv7YW8s/L5Q
+0P6a6wvu9fsTRNO2Fh7v0b3UW4dIga+N0DSgDeatZqoQAl4igQA0a6U3z4/Ac/iB
+/onq/gfR
+-----END PRIVATE KEY-----
+"""
+        }
+    }
+}
+
+MIXPANEL_TOKEN = env.str("MIXPANEL_TOKEN", "")
+MIXPANEL_SECRET = env.str("MIXPANEL_SECRET", "")

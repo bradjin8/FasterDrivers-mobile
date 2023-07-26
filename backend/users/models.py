@@ -16,7 +16,10 @@ class User(AbstractUser):
         max_length=16,
         blank=True
     )
+    activated_profile = models.BooleanField(default=False)
     email = models.EmailField(_("Email of User"), max_length=255, unique=True)
+    flagged = models.BooleanField(default=False)
+    flagged_until = models.DateTimeField(blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

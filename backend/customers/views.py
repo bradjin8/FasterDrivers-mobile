@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
 
+from home.permissions import IsAuthenticatedOrActivatedDriver
 from users.authentication import ExpiringTokenAuthentication
 from .serializers import CustomerAddressSerializer
 from .models import CustomerAddress
@@ -8,7 +8,7 @@ from .models import CustomerAddress
 
 class CustomerAddressViewSet(ModelViewSet):
     serializer_class = CustomerAddressSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
     authentication_classes  = [ExpiringTokenAuthentication]
     queryset = CustomerAddress.objects.all()
 

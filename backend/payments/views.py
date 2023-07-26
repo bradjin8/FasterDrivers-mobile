@@ -17,16 +17,23 @@ from orders.serializers import OrderSerializer
 from users.models import User
 from users.serializers import UserProfileSerializer
 
+from users.authentication import ExpiringTokenAuthentication
+
 from .serializers import SubscriptionSetupSerializer
 from .models import SubscriptionSetup
+from django.conf import settings
 
 import stripe
 import djstripe
 from djstripe import webhooks
 
 from decimal import Decimal
+from mixpanel import Mixpanel
 
 from fancy_cherry_36842.settings import STRIPE_LIVE_MODE, STRIPE_LIVE_SECRET_KEY, STRIPE_TEST_SECRET_KEY, CONNECTED_SECRET
+
+
+mp = Mixpanel(settings.MIXPANEL_TOKEN)
 
 
 if STRIPE_LIVE_MODE == True:
@@ -38,6 +45,7 @@ else:
 class PaymentViewSet(ModelViewSet):
     serializer_class = PaymentSerializer
     permission_classes = (IsAuthenticated,)
+    authentication_classes  = [ExpiringTokenAuthentication]
     queryset = Payment.objects.all()
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
@@ -80,19 +88,22 @@ class PaymentViewSet(ModelViewSet):
         if order.status != 'Unpaid':
             return Response({'detail': 'Order needs to be in Unpaid status'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get the Stripe Customer Infomration
-        customers_data = stripe.Customer.list().data
-        customer = None
-        for customer_data in customers_data:
-            if customer_data.email == request.user.email:
-                customer = customer_data
-                break
-        if customer is None:
-            customer = stripe.Customer.create(email=request.user.email)
+        try:
+            # Get the Stripe Customer Infomration
+            customers_data = stripe.Customer.list().data
+            customer = None
+            for customer_data in customers_data:
+                if customer_data.email == request.user.email:
+                    customer = customer_data
+                    break
+            if customer is None:
+                customer = stripe.Customer.create(email=request.user.email)
 
-        djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
-        payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
-        djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
+            djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
+            payment_method = stripe.PaymentMethod.attach(payment_method, customer=customer)
+            djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         request.user.customer.stripe_account = djstripe_customer
         request.user.customer.stripe_account.save()
@@ -115,29 +126,6 @@ class PaymentViewSet(ModelViewSet):
         # Sync with djstripe models
         dj_customer_payment_intent = djstripe.models.PaymentIntent.sync_from_stripe_data(customer_payment_intent)
 
-        # Transfer appropriate amounts to restaurant and driver
-        # try:
-        #     restaurant_transfer = stripe.Transfer.create(
-        #         amount=int(restaurant_payout * 100),
-        #         currency='usd',
-        #         destination=order.restaurant.connect_account.id,
-        #         source_transaction=charge_id
-        #     )
-        # except Exception as e:
-        #     return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # try:
-        #     driver_transfer = stripe.Transfer.create(
-        #         amount=int(driver_payout * 100),
-        #         currency='usd',
-        #         destination=order.driver.driver.connect_account.id,
-        #         source_transaction=charge_id
-        #     )
-        # except Exception as e:
-        #     return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # dj_restaurant_transfer = djstripe.models.Transfer.sync_from_stripe_data(restaurant_transfer)
-        # dj_driver_transfer = djstripe.models.Transfer.sync_from_stripe_data(driver_transfer)
         Payment.objects.create(
             order=order,
             user=request.user,
@@ -195,7 +183,12 @@ class PaymentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def my_cards(self, request):
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
         else:
@@ -219,7 +212,12 @@ class PaymentViewSet(ModelViewSet):
         payment_method_id = request.data.get('payment_method', None)
         if payment_method_id is None:
             return Response({'detail': 'Missing Payment Method ID'}, status=status.HTTP_400_BAD_REQUEST)
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
         else:
@@ -256,7 +254,12 @@ class PaymentViewSet(ModelViewSet):
         payment_method_id = request.data.get('payment_method', None)
         if payment_method_id is None:
             return Response({'detail': 'Missing Payment Method ID'}, status=status.HTTP_400_BAD_REQUEST)
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
         else:
@@ -281,7 +284,12 @@ class PaymentViewSet(ModelViewSet):
 
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def add_payment_method(self, request):
-        profile = request.user.customer
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        elif request.user.type == "Customer":
+            profile = request.user.customer
         billing_details = request.data.get('billing_details')
         if profile.stripe_account:
             customer_id = profile.stripe_account.id
@@ -299,6 +307,7 @@ class PaymentViewSet(ModelViewSet):
             djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
             profile.stripe_account = djstripe_customer
             profile.stripe_account.save()
+            profile.save()
             customer_id = djstripe_customer.id
         payment_method_id = request.data.get('payment_method', None)
         if payment_method_id is None:
@@ -316,6 +325,12 @@ class PaymentViewSet(ModelViewSet):
                 },
                 "name": billing_details["name"],
             }
+        )
+        stripe.Customer.modify(
+            customer_id,
+            invoice_settings={
+                'default_payment_method': payment_method['id'],
+            },
         )
         djstripe.models.PaymentMethod.sync_from_stripe_data(payment_method)
         payment_methods = stripe.PaymentMethod.list(customer=customer_id, type='card')
@@ -375,8 +390,9 @@ class PaymentViewSet(ModelViewSet):
         djstripe_account = djstripe.models.Account.sync_from_stripe_data(account)
         profile.connect_account = djstripe_account
         profile.save()
-        serializer = UserProfileSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if profile.connect_account.payouts_enabled:
+            return Response(status=status.HTTP_200_OK)
+        return Response("Account payouts not enabled. Reattempt account creation to add additional details.", status=status.HTTP_400_BAD_REQUEST)
 
     # Business Account
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
@@ -385,15 +401,27 @@ class PaymentViewSet(ModelViewSet):
             profile = request.user.restaurant
         elif request.user.type == "Driver":
             profile = request.user.driver
+        device = request.query_params.get('device', False)
         if profile.connect_account:
             account_id = profile.connect_account.id
-            link = stripe.AccountLink.create(
-                account=account_id,
-                refresh_url="http://localhost:8080/reauth/",
-                return_url="http://localhost:8080/success/",
-                type="account_onboarding",
-            )
-            return Response({'link': link})
+            if device == "mobile":
+                link = stripe.AccountLink.create(
+                    account=account_id,
+                    refresh_url="http://localhost:8080/reauth/",
+                    return_url="http://localhost:8080/return/",
+                    type="account_onboarding",
+                )
+                return Response({'link': link})
+
+            else:
+                link = stripe.AccountLink.create(
+                    account=account_id,
+                    refresh_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?reauth=true",
+                    return_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?return=true",
+                    type="account_onboarding",
+                )
+                return Response({'link': link})
+
         business_name = 'Fast Drivers'
         account = stripe.Account.create(
             country="US",
@@ -407,13 +435,23 @@ class PaymentViewSet(ModelViewSet):
         djstripe_account = djstripe.models.Account.sync_from_stripe_data(account)
         profile.connect_account = djstripe_account
         profile.save()
-        link = stripe.AccountLink.create(
-            account=account['id'],
-            refresh_url="http://localhost:8080/reauth/",
-            return_url="http://localhost:8080/success/",
-            type="account_onboarding",
-        )
-        return Response({'link': link}, status=status.HTTP_201_CREATED)
+        if device == "mobile":
+            link = stripe.AccountLink.create(
+                account=account['id'],
+                refresh_url="http://localhost:8080/reauth/",
+                return_url="http://localhost:8080/return/",
+                type="account_onboarding",
+            )
+            return Response({'link': link})
+
+        else:
+            link = stripe.AccountLink.create(
+                account=account['id'],
+                refresh_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?reauth=true",
+                return_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?return=true",
+                type="account_onboarding",
+            )
+            return Response({'link': link})
 
     @action(detail=False, methods=['POST'])
     def connected(self, request):
@@ -466,20 +504,51 @@ class PaymentViewSet(ModelViewSet):
 class SubscriptionsViewSet(ModelViewSet):
     serializer_class = SubscriptionSetupSerializer
     permission_classes = (IsAuthenticated,)
+    authentication_classes  = [ExpiringTokenAuthentication]
     queryset = SubscriptionSetup.objects.all()
 
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def plans(self, request):
-        plans = stripe.Plan.list(active=True)
-        for plan in plans:
-            djstripe.models.Plan.sync_from_stripe_data(plan)
+        if request.user.type == "Restaurant":
+            product_name = "Restaurant Subscription"
+        elif request.user.type == "Driver":
+            product_name = "Driver Subscription"
+        else:
+            product_name = "All"
+
+        products = stripe.Product.list()
+        if product_name == "All":
+            plans = dict()
+            for product in products:
+                if product.name == "Driver Subscription":
+                    product = product
+                    break
+            stripe_plans = stripe.Plan.list(product=product['id'], active=True)
+            plans['driver'] = stripe_plans['data']
+            for product in products:
+                if product.name == "Restaurant Subscription":
+                    product = product
+                    break
+            plans['restaurant'] = stripe_plans['data']
+
+        else:
+            for product in products:
+                if product['name'] == product_name:
+                    product = product
+                    break
+            plans = stripe.Plan.list(product=product['id'], active=True)
+
         return Response(plans)
 
     @action(detail=False, methods=['patch'], permission_classes=[IsAuthenticated])
     @transaction.atomic
-    def change_subscription(self, request): 
-        subscription = request.user.subscription
+    def change_subscription(self, request):
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        subscription = profile.subscription
         stripe_sub = stripe.Subscription.retrieve(subscription.id)
         plan_id = request.data.get('plan_id', None)
         sub = stripe.Subscription.modify(
@@ -496,16 +565,25 @@ class SubscriptionsViewSet(ModelViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     @transaction.atomic
-    def unsubscribe(self, request): 
-        subscription = request.user.subscription
+    def unsubscribe(self, request):
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        subscription = profile.subscription
         sub = stripe.Subscription.delete(subscription.id)
         djstripe.models.Subscription.sync_from_stripe_data(sub)
+        mp.track(str(request.user.id), 'Subscription Cancelled')
         return Response("You've successfully unsubscribed", status=status.HTTP_200_OK)
 
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     @transaction.atomic
     def subscribe(self, request):
-        subscription = request.user.subscription
+        if request.user.type == "Driver":
+            profile = request.user.driver
+        elif request.user.type == "Restaurant":
+            profile = request.user.restaurant
+        subscription = profile.subscription
         if subscription and subscription.status != "canceled":
             return Response({'detail': 'User is already subscribed'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -513,12 +591,12 @@ class SubscriptionsViewSet(ModelViewSet):
         payment_method = request.data.get('payment_method', None)
         plan_id = request.data.get('plan_id', None)
 
-        customers_data = stripe.Customer.list().data
-        customer = None
-        for customer_data in customers_data:
-            if customer_data.email == email:
-                customer = customer_data
-                break
+        # customers_data = stripe.Customer.list().data
+        customer = profile.stripe_account
+        # for customer_data in customers_data:
+        #     if customer_data.email == email:
+        #         customer = customer_data
+        #         break
         try:
             if payment_method is not None:
                     payment_method = stripe.PaymentMethod.retrieve(payment_method)
@@ -530,53 +608,72 @@ class SubscriptionsViewSet(ModelViewSet):
                             invoice_settings={
                                 'default_payment_method': payment_method,
                             },
-                            )
+                        )
 
             else:
                 return Response({'detail': 'Missing Payment Method'}, status=status.HTTP_400_BAD_REQUEST)
 
-            djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
-            subscription = stripe.Subscription.create(
-                customer=customer.id,
-                items=[
-                    {
-                    'plan': plan_id,
-                    },
-                ],
-                trial_period_days=30,
-                expand=['latest_invoice.payment_intent'],
+            if request.data.get('trial', None) == "True" or request.data.get('trial', None) == "true":
+                subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    items=[
+                        {
+                            'plan': plan_id,
+                        },
+                    ],
+                    expand=['latest_invoice.payment_intent'],
+                    trial_period_days=30
+                    )
+            else:
+                subscription = stripe.Subscription.create(
+                    customer=customer.id,
+                    items=[
+                        {
+                            'plan': plan_id,
+                        },
+                    ],
+                    expand=['latest_invoice.payment_intent'],
                 )
             djstripe_subscription = djstripe.models.Subscription.sync_from_stripe_data(subscription)
         except stripe.error.CardError as e:
             return Response({'detail': 'Card Declined'})
 
         # associate customer and subscription with the user
-        request.user.account = djstripe_customer
-        request.user.subscription = djstripe_subscription
-        request.user.save()
+        # profile.stripe_account = djstripe_customer
+        profile.subscription = djstripe_subscription
+        profile.save()
+
+        mp.track(str(request.user.id), 'Subscription Created')
 
         # return information back to the front end
         data = {
-            'customer': customer,
+            # 'customer': customer,
             'subscription': subscription
         }
         return Response(data, status=status.HTTP_201_CREATED)
 
-# A webhook to catch a successful payment and add paid likes to the User account
-@webhooks.handler("invoice.updated")
-def subscription_renewal_webhook(event, **kwargs):
-    data = event.data.get("object", {})
-    payment_status = data.get('paid')
-    customer_id = data.get('customer')
-    user = User.objects.get(
-        account__id=customer_id
-    )
-    if payment_status == True:
-        send_notification(
-            user=user,
-            title="Your subscription has been successfully renewed",
-            content="Your subscription has been successfully renewed",
-            data=user.id,
-            data_type='userId',
-            mom=user
+    @action(detail=False, methods=['patch'])
+    def update_price(self, request):
+        price = int(Decimal(request.data.get('price', 0)) * 100)
+        price_id = request.data.get('price_id', None)
+
+        if price is None:
+            return Response({'error': 'No new price provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch the Stripe Price object using the Stripe API
+        stripe_price = stripe.Price.retrieve(price_id)
+
+        # Create a new Stripe Price with the new price
+        new_stripe_price = stripe.Price.create(
+            unit_amount=price,
+            currency=stripe_price.currency,
+            recurring=stripe_price.recurring,
+            product=stripe_price.product,
         )
+
+        # Set the old price to inactive
+        stripe.Price.modify(
+            stripe_price.id,
+            active=False
+        )
+        return Response({'status': 'Price updated'}, status=status.HTTP_200_OK)
