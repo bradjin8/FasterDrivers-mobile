@@ -524,26 +524,29 @@ class SubscriptionsViewSet(ModelViewSet):
             product_name = "All"
 
         products = stripe.Product.list()
+
         if product_name == "All":
             plans = dict()
             for product in products:
                 if product.name == "Driver Subscription":
-                    product = product
+                    product_driver = product
                     break
-            stripe_plans = stripe.Plan.list(product=product['id'], active=True)
-            plans['driver'] = stripe_plans['data']
+            stripe_plans_driver = stripe.Plan.list(product=product_driver['id'], active=True)
+            plans['driver'] = stripe_plans_driver['data']
+
             for product in products:
                 if product.name == "Restaurant Subscription":
-                    product = product
+                    product_restaurant = product
                     break
-            plans['restaurant'] = stripe_plans['data']
+            stripe_plans_restaurant = stripe.Plan.list(product=product_restaurant['id'], active=True)
+            plans['restaurant'] = stripe_plans_restaurant['data']
 
         else:
             for product in products:
                 if product['name'] == product_name:
-                    product = product
+                    selected_product = product
                     break
-            plans = stripe.Plan.list(product=product['id'], active=True)
+            plans = stripe.Plan.list(product=selected_product['id'], active=True)
 
         return Response(plans)
 
@@ -660,26 +663,36 @@ class SubscriptionsViewSet(ModelViewSet):
 
     @action(detail=False, methods=['patch'])
     def update_price(self, request):
-        price = int(Decimal(request.data.get('price', 0)) * 100)
-        price_id = request.data.get('price_id', None)
+        new_price_value = int(Decimal(request.data.get('price', 0)) * 100)
+        old_price_id = request.data.get('price_id', None)
 
-        if price is None:
+        if new_price_value is None:
             return Response({'error': 'No new price provided'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Fetch the Stripe Price object using the Stripe API
-        stripe_price = stripe.Price.retrieve(price_id)
+        old_price = stripe.Price.retrieve(old_price_id)
 
-        # Create a new Stripe Price with the new price
-        new_stripe_price = stripe.Price.create(
-            unit_amount=price,
-            currency=stripe_price.currency,
-            recurring=stripe_price.recurring,
-            product=stripe_price.product,
+        # Fetch the associated Stripe Product object
+        old_product = stripe.Product.retrieve(old_price.product)
+
+        # Create a new Stripe Product with the same name and attributes as the old product
+        new_product = stripe.Product.create(
+            name=old_product.name,
+            attributes=old_product.attributes,
         )
 
-        # Set the old price to inactive
-        stripe.Price.modify(
-            stripe_price.id,
+        # Create a new Stripe Price with the new price and attach it to the new product
+        new_price = stripe.Price.create(
+            unit_amount=new_price_value,
+            currency=old_price.currency,
+            recurring=old_price.recurring,
+            product=new_product.id,
+        )
+
+        # Set the old product to inactive
+        stripe.Product.modify(
+            old_product.id,
             active=False
         )
+
         return Response({'status': 'Price updated'}, status=status.HTTP_200_OK)
