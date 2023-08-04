@@ -11,7 +11,9 @@ const PrivacyPolicy = ({}) => {
         title="Privacy Policy"
         showBackIcon={true}
       />
-      <WebView style={styles.container} source={{uri: 'https://fancy-cherry-36842-staging.botics.co/api/v1/privacy-policy/'}}/>
+      <View style={styles.container}>
+        <WebView source={{uri: 'https://fancy-cherry-36842-staging.botics.co/api/v1/privacy-policy/'}}/>
+      </View>
     </View>
   )
 }
@@ -20,7 +22,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white
   },
-  container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
+  container: {
+    flex: 1,
+    backgroundColor: color.white,
+    paddingHorizontal: scaleVertical(25),
+  },
 })
 
 export default PrivacyPolicy;
