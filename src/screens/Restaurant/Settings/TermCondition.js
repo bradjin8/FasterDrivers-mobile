@@ -1,7 +1,7 @@
 import React from "react";
 import {StyleSheet, View} from "react-native";
+import {WebView} from "react-native-webview";
 import {color, scaleVertical} from "utils";
-import {Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
 
 const TermCondition = ({}) => {
@@ -11,11 +11,7 @@ const TermCondition = ({}) => {
         title="Terms And Conditions"
         showBackIcon={true}
       />
-      <View style={styles.container}>
-        <Text variant="text" color="black" fontSize={16} fontWeight="400">
-          Terms And Conditions Content
-        </Text>
-      </View>
+      <WebView style={styles.container} source={{uri: 'https://fancy-cherry-36842-staging.botics.co/api/v1/terms-and-conditions/'}}/>
     </View>
   )
 }

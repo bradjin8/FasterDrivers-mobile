@@ -1,4 +1,6 @@
-const HOST = "fancy-cherry-36842.botics.co"
+const PRODUCTION_HOST = "fancy-cherry-36842.botics.co"
+const STAGING_HOST = "fancy-cherry-36842-staging.botics.co"
+const HOST = PRODUCTION_HOST
 export const BASE_URL = `https://${HOST}`
 export const appConfig = {
   // todo add library to handle env variables
@@ -10,7 +12,7 @@ export const appConfig = {
   defaultTimeout: 5000,
   urlScheme: 'fasterdrivers',
   appStoreId: 'com.fasterdrivers.ios',
-  webAppUrl: 'https://fasterdrivers.vercel.app'
+  webAppUrl: 'https://fasterdrivers.com',
 }
 
 export const GOOGLE = {
