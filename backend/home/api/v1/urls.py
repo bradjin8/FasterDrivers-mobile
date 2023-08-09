@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.views.generic import TemplateView
+
 from rest_framework.routers import DefaultRouter
 
 from home.api.v1.viewsets import (
@@ -31,5 +33,7 @@ router.register("driver-reviews", DriverReviewViewSet, basename="driver_reviews"
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("admin/", include("customadmin.urls"))
+    path("admin/", include("customadmin.urls")),
+    path('privacy-policy/', TemplateView.as_view(template_name='privacy-policy.html', content_type='text/html')),
+    path('terms-and-conditions/', TemplateView.as_view(template_name='terms-of-service.html', content_type='text/html'))
 ]
