@@ -422,8 +422,8 @@ class PaymentViewSet(ModelViewSet):
             else:
                 link = stripe.AccountLink.create(
                     account=account_id,
-                    refresh_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?reauth=true",
-                    return_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?return=true",
+                    refresh_url="https://fasterdrivers.com/restaurant/settings/stripe?reauth=true",
+                    return_url="https://fasterdrivers.com/restaurant/settings/stripe?return=true",
                     type="account_onboarding",
                 )
                 return Response({'link': link})
@@ -453,8 +453,8 @@ class PaymentViewSet(ModelViewSet):
         else:
             link = stripe.AccountLink.create(
                 account=account['id'],
-                refresh_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?reauth=true",
-                return_url="https://fasterdrivers.vercel.app/restaurant/settings/stripe?return=true",
+                refresh_url="https://fasterdrivers.com/restaurant/settings/stripe?reauth=true",
+                return_url="https://fasterdrivers.com/restaurant/settings/stripe?return=true",
                 type="account_onboarding",
             )
             return Response({'link': link})
