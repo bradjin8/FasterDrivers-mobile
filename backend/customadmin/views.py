@@ -8,6 +8,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.core.mail import EmailMessage
 from django.utils import timezone
 
+from djstripe.models import Subscription
+from django.db.models import Q
+
 from fancy_cherry_36842.settings import SENDGRID_SENDER
 from home.permissions import IsAdmin
 from users.models import User
@@ -24,6 +27,26 @@ class AdminUserViewSet(ModelViewSet):
     filterset_fields = ['activated_profile', 'flagged', 'type']
     search_fields = ['name', 'first_name', 'last_name', 'email']
     ordering_fields = ['name', 'email', 'flagged_until']
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        active_subscription = self.request.query_params.get('active_subscription', None)
+
+        if active_subscription is not None:
+            if active_subscription.lower() == 'true':
+                queryset = queryset.filter(
+                    Q(restaurant__subscription__status="active") |
+                    Q(driver__subscription__status="active")
+                )
+            elif active_subscription.lower() == 'false':
+                queryset = queryset.exclude(
+                    Q(restaurant__subscription__status="active") |
+                    Q(driver__subscription__status="active") |
+                    Q(type="Customer")
+                )
+
+        return queryset
 
     @action(detail=False, methods=['post'])
     def suspend(self, request):
@@ -93,9 +116,10 @@ class AdminFeedbackViewSet(ModelViewSet):
         feedback = Feedback.objects.get(pk=request.data['feedback'])
         if not feedback.responded:
             # Use feedback's subject and message for the email
-            subject = feedback.subject
-            message = feedback.message
-
+            subject = request.data.get('subject', 'Feedback Response - Faster Drivers')
+            message = request.data.get('message')
+            if not message:
+                return Response("Message cannot be empty", status=status.HTTP_400_BAD_REQUEST)
             # construct email and send
             email_msg = EmailMessage(subject, message, from_email=SENDGRID_SENDER, to=[feedback.user.email])
             email_msg.content_subtype = "html"

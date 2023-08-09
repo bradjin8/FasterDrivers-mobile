@@ -10,7 +10,7 @@ def auth_token(user):
 def send_password_reset_email(user):
     email = user.email
     token, created = Token.objects.get_or_create(user=user)
-    link = "https://fasterdrivers.vercel.app/reset-password?token={}".format(token)
+    link = "https://fasterdrivers.com/reset-password?token={}".format(token)
     email_body = """\
             <html>
             <head></head>
@@ -30,7 +30,7 @@ def send_password_reset_email(user):
     email_msg.send()
 
 def send_invitation_email(email):
-    link = "https://fasterdrivers.vercel.app/"
+    link = "https://fasterdrivers.com/"
     email_body = """\
             <html>
             <head></head>
