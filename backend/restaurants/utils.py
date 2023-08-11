@@ -9,7 +9,11 @@ def sort_by_category(results):
     sorted_dishes = {}
     if menu_data:
         for item in menu_data:
-            category_name = item.get('category', {}).get('name', 'Uncategorized')
+            category = item.get('category')
+            if category:
+                category_name = category.get('name', 'Uncategorized')
+            else:
+                category_name = 'Uncategorized'
             sorted_dishes.setdefault(category_name, []).append(item)
     
     if 'dishes' in results:  
