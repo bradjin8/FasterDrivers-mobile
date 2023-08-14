@@ -101,11 +101,9 @@ class Dish(UUIDModel):
     name = models.CharField(
         max_length=64
     )
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='dishes'
+    category = models.CharField(
+        max_length=255,
+        blank=True
     )
     description = models.TextField()
     price = models.DecimalField(

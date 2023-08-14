@@ -122,11 +122,11 @@ class DishSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(serializer.errors)
         return dish
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        if instance.category:
-            rep['category'] = CategorySerializer(instance.category).data
-        return rep
+    # def to_representation(self, instance):
+    #     rep = super().to_representation(instance)
+    #     if instance.category:
+    #         rep['category'] = CategorySerializer(instance.category).data
+    #     return rep
 
 class RestaurantSerializer(serializers.ModelSerializer):
     dishes = DishSerializer(required=False, many=True)
