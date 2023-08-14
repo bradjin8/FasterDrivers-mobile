@@ -23,10 +23,10 @@ const CarDetails = () => {
   const [changeImage, setChangeImage] = useState(null)
 
   const [customerDetails, setCustomerDetails] = useState({
-    "driver.car_make": car_make,
-    "driver.car_model": car_model,
-    "driver.car_vin": car_vin,
-    "driver.car_license_number": car_license_number,
+    "driver.car_make": car_make || "",
+    "driver.car_model": car_model || "",
+    "driver.car_vin": car_vin || "",
+    "driver.car_license_number": car_license_number || "",
   })
 
   const onChangeText = (key, text) => {
@@ -92,7 +92,7 @@ const CarDetails = () => {
           <CustomTextInput
             value={customerDetails["driver.car_vin"]}
             onChangeText={(text) => onChangeText("driver.car_vin", text)}
-            keyboardType={'numeric'}
+            // keyboardType={'numeric'}
           />
           <Text variant="text" color="black">
             Licence Number
@@ -100,7 +100,7 @@ const CarDetails = () => {
           <CustomTextInput
             value={customerDetails["driver.car_license_number"]}
             onChangeText={(text) => onChangeText("driver.car_license_number", text)}
-            keyboardType={'numeric'}
+            // keyboardType={'numeric'}
           />
         </View>
         <View style={{marginTop: scaleVertical(50)}}>

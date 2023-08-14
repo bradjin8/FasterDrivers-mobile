@@ -16,6 +16,8 @@ const ADD_NEW_DISH_REQUEST_STARTED = "ADD_NEW_DISH_REQUEST_STARTED"
 const ADD_NEW_DISH_REQUEST_COMPLETED = "ADD_NEW_DISH_REQUEST_COMPLETED"
 const UPDATE_DISH_REQUEST_STARTED = "UPDATE_DISH_REQUEST_STARTED"
 const UPDATE_DISH_REQUEST_COMPLETED = "UPDATE_DISH_REQUEST_COMPLETED"
+const DELETE_DISH_REQUEST_STARTED = "DELETE_DISH_REQUEST_STARTED"
+const DELETE_DISH_REQUEST_COMPLETED = "DELETE_DISH_REQUEST_COMPLETED"
 const REQUEST_FAILED = "REQUEST_FAILED"
 const VIEW_MY_ORDERS_REQUEST_STARTED = "VIEW_MY_ORDERS_REQUEST_STARTED"
 const VIEW_MY_ORDERS_REQUEST_COMPLETED = "VIEW_MY_ORDERS_REQUEST_COMPLETED"
@@ -91,11 +93,13 @@ export const restaurantReducer = (state = initialState, action) => {
         loading: false,
       }
     case UPDATE_DISH_REQUEST_STARTED:
+    case DELETE_DISH_REQUEST_STARTED:
       return {
         ...state,
         loading: true
       }
     case UPDATE_DISH_REQUEST_COMPLETED:
+    case DELETE_DISH_REQUEST_COMPLETED:
       return {
         ...state,
         loading: false,
@@ -471,7 +475,7 @@ const updateDishFinished = (data) => ({
 
 export const updateDishAPI = (data) => {
   console.log('update-dish-api', data)
-  const URL = `${appConfig.backendServerURL}/restaurants/dishes/${data.id}/`
+  const URL = `${appConfig.backendServerURL}/dishes/${data.id}/`
   const options = {
     headers: {
       Accept: "application/json",
@@ -504,6 +508,44 @@ function* updateDishAction(data) {
   }
 }
 
+export const deleteDish = (data) => ({
+  type: DELETE_DISH_REQUEST_STARTED,
+  payload: data,
+})
+export const deleteDishFinished = () => ({
+  type: DELETE_DISH_REQUEST_COMPLETED,
+})
+
+export const deleteDishAPI = (data) => {
+  const URL = `${appConfig.backendServerURL}/dishes/${data}/`
+  const options = {
+    headers: {
+      Accept: "application/json",
+    },
+    method: "DELETE",
+  }
+  return XHR(URL, options)
+}
+
+function* deleteDishAction(data) {
+  try {
+    const resp = yield call(deleteDishAPI, data.payload)
+    yield put(deleteDishFinished())
+    showMessage({
+      message: "Dish Deleted Successfully",
+      type: "success"
+    })
+    goBack()
+  } catch (e) {
+    const {response} = e
+    yield put(requestFailed())
+    showMessage({
+      message: response?.data?.detail ?? "Something went wrong, Please try again!",
+      type: "danger"
+    })
+  }
+}
+
 export default all([
   takeLatest(ADD_NEW_DISH_REQUEST_STARTED, addNewDishAction),
   takeLatest(GET_DISHES_REQUEST_STARTED, getDishesAction),
@@ -513,4 +555,5 @@ export default all([
   takeLatest(GET_NEARBY_DRIVERS_REQUEST_STARTED, getNearbyDriversAction),
   takeLatest(ASSIGN_DRIVER_REQUEST_STARTED, assignDriverAction),
   takeLatest(UPDATE_DISH_REQUEST_STARTED, updateDishAction),
+  takeLatest(DELETE_DISH_REQUEST_STARTED, deleteDishAction),
 ])

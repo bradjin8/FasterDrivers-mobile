@@ -1,20 +1,22 @@
 import {navigate} from "navigation/NavigationService";
 import React, {useRef, useState} from "react";
 import {Image, StyleSheet, View} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
 import Carousel, {Pagination} from "react-native-snap-carousel";
 import {Images} from "src/theme";
 import {color, scale, scaleVertical, screenHeight, screenWidth} from "utils";
 import {Button} from "../../components/index";
 
+
 const SliderScreen = ({}) => {
   const carouselRef = useRef(null);
   const [index, setIndex] = useState(0);
 
-  const renderCarouselItem = () => {
+  const renderCarouselItem = ({item, index}) => {
     return (
       <View style={{alignItems: 'center'}}>
         <Image
-          source={Images.AppLogo}
+          source={item.image}
           style={styles.icon}
           resizeMode={'contain'}
         />
@@ -28,8 +30,14 @@ const SliderScreen = ({}) => {
         layout="default"
         // layoutCardOffset={9}
         // ref={carouselRef}
-        data={[{}, {}, {}]}
-        renderItem={() => renderCarouselItem()}
+        data={[{
+          image: Images.Onboard1
+        }, {
+          image: Images.Onboard2
+        }, {
+          image: Images.Onboard3
+        }]}
+        renderItem={renderCarouselItem}
         sliderWidth={screenWidth-50}
         itemWidth={screenWidth-50}
         // inactiveSlideShift={0}
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
     paddingVertical: scaleVertical(50),
   },
   imageContain: {
-    height: screenHeight- 300,
+    height: screenHeight- 180,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -87,8 +95,8 @@ const styles = StyleSheet.create({
     paddingVertical: 0
   },
   icon: {
-    width: scale(294),
-    height: scaleVertical(168),
+    width: widthPercentageToDP(80),
+    height: screenHeight- 200,
   },
 });
 

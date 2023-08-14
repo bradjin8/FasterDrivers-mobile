@@ -37,6 +37,9 @@ import IcInstagram from "src/assets/images/ic_instagram.png"
 import IcFacebook2 from "src/assets/images/ic_facebook2.png"
 import IcMessager from "src/assets/images/ic_messager.png"
 import Pencil from "src/assets/images/pencil.png"
+import Onboard1 from "src/assets/images/onboard1.jpg"
+import Onboard2 from "src/assets/images/onboard2.jpg"
+import Onboard3 from "src/assets/images/onboard3.jpg"
 
 
 export default {
@@ -79,4 +82,7 @@ export default {
   IcFacebook2,
   IcMessager,
   Pencil,
+  Onboard1,
+  Onboard2,
+  Onboard3,
 }

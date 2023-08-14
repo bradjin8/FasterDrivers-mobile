@@ -33,14 +33,8 @@ const AddNewDish = ({route}) => {
   const [uploadImage, setUploadImage] = useState(images);
   const [newDish, setNewDish] = useState(dish || {});
   const [changeImage, setChangeImage] = useState(null)
-  const [category, setCategory] = useState(dish?.category);
-  const [openCategory, setOpenCategory] = useState(false);
-  const [categoryOptions, setCategoryOptions] = useState([
-    {label: 'Burger', value: 'Burgers'},
-    {label: 'Wings', value: 'Wings'},
-    {label: 'Salads', value: 'Salads'},
-    {label: 'Soups', value: 'Soups'},
-  ])
+  const [category, setCategory] = useState(dish?.category || '');
+
   const [addons, setAddons] = useState(dish?.addons || [])
 
   const {name, description, price, sku_number} = newDish
@@ -177,13 +171,9 @@ const AddNewDish = ({route}) => {
             NAME OF DISH
           </Text>
 
-          <CustomDropDown
-            openCategory={openCategory}
-            category={category}
-            categoryOptions={categoryOptions}
-            setOpenCategory={setOpenCategory}
-            setCategory={setCategory}
-            setCategoryOptions={setCategoryOptions}
+          <CustomTextInput
+            value={category}
+            onChangeText={(text) => setCategory(text)}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             CATEGORY
@@ -234,7 +224,7 @@ const AddNewDish = ({route}) => {
 const Addon = ({addon, onChange}) => {
   const [title, setTitle] = useState(addon.title)
   const [required, setRequired] = useState(addon.required)
-  const [number_of_items, setNumberOfItems] = useState(addon.number_of_items)
+  const [number_of_items, setNumberOfItems] = useState(addon.number_of_items ?? 0)
   const [items, setItems] = useState(addon.items)
 
   const onAddNewItem = () => {

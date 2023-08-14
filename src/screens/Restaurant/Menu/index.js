@@ -54,6 +54,7 @@ const Menu = ({navigation, route}) => {
   }, [])
 
   const filterDishes = () => {
+    dishes?.sort((a, b) => a.updated_at > b.updated_at ? -1 : 1)
     if (searchValue) {
       return dishes.filter(item =>
         item.name.toLowerCase().includes(searchValue.toLowerCase())
