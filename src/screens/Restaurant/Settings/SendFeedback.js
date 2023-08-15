@@ -1,53 +1,28 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { color, scaleVertical } from "utils";
-import SimpleHeader from "../../../components/SimpleHeader";
-import { Button, CustomTextInput, Text } from "../../../components/index";
-import { useDispatch, useSelector } from "react-redux";
-import validator from "utils/validation";
-import { loginRequest } from "../../../screenRedux/loginRedux";
 import BaseScreen from "components/BaseScreen";
-import { navigate } from "navigation/NavigationService";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {color, scaleVertical} from "utils";
+import {Button, CustomTextInput, Text} from "../../../components/index";
+import SimpleHeader from "../../../components/SimpleHeader";
+import {sendFeedbackRequest} from "../../../screenRedux/loginRedux";
 
 const SendFeedback = ({}) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [userName, setUserName] = useState(null)
-  const [userError, setUserError] = useState(null)
-  const [password, setPassword] = useState(null)
-  const [passwordError, setPasswordError] = useState(null)
-  
-  const onBlurUser = () => {
-    if(!userName) {
-      setUserError(true)
-    } else if(!validator.email.regEx.test(userName)) {
-      setUserError(true)
-    } else {
-      setUserError(false)
-    }
-  }
-  
-  const onBlurPassword = () => {
-    if(!password) {
-      setPasswordError(true)
-    } else {
-      setPasswordError(false)
-    }
-  }
-  
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+
   const onSignIn = () => {
-    if(userName && password && validator.email.regEx.test(userName)) {
+    if(title && content) {
       let data = new FormData();
-      data.append('email', userName);
-      data.append('password', password);
-      // dispatch(loginRequest(data))
-    } else {
-      onBlurUser();
-      onBlurPassword();
+      data.append('subject', title);
+      data.append('message', content);
+      dispatch(sendFeedbackRequest(data))
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -60,22 +35,18 @@ const SendFeedback = ({}) => {
             Title
           </Text>
           <CustomTextInput
-            value={userName}
+            value={title}
             placeholder="Feedback Subject"
-            onChangeText={(text) => setUserName(text)}
-            onBlurText={onBlurUser}
-            hasError={userError}
+            onChangeText={(text) => setTitle(text)}
             errorMessage={"Enter valid subject"}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             Message Content
           </Text>
           <CustomTextInput
-            value={password}
+            value={content}
             placeholder="Message Content"
-            onBlurText={onBlurPassword}
-            onChangeText={(text) => setPassword(text)}
-            hasError={passwordError}
+            onChangeText={(text) => setContent(text)}
             multiline={true}
             style={{textAlignVertical: 'top'}}
             errorMessage={"Enter valid message content"}

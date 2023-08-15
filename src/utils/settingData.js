@@ -1,4 +1,4 @@
-import { Images } from "src/theme"
+import {Images} from "src/theme"
 
 export const restaurantSettingData = [
   {
@@ -14,11 +14,12 @@ export const restaurantSettingData = [
   {
     title: "Change Password",
     icon: Images.ChangePassword,
-    key:"ChangePassword",
+    key: "ChangePassword",
   },
   {
     title: "Invite Friends",
-    icon: Images.InviteFriends
+    icon: Images.InviteFriends,
+    key: "InviteFriends"
   },
   {
     title: "Order Acceptance",
@@ -31,22 +32,34 @@ export const restaurantSettingData = [
     key: "SendFeedback"
   },
   {
+    title: "Subscription",
+    icon: Images.Subscription,
+    key: "Subscription",
+  },
+  {
     title: "My Restaurant",
     icon: Images.MyRestaurant,
-    key:"RestaurantProfile",
+    key: "RestaurantProfile",
   },
   {
     title: "My Account",
     icon: Images.MyRestaurant,
-    key:"AccountInformation",
+    key: "AccountInformation",
   },
   {
     title: "My Wallet",
-    icon: Images.OrderAcceptance
+    icon: Images.OrderAcceptance,
+    key: "Wallet"
+  },
+  {
+    title: "Stripe Payment",
+    icon: Images.OrderAcceptance,
+    key: "StripeConnect"
   },
   {
     title: "Delete Account",
-    icon: Images.DeleteAccount
+    icon: Images.DeleteAccount,
+    key: 'deleteAccount'
   },
   {
     title: "Log Out",
@@ -69,11 +82,12 @@ export const driverSettingData = [
   {
     title: "Change Password",
     icon: Images.ChangePassword,
-    key:"ChangePassword",
+    key: "ChangePassword",
   },
   {
     title: "Invite Friends",
-    icon: Images.InviteFriends
+    icon: Images.InviteFriends,
+    key: "InviteFriends"
   },
   {
     title: "Feedback",
@@ -82,26 +96,33 @@ export const driverSettingData = [
   },
   {
     title: "Car Details",
-    icon: Images.OrderAcceptance,
+    icon: Images.Car,
     key: "CarDetails"
   },
   {
     title: "Subscription",
-    icon: Images.MyRestaurant,
-    key:"RestaurantProfile",
+    icon: Images.Subscription,
+    key: "Subscription",
   },
   {
     title: "My Account",
     icon: Images.MyRestaurant,
-    key:"AccountInformation",
+    key: "AccountInformation",
   },
   {
     title: "My Wallet",
-    icon: Images.OrderAcceptance
+    icon: Images.OrderAcceptance,
+    key: "Payment"
+  },
+  {
+    title: "Stripe Payment",
+    icon: Images.OrderAcceptance,
+    key: "StripeConnect"
   },
   {
     title: "Delete Account",
-    icon: Images.DeleteAccount
+    icon: Images.DeleteAccount,
+    key: 'deleteAccount'
   },
   {
     title: "Log Out",
@@ -114,16 +135,17 @@ export const customerSettingData = [
   {
     title: "My Account",
     icon: Images.MyRestaurant,
-    key:"AccountInformation",
+    key: "AccountInformation",
   },
   {
     title: "Change Password",
     icon: Images.ChangePassword,
-    key:"ChangePassword",
+    key: "ChangePassword",
   },
   {
     title: "Invite Friends",
-    icon: Images.InviteFriends
+    icon: Images.InviteFriends,
+    key: "InviteFriends"
   },
   {
     title: "Feedback",
@@ -132,7 +154,8 @@ export const customerSettingData = [
   },
   {
     title: "My Wallet",
-    icon: Images.OrderAcceptance
+    icon: Images.OrderAcceptance,
+    key: "Wallet"
   },
   {
     title: "Privacy Policy",
@@ -146,7 +169,8 @@ export const customerSettingData = [
   },
   {
     title: "Delete Account",
-    icon: Images.DeleteAccount
+    icon: Images.DeleteAccount,
+    key: "deleteAccount"
   },
   {
     title: "Log Out",

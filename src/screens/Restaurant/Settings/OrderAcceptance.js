@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Switch } from "react-native";
-import { color, scaleVertical } from "utils";
+import React, {useState} from "react";
+import {StyleSheet, Switch, View} from "react-native";
+import {color, scaleVertical} from "utils";
+import {Text} from "../../../components/index";
 import SimpleHeader from "../../../components/SimpleHeader";
-import { Text } from "../../../components/index";
 
 const OrderAcceptance = ({}) => {
   const [automaticAccept, setAutomaticAccept] = useState(false);
   const [manuallyAccept, setManuallyAccept] = useState(false);
-  
+
   return (
     <View style={styles.mainWrapper}>
       <SimpleHeader

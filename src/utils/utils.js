@@ -64,3 +64,11 @@ export const getServerError = (errorObject, errorMessage) => {
 
   return null;
 };
+
+export const truncateString = (str, length) => {
+  if (str && str.length > length) {
+    return `${str.substring(0, length)}...`;
+  }
+
+  return str;
+};

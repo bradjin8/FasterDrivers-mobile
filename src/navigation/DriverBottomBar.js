@@ -1,24 +1,29 @@
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+import {createStackNavigator} from "@react-navigation/stack"
 import React from "react"
-import { Image } from "react-native"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { createStackNavigator } from "@react-navigation/stack"
-import { Text } from "../components/index";
-import { color, scaleVertical, scale } from "utils";
-import { Images } from "src/theme"
+import {Image} from "react-native"
+
+import History from "screens/Driver/History"
+
+import Home from "screens/Driver/Home"
 
 import Settings from "screens/Driver/Settings"
 import AccountInformation from "screens/Driver/Settings/AccountInformation";
 import CarDetails from "screens/Driver/Settings/CarDetails";
-import TermCondition from "screens/Restaurant/Settings/TermCondition";
-import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
-import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
-import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
-
-import Home from "screens/Driver/Home"
-
-import History from "screens/Driver/History"
 
 import Wallet from "screens/Driver/Wallet"
+import AddCard from "screens/Restaurant/Settings/AddCard";
+import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
+import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
+import Payment from "screens/Restaurant/Settings/Payment";
+import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
+import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
+import StripeConnect from "screens/Restaurant/Settings/StripeConnect";
+import Subscription from "screens/Restaurant/Settings/Subscription";
+import TermCondition from "screens/Restaurant/Settings/TermCondition";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {Text} from "../components/index";
 
 
 const Tab = createBottomTabNavigator()
@@ -30,11 +35,12 @@ const DriverBottomBar = props => {
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.driver,
           height: scaleVertical(65),
           tabBarActiveTintColor: color.black,
           tabBarInactiveTintColor: color.gray,
-        }
+          tabBarLabelPosition: 'below-icon',
+        },
       }}
     >
       <Tab.Screen
@@ -42,12 +48,13 @@ const DriverBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Home</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={Images.Home}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
@@ -58,28 +65,30 @@ const DriverBottomBar = props => {
         component={HistoryTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">History</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">History</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
-              source={Images.history}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              source={Images.History}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
         }}
       />
-     <Tab.Screen
+      <Tab.Screen
         name="Wallet"
         component={WalletTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Wallet</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Wallet</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
-              source={Images.OrderAcceptance}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              source={Images.Wallet}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
@@ -90,12 +99,13 @@ const DriverBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Settings</Text>
           ),
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: ({focused}) => (
             <Image
               source={Images.Settings}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              style={{width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black}}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
@@ -111,16 +121,21 @@ const SettingTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="Settings"
       >
-        <settingStack.Screen name="Settings" component={Settings} />
-        <settingStack.Screen name="ChangePassword" component={ChangePassword} />
-        <settingStack.Screen name="AccountInformation" component={AccountInformation} />
-        <settingStack.Screen name="CarDetails" component={CarDetails} />
-        <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-        <settingStack.Screen name="TermCondition" component={TermCondition} />
-        <settingStack.Screen name="SendFeedback" component={SendFeedback} />
+        <settingStack.Screen name="Settings" component={Settings}/>
+        <settingStack.Screen name="ChangePassword" component={ChangePassword}/>
+        <settingStack.Screen name="AccountInformation" component={AccountInformation}/>
+        <settingStack.Screen name="CarDetails" component={CarDetails}/>
+        <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy}/>
+        <settingStack.Screen name="TermCondition" component={TermCondition}/>
+        <settingStack.Screen name="SendFeedback" component={SendFeedback}/>
+        <settingStack.Screen name="InviteFriends" component={InviteFriends}/>
+        <settingStack.Screen name="Subscription" component={Subscription}/>
+        <settingStack.Screen name="Payment" component={Payment}/>
+        <settingStack.Screen name="AddCard" component={AddCard}/>
+        <settingStack.Screen name="StripeConnect" component={StripeConnect} />
       </settingStack.Navigator>
     </>
   )
@@ -130,10 +145,10 @@ const HomeTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="Home"
       >
-        <settingStack.Screen name="Home" component={Home} />
+        <settingStack.Screen name="Home" component={Home}/>
       </settingStack.Navigator>
     </>
   )
@@ -143,10 +158,10 @@ const HistoryTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="History"
       >
-        <settingStack.Screen name="History" component={History} />
+        <settingStack.Screen name="History" component={History}/>
       </settingStack.Navigator>
     </>
   )
@@ -156,10 +171,10 @@ const WalletTab = () => {
   return (
     <>
       <settingStack.Navigator
-        screenOptions={{ headerShown: false, animationEnabled: false }}
+        screenOptions={{headerShown: false, animationEnabled: false}}
         initialRouteName="Wallet"
       >
-        <settingStack.Screen name="Wallet" component={Wallet} />
+        <settingStack.Screen name="Wallet" component={Wallet}/>
       </settingStack.Navigator>
     </>
   )

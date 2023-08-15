@@ -14,7 +14,7 @@ export const CustomDropDown = ({
   hasError,
   errorMessage,
 }) => {
-  
+
   return (
     <View>
       <DropDownPicker
@@ -26,6 +26,17 @@ export const CustomDropDown = ({
         setOpen={setOpenCategory}
         setValue={setCategory}
         setItems={setCategoryOptions}
+        dropDownContainerStyle={{
+          borderWidth: 0,
+          borderRadius: 10,
+          backgroundColor: color.white,
+        }}
+        labelStyle={{
+          fontFamily: "Lato-Light",
+        }}
+        listItemLabelStyle={{
+          fontFamily: "Lato-Light",
+        }}
       />
       {hasError && <Text color="error" variant="text">{errorMessage}</Text>}
     </View>
@@ -42,6 +53,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 15,
-    borderWidth: 0
+    borderWidth: 0,
   },
 });

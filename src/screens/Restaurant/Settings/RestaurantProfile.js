@@ -1,16 +1,16 @@
-import React, { useState, useRef } from "react";
-import { StyleSheet, View, Image, Platform, Pressable } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components";
-import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { useDispatch, useSelector } from "react-redux";
-import { updateRestaurant } from "../../../screenRedux/loginRedux";
-import { pickFromCamera, pickFromGallery } from "utils/Camera";
+import React, {useRef, useState} from "react";
+import {Image, Platform, Pressable, StyleSheet, View} from "react-native";
 import ActionSheet from "react-native-actionsheet";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {pickFromCamera, pickFromGallery} from "utils/Camera";
+import {Button, CustomTextInput, Text} from "../../../components";
+import BaseScreen from "../../../components/BaseScreen";
+import {updateAccount} from "../../../screenRedux/loginRedux";
 
-const RestaurantProfile = () => {
+const RestaurantProfile = ({navigation}) => {
   const actionSheet = useRef(null);
   const ImagePickerOptions = ["Take Photo", "Choose from Gallery", "Cancel"];
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const RestaurantProfile = () => {
   const [pickImage, setPickImage] = useState(user?.restaurant?.photo)
   const [changeImage, setChangeImage] = useState(null)
   const [restaurantDetails, setRestaurantDetails] = useState({
-    "name": user.name,
+    "restaurant.name": user.restaurant.name,
     "restaurant.phone": user.restaurant.phone,
     "restaurant.street": user.restaurant.street,
     "restaurant.city": user.restaurant.city,
@@ -30,11 +30,11 @@ const RestaurantProfile = () => {
     "restaurant.description": user.restaurant.description,
     "restaurant.type": user.restaurant.type,
   })
-  
+
   const onChangeText = (key, text) => {
     setRestaurantDetails(prevState => ({ ...prevState, [key]: text }));
   }
-  
+
   const onSave = () => {
     let data = new FormData();
     if(changeImage) {
@@ -45,7 +45,7 @@ const RestaurantProfile = () => {
         data: pickImage.data
       });
     }
-    data.append("name", restaurantDetails.name);
+    data.append("restaurant.name", restaurantDetails["restaurant.name"]);
     data.append("restaurant.phone", restaurantDetails["restaurant.phone"]);
     data.append("restaurant.street", restaurantDetails["restaurant.street"]);
     data.append("restaurant.city", restaurantDetails["restaurant.city"]);
@@ -55,8 +55,8 @@ const RestaurantProfile = () => {
     data.append("restaurant.ein_number", restaurantDetails["restaurant.ein_number"]);
     data.append("restaurant.description", restaurantDetails["restaurant.description"]);
     data.append("restaurant.type", restaurantDetails["restaurant.type"]);
-    
-    dispatch(updateRestaurant(data))
+
+    dispatch(updateAccount(data))
   }
 
   return (
@@ -64,13 +64,14 @@ const RestaurantProfile = () => {
       <SimpleHeader
         title="My Restaurant"
         showBackIcon={true}
+        onBackPress={() => navigation.navigate('Settings')}
       />
       <View style={styles.container}>
-        
+
         <View style={styles.imageContain}>
           <Pressable style={styles.imageButton} onPress={() => actionSheet.current.show()}>
-            <View style={styles.pencileView}>
-              <Image source={Images.Edit} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
+            <View style={styles.pencilView}>
+              <Image source={Images.Pencil} style={{width: scaleVertical(12), height: scaleVertical(12)}} />
             </View>
             {pickImage ?
              <Image source={{uri: changeImage ? pickImage?.path : pickImage}} style={styles.actualImage} defaultSource={Images.Capture} />
@@ -79,14 +80,14 @@ const RestaurantProfile = () => {
             }
           </Pressable>
         </View>
-        
+
         <View>
           <Text variant="text" color="black" >
             Restaurant Name
           </Text>
           <CustomTextInput
-            value={restaurantDetails["name"]}
-            onChangeText={(text) => onChangeText("name", text)}
+            value={restaurantDetails["restaurant.name"]}
+            onChangeText={(text) => onChangeText("restaurant.name", text)}
           />
           <Text variant="text" color="black" >
             Street
@@ -102,7 +103,7 @@ const RestaurantProfile = () => {
             value={restaurantDetails["restaurant.city"]}
             onChangeText={(text) => onChangeText("restaurant.city", text)}
           />
-          
+
           <View style={styles.stateView}>
             <View style={{width: '47%'}}>
               <Text variant="text" color="black" >
@@ -120,10 +121,11 @@ const RestaurantProfile = () => {
               <CustomTextInput
                 value={restaurantDetails["restaurant.zip_code"]}
                 onChangeText={(text) => onChangeText("restaurant.zip_code", text)}
+                keyboardType={'numeric'}
               />
             </View>
           </View>
-          
+
           <Text variant="text" color="black" >
             Website
           </Text>
@@ -137,6 +139,7 @@ const RestaurantProfile = () => {
           <CustomTextInput
             value={restaurantDetails["restaurant.ein_number"]}
             onChangeText={(text) => onChangeText("restaurant.ein_number", text)}
+            keyboardType={'numeric'}
           />
           <Text variant="text" color="black" >
             Phone Number
@@ -144,6 +147,7 @@ const RestaurantProfile = () => {
           <CustomTextInput
             value={restaurantDetails["restaurant.phone"]}
             onChangeText={(text) => onChangeText("restaurant.phone", text)}
+            keyboardType={'phone-pad'}
           />
           <Text variant="text" color="black" >
             Type of the restaurant
@@ -207,7 +211,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  pencileView: {
+  pencilView: {
     width: scaleVertical(25), height: scaleVertical(25), borderRadius: scaleVertical(12.5),
     backgroundColor: color.white, position: 'absolute', top: 0, right: 0, alignItems: 'center', justifyContent: 'center', zIndex: 100
   },
@@ -219,7 +223,8 @@ const styles = StyleSheet.create({
   icon: {
     width: scale(36),
     height: scaleVertical(30),
-    tintColor: 'white'
+    tintColor: 'white',
+    resizeMode: 'contain',
   },
   stateView: {
     flexDirection: 'row',

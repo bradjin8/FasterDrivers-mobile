@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { color, scale, scaleVertical } from "utils";
+import React, {useState} from "react";
+import {Image, StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
 import validator from "utils/validation";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../components/index";
 import BaseScreen from "../../components/BaseScreen";
-import { useDispatch, useSelector } from "react-redux";
-import { signUpRequestStarted } from "../../screenRedux/loginRedux";
+import {Button, CustomTextInput, Text} from "../../components/index";
+import {signUpRequestStarted} from "../../screenRedux/loginRedux";
 
 const SignUp = ({ navigation, route }) => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.loginReducer.user)
   const loading = useSelector(state => state.loginReducer.loading)
-  const [userName, setUserName] = useState("test@gmail.com")
+  const [userName, setUserName] = useState("")
   const [userError, setUserError] = useState(null)
-  const [password, setPassword] = useState("test@123")
+  const [password, setPassword] = useState("")
   const [passwordError, setPasswordError] = useState(null)
-  const [rePassword, setRePassword] = useState("test@123")
+  const [rePassword, setRePassword] = useState("")
   const [rePasswordError, setRePasswordError] = useState(null)
   const userType = route?.params.userType;
 
@@ -66,6 +66,7 @@ const SignUp = ({ navigation, route }) => {
           <Image
             source={Images.AppLogo}
             style={styles.icon}
+            resizeMode="contain"
           />
         </View>
         <View style={{width: '100%'}}>
@@ -80,6 +81,7 @@ const SignUp = ({ navigation, route }) => {
             onBlurText={onBlurUser}
             hasError={userError}
             errorMessage={"Enter valid email"}
+            keyboardType={"email-address"}
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
             Password

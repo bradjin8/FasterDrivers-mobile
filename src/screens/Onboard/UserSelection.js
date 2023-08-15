@@ -1,20 +1,21 @@
+import {navigate} from "navigation/NavigationService";
 import React from "react"
-import { StyleSheet, View, Text, Image } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button } from '../../components/index';
-import { navigate } from "navigation/NavigationService";
+import {Image, StyleSheet, View} from "react-native";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {Button} from '../../components/index';
 
 const UserSelection = ({}) => {
   const redirectTo = (userType) => {
     navigate("SignIn", {userType})
   }
-  
+
   return (
     <View style={styles.container}>
       <Image
         source={Images.AppLogo}
         style={styles.icon}
+        resizeMode={'contain'}
       />
       <View>
         <Button isSecondary text='Restaurant' fontSize={16} onPress={() => redirectTo("Restaurant")} mt={30} fontWeight="700" />

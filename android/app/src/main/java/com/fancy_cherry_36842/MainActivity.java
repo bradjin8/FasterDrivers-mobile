@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "fancy_cherry_36842";
+    return "FasterDrivers";
   }
 }

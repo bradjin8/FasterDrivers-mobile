@@ -1,48 +1,59 @@
-import React, { useEffect, useState } from "react";
-import { Image, View } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { createStackNavigator } from "@react-navigation/stack"
-import { Text } from "../components/index";
-import { color, scaleVertical, scale } from "utils";
-import { Images } from "src/theme"
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs"
+import {createStackNavigator} from "@react-navigation/stack"
+import React, {useEffect, useState} from "react";
+import {Image, View} from "react-native";
+import Feather from "react-native-vector-icons/Feather";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+
+import {useSelector} from "react-redux";
+
+import Home from "screens/Customer/Home"
+import Cart from "screens/Customer/Home/Cart"
+import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
+
+import AddCard from "screens/Customer/Orders/AddCard"
+import OrderDetails from "screens/Customer/Orders/OrderDetails"
+import OrderOnMap from "screens/Customer/Orders/OrderOnMap";
+import Orders from "screens/Customer/Orders/Orders"
+import Payment from "screens/Customer/Orders/Payment"
 
 import Settings from "screens/Customer/Settings"
 import AccountInformation from "screens/Customer/Settings/AccountInformation";
-import TermCondition from "screens/Restaurant/Settings/TermCondition";
-import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
-import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
-
-import Home from "screens/Customer/Home"
-import RestaurantDetails from "screens/Customer/Home/RestaurantDetails"
-
-import Orders from "screens/Customer/Orders"
-import Payment from "screens/Customer/Orders/Payment"
-import AddCard from "screens/Customer/Orders/AddCard"
-
-import { useSelector } from "react-redux";
+import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
+import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
+import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
+import TermCondition from "screens/Restaurant/Settings/TermCondition";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
+import {Text} from "../components/index";
 
 const Tab = createBottomTabNavigator()
 const settingStack = createStackNavigator()
 
+const tabBarStyle = {
+  backgroundColor: color.white,
+  height: scaleVertical(60),
+  tabBarActiveTintColor: color.black,
+  tabBarInactiveTintColor: color.gray,
+  paddingTop: scaleVertical(5)
+}
+
 const CustomerBottomBar = props => {
   const cartItemsReducer = useSelector(state => state.customerReducer.carts)
   const [cartItems, setCartItems] = useState(cartItemsReducer)
-  
+
   useEffect(() => {
     setCartItems(cartItemsReducer)
   }, [cartItemsReducer]);
-  
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarStyle: {
-          backgroundColor: color.white,
-          // height: scaleVertical(65),
-          tabBarActiveTintColor: color.black,
-          tabBarInactiveTintColor: color.gray,
-        }
+        animationEnabled: true,
+        tabBarStyle: tabBarStyle,
+        tabBarLabelPosition: 'below-icon',
       }}
     >
       <Tab.Screen
@@ -50,16 +61,14 @@ const CustomerBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarStyle: {
-            display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex'
+            ...tabBarStyle,
+            display: props.route.state?.routes?.[0].state?.index > 0 ? 'none' : 'flex',
           },
           tabBarLabel: ({ focused }) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Home}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <SimpleLineIcons name={'home'} size={scale(22)} color={focused ? color.black : color.gray} />
           ),
           header: () => null,
         }}
@@ -69,7 +78,7 @@ const CustomerBottomBar = props => {
         component={OrderTab}
         options={{
           tabBarLabel: ({ focused }) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Orders</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <View>
@@ -87,14 +96,11 @@ const CustomerBottomBar = props => {
                 justifyContent: 'center',
                 backgroundColor: color.angry
               }}>
-                <Text variant="text" color="white" fontSize={12} fontWeight="600">
+                <Text variant="strong" color="white" fontSize={12} fontWeight="600">
                   {cartItems.length}
                 </Text>
               </View> : null}
-              <Image
-                source={Images.orders}
-                style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-              />
+              <Feather name={'shopping-cart'} size={scale(24)} color={focused ? color.black : color.gray} />
             </View>
           ),
           header: () => null
@@ -105,12 +111,13 @@ const CustomerBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({ focused }) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Settings}
               style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              resizeMode={'contain'}
             />
           ),
           header: () => null
@@ -135,6 +142,7 @@ const SettingTab = () => {
         <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
+        <settingStack.Screen name="InviteFriends" component={InviteFriends} />
       </settingStack.Navigator>
     </>
   )
@@ -148,6 +156,7 @@ const HomeTab = () => {
         initialRouteName="Home"
       >
         <settingStack.Screen name="Home" component={Home} />
+        <settingStack.Screen name="Cart" component={Cart} />
         <settingStack.Screen name="RestaurantDetails" component={RestaurantDetails} />
       </settingStack.Navigator>
     </>
@@ -162,6 +171,8 @@ const OrderTab = () => {
         initialRouteName="Orders"
       >
         <settingStack.Screen name="Orders" component={Orders} />
+        <settingStack.Screen name="OrderDetails" component={OrderDetails} />
+        <settingStack.Screen name="OrderOnMap" component={OrderOnMap} />
         <settingStack.Screen name="Payment" component={Payment} />
         <settingStack.Screen name="AddCard" component={AddCard} />
       </settingStack.Navigator>

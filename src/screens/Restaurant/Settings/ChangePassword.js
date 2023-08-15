@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image, TouchableHighlight } from "react-native";
-import { color, scale, scaleVertical } from "utils";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../../components";
-import BaseScreen from "../../../components/BaseScreen";
 import SimpleHeader from "components/SimpleHeader";
-import { changePassword } from "../../../screenRedux/loginRedux";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {color, scale, scaleVertical} from "utils";
+import {Button, CustomTextInput, Text} from "../../../components";
+import BaseScreen from "../../../components/BaseScreen";
+import {changePassword} from "../../../screenRedux/loginRedux";
 
 const ChangePassword = ({}) => {
   const dispatch = useDispatch()
@@ -17,43 +16,56 @@ const ChangePassword = ({}) => {
   const [newError, setNewError] = useState(null)
   const [newRepeat, setNewRepeat] = useState(null)
   const [newRepeatError, setNewRepeatError] = useState(null)
-  
+
+  const [errMsgMap, setErrMsgMap] = useState({
+    oldPass: '',
+    newPass: '',
+    newRepeat: ''
+  })
+
   const onBlurPassword = () => {
-    if(!newPass) {
+    if (!newPass) {
       setNewError(true)
+      setErrMsgMap({...errMsgMap, newPass: 'Enter new password'})
     } else {
       setNewError(false)
     }
   }
   const onBlurRePassword = () => {
-    if(!newPass || newRepeat !== newPass) {
+    if (!newPass || newRepeat !== newPass) {
       setNewRepeatError(true)
+      if (!newPass) {
+        setErrMsgMap({...errMsgMap, newRepeat: 'Enter repeat password'})
+      } else {
+        setErrMsgMap({...errMsgMap, newRepeat: 'Repeat password not match'})
+      }
     } else {
       setNewRepeatError(false)
     }
   }
   const onBlurOldPassword = () => {
-    if(!oldPass) {
+    if (!oldPass) {
       setOldError(true)
+      setErrMsgMap({...errMsgMap, oldPass: 'Enter current password'})
     } else {
       setOldError(false)
     }
   }
-  
+
   const changePass = () => {
-    if(oldPass && newPass && newRepeat === newPass) {
+    if (oldPass && newPass && newRepeat === newPass) {
       let data = new FormData();
       data.append('current_password', oldPass);
       data.append('password_1', newPass);
       data.append('password_2', newRepeat);
       dispatch(changePassword(data))
-    } else  {
+    } else {
       onBlurOldPassword();
       onBlurPassword();
       onBlurRePassword();
     }
   }
-  
+
   return (
     <BaseScreen style={styles.mainWrapper}>
       <SimpleHeader
@@ -71,7 +83,7 @@ const ChangePassword = ({}) => {
             onChangeText={(text) => setOldPass(text)}
             onBlurText={onBlurOldPassword}
             hasError={oldError}
-            errorMessage={"Enter old password"}
+            errorMessage={errMsgMap.oldPass}
             placeholder="********"
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
@@ -83,7 +95,7 @@ const ChangePassword = ({}) => {
             onChangeText={(text) => setNewPass(text)}
             onBlurText={onBlurPassword}
             hasError={newError}
-            errorMessage={"Enter new password"}
+            errorMessage={errMsgMap.newPass}
             placeholder="********"
           />
           <Text variant="text" color="black" style={styles.inputTitle}>
@@ -96,11 +108,11 @@ const ChangePassword = ({}) => {
             onBlurText={onBlurRePassword}
             hasError={newRepeatError}
             placeholder="********"
-            errorMessage={"Enter repeat password"}
+            errorMessage={errMsgMap.newRepeat}
           />
         </View>
         <View style={{marginTop: scaleVertical(50)}}>
-          <Button text='Save' loading={loading} fontSize={16} onPress={() => changePass()}  mt={30} fontWeight="700" />
+          <Button text='Save' loading={loading} fontSize={16} onPress={() => changePass()} mt={30} fontWeight="700"/>
         </View>
       </View>
     </BaseScreen>

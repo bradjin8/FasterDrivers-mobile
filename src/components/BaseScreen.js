@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { StatusBar, StyleSheet, ScrollView } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { color } from "utils";
+import React, {useState} from 'react';
+import {StatusBar, StyleSheet, ScrollView, KeyboardAvoidingView} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {color} from "utils";
 
 const BaseScreen = ({
-  bounces = false,
-  children,
-  enableOnAndroid = true,
-  style,
-}) => {
-  const [scrollEnabled, setScrollEnabled] = useState(true);
-  
+                      bounces = false,
+                      children,
+                      enableOnAndroid = true,
+                      style,
+                    }) => {
+  const [scrollEnabled, setScrollEnabled] = useState(true)
+
   return (
     <SafeAreaView style={style}>
       <KeyboardAwareScrollView
@@ -26,8 +26,8 @@ const BaseScreen = ({
         onKeyboardDidHide={() => setScrollEnabled(true)}
         onKeyboardDidShow={() => setScrollEnabled(false)}
       >
-        <StatusBar barStyle="light-content" />
-          {children}
+        <StatusBar barStyle="light-content"/>
+        {children}
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );

@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { color, scaleVertical } from "utils";
+import {StyleSheet, View} from "react-native";
+import {WebView} from "react-native-webview";
+import {color, scaleVertical} from "utils";
 import SimpleHeader from "../../../components/SimpleHeader";
-import { Text } from "../../../components/index";
 
 const PrivacyPolicy = ({}) => {
   return (
@@ -12,9 +12,7 @@ const PrivacyPolicy = ({}) => {
         showBackIcon={true}
       />
       <View style={styles.container}>
-        <Text variant="text" color="black" fontSize={16} fontWeight="400">
-          Privacy Policy Content
-        </Text>
+        <WebView source={{uri: 'https://fancy-cherry-36842-staging.botics.co/api/v1/privacy-policy/'}}/>
       </View>
     </View>
   )
@@ -24,7 +22,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white
   },
-  container: {flex: 1, backgroundColor: color.white, padding: scaleVertical(25)},
+  container: {
+    flex: 1,
+    backgroundColor: color.white,
+    paddingHorizontal: scaleVertical(25),
+  },
 })
 
 export default PrivacyPolicy;

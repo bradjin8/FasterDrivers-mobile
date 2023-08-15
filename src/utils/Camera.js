@@ -6,10 +6,10 @@ const global = getGlobalOptions();
 
 async function askPermission(permission) {
   try {
-    const status = await Permissions.check(permission);
+    let status = await Permissions.check(permission);
     if (status !== Permissions.RESULTS.GRANTED) {
       // if not already granted then ask
-      const status = await Permissions.request(permission);
+      status = await Permissions.request(permission);
       if (status !== Permissions.RESULTS.GRANTED) {
         // user denied on ask
         return false;
@@ -23,19 +23,20 @@ async function askPermission(permission) {
 }
 
 export async function getCameraGalleryPermissions() {
-  // need both permisisons for camera, so ask both on galery and camera
+  // need both permissions for camera, so ask both on gallery and camera
   const { PERMISSIONS } = Permissions;
   let permission = Platform.select({
     android: PERMISSIONS.ANDROID.CAMERA,
     ios: PERMISSIONS.IOS.CAMERA
   });
-  
+
   const cameraPermissions = await askPermission(permission);
   permission = Platform.select({
     android: PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
     ios: PERMISSIONS.IOS.PHOTO_LIBRARY
   });
   const storagePermissions = await askPermission(permission);
+  console.log("cameraPermissions", cameraPermissions, "storagePermissions", storagePermissions)
   return cameraPermissions && storagePermissions;
 }
 
@@ -63,7 +64,7 @@ function permissionsAlert() {
   );
 }
 
-export const pickFromGallery = async () => {
+export const pickFromGallery = async (width = 600, height = 400) => {
   const havePermission = await getCameraGalleryPermissions();
   if (!havePermission) {
     permissionsAlert();
@@ -71,8 +72,8 @@ export const pickFromGallery = async () => {
   } else {
     try {
       const res = await ImagePicker.openPicker({
-        width: 500,
-        height: 400,
+        width: width,
+        height: height,
         cropping: true,
         mediaType: "photo",
         includeBase64: true
@@ -85,7 +86,7 @@ export const pickFromGallery = async () => {
   }
 };
 
-export const pickFromCamera = async () => {
+export const pickFromCamera = async (width = 600, height = 400) => {
   const havePermission = await getCameraGalleryPermissions();
   if (!havePermission) {
     permissionsAlert();
@@ -93,8 +94,8 @@ export const pickFromCamera = async () => {
   } else {
     try {
       const res = await ImagePicker.openCamera({
-        width: 500,
-        height: 400,
+        width: width,
+        height: height,
         cropping: true,
         mediaType: "photo",
         includeBase64: true,

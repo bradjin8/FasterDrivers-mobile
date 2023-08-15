@@ -5,5 +5,5 @@ export const color = {
   transparent: 'rgba(0, 0, 0, 0)',
   primary: palette.primary,
   error: palette.angry,
-  text: palette.white
+  text: palette.black,
 };

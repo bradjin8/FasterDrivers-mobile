@@ -1,48 +1,40 @@
 {
   "project_info": {
-    "project_number": "847642727860",
-    "project_id": "com.fancy_cherry_36842",
-    "storage_bucket": "com.fancy_cherry_36842-test.appspot.com"
+    "project_number": "592134203023",
+    "project_id": "fancy-cherry",
+    "storage_bucket": "fancy-cherry.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:847642727860:android:5f0325d9029fcfbef68ee1",
+        "mobilesdk_app_id": "1:592134203023:android:bc105c9792f473598cf2fa",
         "android_client_info": {
           "package_name": "com.fancy_cherry_36842"
         }
       },
       "oauth_client": [
         {
-          "client_id": "847642727860-0vqnfi0v3oo9s0o44l5k21l1uoq7aqfa.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.fancy_cherry_36842",
-            "certificate_hash": "91c5b9a02fd586c7a7c5a10185a8d0d771ba2c26"
-          }
-        },
-        {
-          "client_id": "847642727860-adijci519592l6uo24toufq9he25lc5g.apps.googleusercontent.com",
+          "client_id": "592134203023-94uubclul41i4er7mkadi0266pepi6oa.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZX8Mtbga3LnLPyNi7iEXUAdTCVyyk4lk"
+          "current_key": "AIzaSyACYu_wAXW4MFrBzqGqEJRXvT24xYMpHhE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "847642727860-adijci519592l6uo24toufq9he25lc5g.apps.googleusercontent.com",
+              "client_id": "592134203023-94uubclul41i4er7mkadi0266pepi6oa.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "847642727860-o93apd9dtnsk75i7sschbi66i0ihr7jm.apps.googleusercontent.com",
+              "client_id": "592134203023-r2s6smi9hf7v7l1eebolk97r3fk1ticq.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.fancy_cherry_36842"
+                "bundle_id": "com.fasterdrivers.ios"
               }
             }
           ]

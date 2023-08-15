@@ -1,85 +1,92 @@
-import React, { useState } from "react";
-import { StyleSheet, View, ScrollView, Image, Pressable } from "react-native";
-import { color, scaleVertical, customerSettingData, scale } from "utils";
-import SimpleHeader from "../../../components/SimpleHeader";
-import { Button, Text } from "../../../components/index";
-import FontAwesomeIcons from 'react-native-vector-icons/dist/FontAwesome';
-import { navigate } from "navigation/NavigationService";
-import { useDispatch, useSelector } from "react-redux";
-import { createNewOrder } from "../../../screenRedux/customerRedux";
-import Icon from "react-native-vector-icons/dist/Feather";
-import { Images } from "../../../theme";
+import PaymentCard from "components/PaymentCard";
+import {navigate} from "navigation/NavigationService";
+import React, {useEffect} from "react";
+import {Alert, ScrollView, StyleSheet, View} from "react-native";
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import {useDispatch, useSelector} from "react-redux";
+import {Button, Text} from "src/components/index";
+import SimpleHeader from "src/components/SimpleHeader";
+import {deletePaymentRequest, getPaymentsRequest, payOrderRequest} from "src/screenRedux/customerRedux";
+import {Flex, Margin} from "src/theme/Styles";
+import {color, scaleVertical} from "utils";
 
-const Payment = ({}) => {
+const Payment = ({route}) => {
   const dispatch = useDispatch()
-  const cartItemsReducer = useSelector(state => state.customerReducer.carts)
-  const [cartItems, setCartItems] = useState(cartItemsReducer)
-  const addresses = useSelector(state => state.customerReducer.addresses);
-  const defaultAddress = addresses?.find(o => o.default)
-  
-  const createPayment = () => {
-    let data = new FormData();
-    data.append('restaurant', cartItems[0].restaurant);
-    
-    if(defaultAddress) {
-      data.append('address', defaultAddress.id);
-    }
-    cartItems.map((item, index) => {
-      data.append(`dishes[${index}]dish`, item.id);
-      data.append(`dishes[${index}]quantity`, item.quantity);
-      // data.append('dishes[0]dish_addons[0]item', "7516a864-c9b8-494e-be5b-8b80b2bfd7fd");
-      // data.append('dishes[0]dish_addons[0]quantity', "2");
-    })
-    dispatch(createNewOrder(data))
+  const {payments, loading} = useSelector(state => state.customerReducer);
+  const [paymentId, setPaymentId] = React.useState(null)
+
+  const order = route?.params?.order
+
+  // console.log('order', order)
+
+  const pay = async () => {
+    let data = new FormData()
+    data.append('payment_method', paymentId)
+    data.append('order', order.id)
+    dispatch(payOrderRequest(data))
   }
-  
+
+  const removePaymentMethod = () => {
+    Alert.alert('Are you sure to remove this payment method?', '', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          const data = new FormData()
+          data.append('payment_method', paymentId)
+          dispatch(deletePaymentRequest(data))
+        }
+      }
+    ])
+  }
+
   const renderFinalTotal = () => {
-    return  cartItems.length && cartItems.reduce((prev,curr) => {
-      return prev + (curr.quantity * curr.price)
-    }, 0).toFixed(2)
+    return order.total
   }
-  
+
+  useEffect(() => {
+    dispatch(getPaymentsRequest())
+  }, [])
+
+  useEffect(() => {
+    setPaymentId(null)
+  }, [payments])
+
   return (
     <View style={styles.mainWrapper}>
       <SimpleHeader
-        title="Payment"
+        title={order !== null ? "Payment" : "Wallet"}
         showBackIcon={true}
       />
-      <ScrollView style={styles.container}>
-        <View style={styles.pricingView}>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">Total</Text>
-          <Text variant="text" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
-        </View>
-        <View style={styles.innerContain}>
-          {addresses?.map((address, index) => {
-            return(
-              <Pressable onPress={() => alert('select method')}>
-                {address.default && <View style={styles.circle}>
-                  <Image source={Images.ticks}style={styles.tickImg} />
-                </View>}
-                <View style={[styles.itemContain, address.default && styles.activeItem]} key={index.toString()}>
-                  <Text variant="text" color="black" fontSize={16} fontWeight="700">Master Card</Text>
-                  <View style={[styles.flexDirection, styles.paddingTop]}>
-                    <FontAwesomeIcons name="cc-mastercard" size={16} color={color.black} style={{marginRight: scaleVertical(10)}} />
-                    <Text variant="text" color="black" fontSize={16} fontWeight="400">************* 436</Text>
-                  </View>
-                </View>
-              </Pressable>
-            )
-          })}
-          <Button
-            style={styles.btnStyle}
-            variant="outline"
-            text="Add New Payment Method"
-            textColor="black"
-            onPress={() => navigate("AddCard")}
-            fontSize={16}
-            fontWeight="600"
-            icon="add"
-          />
-          <Button loading={false} text="Pay" mt={20} onPress={() => navigate("AddCard")} />
-        </View>
-      </ScrollView>
+      <View style={styles.container}>
+        <ScrollView>
+          {order && <View style={styles.pricingView}>
+            <Text variant="strong" color="black" fontSize={14} fontWeight="400">Total</Text>
+            <Text variant="strong" color="black" fontSize={14} fontWeight="400">${renderFinalTotal()}</Text>
+          </View>}
+          <View style={styles.innerContain}>
+            {payments?.map((payment, index) => <PaymentCard payment={payment} key={index} onPress={() => setPaymentId(payment.id)} active={paymentId === payment.id}/>)}
+            <Button
+              style={styles.btnStyle}
+              variant="outline"
+              text="Add New Payment Method"
+              textColor="black"
+              onPress={() => navigate("AddCard")}
+              fontSize={16}
+              fontWeight="600"
+              icon="add"
+            />
+          </View>
+        </ScrollView>
+        {paymentId && <View style={[Margin.t10]}>
+          <Button disabled={loading} text="Remove" fontSize={18} fontWeight={'600'} onPress={removePaymentMethod} style={{backgroundColor: 'red'}}/>
+          {order && <Button disabled={loading} text="Pay" fontSize={18} fontWeight={'600'} mt={20} onPress={pay}/>}
+        </View>}
+      </View>
     </View>
   )
 }
@@ -104,18 +111,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.white,
     padding: scaleVertical(10)
   },
-  itemContain: {
-    backgroundColor: color.secondary,
-    borderRadius: scale(10),
-    borderColor: color.black,
-    borderWidth: scale(1),
-    marginBottom: scale(15),
-    padding: scale(10),
-    justifyContent: 'center',
-  },
-  activeItem: {
-    borderColor: color.primary,
-  },
   checkView: {
     position: 'absolute',
     right: -4,
@@ -130,15 +125,6 @@ const styles = StyleSheet.create({
   btnStyle: {
     borderColor: color.black,
   },
-  circle: {
-    position: 'absolute',
-    right: -10,
-    top: -8,
-    zIndex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tickImg: { height: 24, width: 24, borderRadius: 12},
 })
 
 export default Payment;

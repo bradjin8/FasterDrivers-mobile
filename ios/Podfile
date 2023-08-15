@@ -3,7 +3,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '13.0'
 
-target 'fancy_cherry_36842' do
+target 'FasterDrivers' do
   config = use_native_modules!
 
   use_react_native!(
@@ -17,8 +17,12 @@ target 'fancy_cherry_36842' do
  permissions_path = '../node_modules/react-native-permissions/ios'
  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways/Permission-LocationAlways.podspec"
  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
+ pod 'Permission-Camera', :path => "#{permissions_path}/Camera/Permission-Camera.podspec"
+ pod 'Permission-MediaLibrary', :path => "#{permissions_path}/MediaLibrary/Permission-MediaLibrary.podspec"
+ pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary/Permission-PhotoLibrary.podspec"
+ pod 'Permission-PhotoLibraryAddOnly', :path => "#{permissions_path}/PhotoLibraryAddOnly/Permission-PhotoLibraryAddOnly.podspec"
 
-  target 'fancy_cherry_36842Tests' do
+  target 'FasterDriversTests' do
     inherit! :complete
     # Pods for testing
   end

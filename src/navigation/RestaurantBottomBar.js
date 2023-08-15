@@ -2,6 +2,14 @@ import React from "react"
 import { Image } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createStackNavigator } from "@react-navigation/stack"
+import {widthPercentageToDP} from "react-native-responsive-screen";
+import Feather from "react-native-vector-icons/Feather";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import ViewDish from "screens/Restaurant/Menu/ViewDish";
+import AddCard from "screens/Restaurant/Settings/AddCard";
+import InviteFriends from "screens/Restaurant/Settings/InviteFriends";
+import Payment from "screens/Restaurant/Settings/Payment";
+import StripeConnect from "screens/Restaurant/Settings/StripeConnect";
 import { Text } from "../components/index";
 import { color, scaleVertical, scale } from "utils";
 
@@ -13,6 +21,7 @@ import SendFeedback from "screens/Restaurant/Settings/SendFeedback";
 import PrivacyPolicy from "screens/Restaurant/Settings/PrivacyPolicy";
 import RestaurantProfile from "screens/Restaurant/Settings/RestaurantProfile"
 import ChangePassword from "screens/Restaurant/Settings/ChangePassword"
+import Subscription from "screens/Restaurant/Settings/Subscription"
 
 import Menu from "screens/Restaurant/Menu"
 import AddNewDish from "screens/Restaurant/Menu/AddNewDish"
@@ -31,11 +40,12 @@ const RestaurantBottomBar = props => {
       initialRouteName="Home"
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.restaurant,
           height: scaleVertical(65),
-          tabBarActiveTintColor: color.black,
-          tabBarInactiveTintColor: color.gray,
-        }
+          tabBarActiveTintColor: color.primary,
+          tabBarInactiveTintColor: color.black,
+        },
+        tabBarLabelPosition: 'below-icon',
       }}
     >
       <Tab.Screen
@@ -43,13 +53,10 @@ const RestaurantBottomBar = props => {
         component={HomeTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Home</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Home</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Home}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <SimpleLineIcons name={'home'} size={scale(22)} color={focused ? color.primary : color.black} />
           ),
           header: () => null
         }}
@@ -59,12 +66,13 @@ const RestaurantBottomBar = props => {
         component={MenuTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Menu</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Menu</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Menu}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              resizeMode={'contain'}
+              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
             />
           ),
           header: () => null
@@ -75,13 +83,10 @@ const RestaurantBottomBar = props => {
         component={MapTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Map</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Map</Text>
           ),
           tabBarIcon: ({ focused }) => (
-            <Image
-              source={Images.Map}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
-            />
+            <Feather name={'map'} size={scale(22)} color={focused ? color.primary : color.black} />
           ),
           header: () => null
         }}
@@ -91,12 +96,13 @@ const RestaurantBottomBar = props => {
         component={SettingTab}
         options={{
           tabBarLabel: ({focused, color, size}) => (
-            <Text variant="text" color={focused ? 'black' : 'gray'} fontSize={14} fontWeight="700">Settings</Text>
+            <Text variant="strong" color={focused ? 'primary' : 'black'} fontSize={14} fontWeight="700">Settings</Text>
           ),
           tabBarIcon: ({ focused }) => (
             <Image
               source={Images.Settings}
-              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.black : color.gray }}
+              resizeMode={'contain'}
+              style={{ width: scale(22), height: scale(22), tintColor: focused ? color.primary : color.black }}
             />
           ),
           header: () => null
@@ -119,10 +125,15 @@ const SettingTab = () => {
         <settingStack.Screen name="RestaurantProfile" component={RestaurantProfile} />
         <settingStack.Screen name="ChangePassword" component={ChangePassword} />
         <settingStack.Screen name="AccountInformation" component={AccountInformation} />
+        <settingStack.Screen name="StripeConnect" component={StripeConnect} />
         <settingStack.Screen name="OrderAcceptance" component={OrderAcceptance} />
         <settingStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
         <settingStack.Screen name="TermCondition" component={TermCondition} />
         <settingStack.Screen name="SendFeedback" component={SendFeedback} />
+        <settingStack.Screen name="InviteFriends" component={InviteFriends} />
+        <settingStack.Screen name="Subscription" component={Subscription} />
+        <settingStack.Screen name="Wallet" component={Payment} />
+        <settingStack.Screen name="AddCard" component={AddCard} />
       </settingStack.Navigator>
     </>
   )
@@ -162,6 +173,7 @@ const MenuTab = () => {
         initialRouteName="Menu"
       >
         <settingStack.Screen name="Menu" component={Menu} />
+        <settingStack.Screen name="ViewDish" component={ViewDish} />
         <settingStack.Screen name="AddNewDish" component={AddNewDish} />
       </settingStack.Navigator>
     </>

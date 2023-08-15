@@ -1,30 +1,26 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { color, scale, scaleVertical } from "utils";
+import React, {useState} from "react";
+import {Alert, Image, StyleSheet, View} from "react-native";
+import {useDispatch, useSelector} from "react-redux";
+import {Images} from "src/theme"
+import {color, scale, scaleVertical} from "utils";
 import validator from "utils/validation";
-import { Images } from "src/theme"
-import { Button, CustomTextInput, Text } from "../../components/index";
 import BaseScreen from "../../components/BaseScreen";
+import {Button, CustomTextInput, Text} from "../../components/index";
+import {forgotPasswordAPI, forgotPasswordRequest} from "../../screenRedux/loginRedux";
 
-const ForgotPassword = ({ navigation }) => {
-  const [userName, setUserName] = useState(null)
-  const [userError, setUserError] = useState(null)
+const ForgotPassword = ({navigation}) => {
+  const [email, setEmail] = useState('')
+  const dispatch = useDispatch()
+  const {loading} = useSelector(state => state.loginReducer)
 
-  const onBlurUser = () => {
-    if(!userName) {
-      setUserError(true)
-    } else if(!validator.email.regEx.test(userName)) {
-      setUserError(true)
-    } else {
-      setUserError(false)
-    }
-  }
-
-  const onSignIn = () => {
-    if(userName && validator.email.regEx.test(userName)) {
+  const onResetPassword = () => {
+    if (email && validator.email.regEx.test(email)) {
       // api call
+      const data = new FormData()
+      data.append('email', email)
+      dispatch(forgotPasswordRequest(data))
     } else {
-      onBlurUser();
+      Alert.alert('Please enter valid email')
     }
   }
 
@@ -35,10 +31,11 @@ const ForgotPassword = ({ navigation }) => {
           <Image
             source={Images.AppLogo}
             style={styles.icon}
+            resizeMode={'contain'}
           />
         </View>
         <View style={styles.passwordText}>
-          <Text variant="text" color="black" fontSize={22} fontWeight={'600'} style={styles.inputTitle}>
+          <Text variant="strong" color="black" fontSize={22} fontWeight={'400'} style={styles.inputTitle}>
             Forgot Password
           </Text>
           <Text variant="text" color="black" fontSize={18} fontWeight={'500'} style={styles.inputTitle}>
@@ -51,16 +48,17 @@ const ForgotPassword = ({ navigation }) => {
           </Text>
           <CustomTextInput
             title="EMAIL"
-            value={userName}
-            placeholder="email"
-            onChangeText={(text) => setUserName(text)}
-            onBlurText={onBlurUser}
-            hasError={userError}
-            errorMessage={"Enter valid email"}
+            value={email}
+            placeholder="email@domain.com"
+            onChangeText={(text) => setEmail(text)}
+            keyboardType="email-address"
           />
         </View>
         <View style={styles.buttonView}>
-          <Button variant="outline" text='Sign up' onPress={onSignIn} fontSize={16} mt={30} />
+          <Button
+            variant="outline" text='Reset Password' onPress={onResetPassword} fontSize={16} mt={30}
+            loading={loading}
+          />
         </View>
       </View>
     </BaseScreen>
@@ -71,8 +69,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: color.white
   },
-  container: {flex: 1, backgroundColor: color.white, alignItems: 'center', padding: scaleVertical(25) },
-  inputContainer: { paddingVertical: scaleVertical(50), width: '100%' },
+  container: {flex: 1, backgroundColor: color.white, alignItems: 'center', padding: scaleVertical(25)},
+  inputContainer: {paddingVertical: scaleVertical(50), width: '100%'},
   imageView: {
     paddingTop: scaleVertical(50),
     paddingBottom: scaleVertical(30),

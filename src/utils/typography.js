@@ -1,6 +1,6 @@
 export const typography = {
-  // thin_100: 'Ubuntu-Light',
-  // regular_400: 'Ubuntu',
-  // medium_600: 'Ubuntu-Medium',
-  // bold_700: 'Ubuntu-Bold',
+  thin_100: 'Lato-Thin',
+  regular_400: 'Lato-Light',
+  medium_600: 'Lato-Regular',
+  bold_700: 'Lato-Bold',
 };

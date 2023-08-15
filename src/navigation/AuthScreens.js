@@ -13,7 +13,7 @@ const authStack = createStackNavigator()
 
 const AuthStackScreen = () => (
   <authStack.Navigator
-    screenOptions={{ headerShown: false, animationEnabled: false }}
+    screenOptions={{ headerShown: false, animationEnabled: true }}
     initialRouteName="SliderScreen"
   >
     <authStack.Screen name="Onboard" component={Onboard} />

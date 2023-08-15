@@ -1,4 +1,4 @@
-import { configureStore, createReducer, combineReducers } from "@reduxjs/toolkit"
+import {combineReducers, configureStore, createReducer} from "@reduxjs/toolkit"
 
 export const getStore = (globalState) => {
   const appReducer = createReducer(globalState, _ => {
@@ -14,8 +14,8 @@ export const getStore = (globalState) => {
       if (rootState) {
         rootState = {
           ...rootState,
-          auth: initialAuthState,
-          dashboard: initialDashboardState
+          auth: {},
+          dashboard: {}
         }
       }
     }
@@ -24,6 +24,12 @@ export const getStore = (globalState) => {
 
   return configureStore({
     reducer: rootReducer,
-    middleware: getDefaultMiddleware => getDefaultMiddleware()
+    middleware: getDefaultMiddleware => getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['*/fulfilled', '*/rejected', '*/pending'],
+        ignoredPaths: [''],
+        ignoredActionPaths: ['payload'],
+      }
+    })
   })
 }
