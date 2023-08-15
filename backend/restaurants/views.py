@@ -13,8 +13,9 @@ from users.serializers import UserProfileSerializer
 from users.models import User
 from users.authentication import ExpiringTokenAuthentication
 from .serializers import DishSerializer, AddOnSerializer, ItemSerializer, \
-                         RestaurantSerializer, ListRestaurantSerializer
-from .models import Dish, AddOn, Item, Restaurant
+                         RestaurantSerializer, ListRestaurantSerializer, \
+                         CategorySerializer
+from .models import Dish, AddOn, Item, Restaurant, Category
 from .utils import sort_by_type, sort_by_category
 
 from orders.models import Order
@@ -44,6 +45,20 @@ class ItemViewSet(ModelViewSet):
     queryset = Item.objects.all()
 
 
+class CategoryViewSet(ModelViewSet):
+    serializer_class = CategorySerializer
+    permission_classes = (IsAuthenticatedOrActivatedDriver,)
+    authentication_classes  = [ExpiringTokenAuthentication]
+    queryset = Category.objects.all()
+    filterset_fields = ['restaurant']
+
+    def get_queryset(self):
+        return Category.objects.filter(restaurant=self.request.user.restaurant)
+
+    def perform_create(self, serializer):
+        serializer.save(restaurant=self.request.user.restaurant)
+
+
 class RestaurantViewSet(ModelViewSet):
     serializer_class = RestaurantSerializer
     permission_classes = (IsAuthenticatedOrActivatedDriver,)
@@ -63,7 +78,8 @@ class RestaurantViewSet(ModelViewSet):
                 Q(user=self.request.user) | 
                 Q(subscription__status="active", connect_account__payouts_enabled=True)
             )
-        return Restaurant.objects.filter(subscription__status="active", connect_account__payouts_enabled=True)
+        # return Restaurant.objects.filter(subscription__status="active", connect_account__payouts_enabled=True)
+        return super().get_queryset()
 
 
     def list(self, request, *args, **kwargs):
@@ -80,22 +96,34 @@ class RestaurantViewSet(ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def nearby_drivers(self, request):
+        ongoing_statuses = ["Accepted", "In Progress", "Driver Assigned", "In Transit"]
         restaurant_location = request.user.restaurant.location
+        if restaurant_location is None:
+            return Response({"detail": "The restaurant's location is not set."}, status=400)
+
         nearby_users = User.objects.filter(
+            # Only include drivers that do not have any ongoing orders
+            ~Q(driver_orders__status__in=ongoing_statuses),
             activated_profile=True,
             driver__subscription__status="active",
             driver__connect_account__payouts_enabled=True,
             driver__location__distance_lt=(
                 restaurant_location, Distance(km=20)
             )
-        )
+        ).distinct()
         serializer = UserProfileSerializer(nearby_users, many=True).data
         return Response(serializer)
 
     @action(detail=False, methods=['POST'])
     def request_driver(self, request):
+        ongoing_statuses = ["Accepted", "In Progress", "Driver Assigned", "In Transit"]
         order = Order.objects.get(id=request.data.get('order'))
         driver_user = User.objects.get(id=request.data.get('driver'))
+
+        # Check if driver already has an ongoing order
+        if Order.objects.filter(driver=driver_user, status__in=ongoing_statuses).exists():
+            return Response("Driver is currently assigned to an ongoing order", status=400)
+
         order.driver = driver_user
         order.driver_assigned_at = timezone.now()
         order.status = "Driver Assigned"

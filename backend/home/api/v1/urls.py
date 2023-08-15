@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.views.generic import TemplateView
+
 from rest_framework.routers import DefaultRouter
 
 from home.api.v1.viewsets import (
@@ -7,7 +9,7 @@ from home.api.v1.viewsets import (
 )
 from customers.views import CustomerAddressViewSet
 from users.viewsets import UserViewSet
-from restaurants.views import DishViewSet, AddOnViewSet, ItemViewSet, RestaurantViewSet
+from restaurants.views import DishViewSet, AddOnViewSet, ItemViewSet, RestaurantViewSet, CategoryViewSet
 from orders.views import OrderViewSet
 from payments.views import PaymentViewSet, SubscriptionsViewSet
 from reviews.views import ReviewViewSet, DriverReviewViewSet
@@ -21,6 +23,7 @@ router.register("orders", OrderViewSet, basename="orders")
 router.register("customers/address", CustomerAddressViewSet, basename="customer_addresses")
 router.register("restaurants", RestaurantViewSet, basename="restuarants")
 router.register("dishes", DishViewSet, basename="dishes")
+router.register("categories", CategoryViewSet, basename="categories")
 router.register("addons", AddOnViewSet, basename="addons")
 router.register("items", ItemViewSet, basename="items")
 router.register("payments", PaymentViewSet, basename="payments")
@@ -30,5 +33,7 @@ router.register("driver-reviews", DriverReviewViewSet, basename="driver_reviews"
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("admin/", include("customadmin.urls"))
+    path("admin/", include("customadmin.urls")),
+    path('privacy-policy/', TemplateView.as_view(template_name='privacy-policy.html', content_type='text/html')),
+    path('terms-and-conditions/', TemplateView.as_view(template_name='terms-of-service.html', content_type='text/html'))
 ]

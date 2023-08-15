@@ -3,7 +3,7 @@ from django.contrib.gis.geos import Point
 
 from rest_framework import serializers
 
-from .models import Restaurant, Dish, AddOn, Item
+from .models import Restaurant, Dish, AddOn, Item, Category
 
 from fancy_cherry_36842.settings import GOOGLE_API_KEY
 from djstripe.models import Account, Subscription
@@ -73,6 +73,17 @@ class AddOnSerializer(serializers.ModelSerializer):
         return addon
 
 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+        extra_kwargs = {
+            'restaurant': {
+                'required': False
+            }
+        }
+
+
 class DishSerializer(serializers.ModelSerializer):
     addons = AddOnSerializer(many=True, required=False)
 
@@ -111,6 +122,11 @@ class DishSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(serializer.errors)
         return dish
 
+    # def to_representation(self, instance):
+    #     rep = super().to_representation(instance)
+    #     if instance.category:
+    #         rep['category'] = CategorySerializer(instance.category).data
+    #     return rep
 
 class RestaurantSerializer(serializers.ModelSerializer):
     dishes = DishSerializer(required=False, many=True)
