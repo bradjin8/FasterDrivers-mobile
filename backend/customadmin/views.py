@@ -71,7 +71,7 @@ class AdminUserViewSet(ModelViewSet):
         email_body = """
             Hi {},\n
             Your driver account on our platform has been approved and activated.\n
-            You can now log in and start accepting rides.\n
+            You can now log in and start accepting orders.\n
             Regards,\n
             Team Faster Drivers +
             """.format(user.first_name)
