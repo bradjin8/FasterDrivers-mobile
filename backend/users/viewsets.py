@@ -9,7 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from fancy_cherry_36842.settings import SECRET_KEY
+from fancy_cherry_36842.settings import SECRET_KEY, STRIPE_LIVE_MODE, STRIPE_TEST_SECRET_KEY, STRIPE_LIVE_SECRET_KEY
 
 from .models import User
 from .serializers import ChangePasswordSerializer, CustomAuthTokenSerializer, UserProfileSerializer
@@ -22,7 +22,13 @@ import requests
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 import base64
+import stripe
 
+
+if STRIPE_LIVE_MODE == True:
+    stripe.api_key = STRIPE_LIVE_SECRET_KEY
+else:
+    stripe.api_key = STRIPE_TEST_SECRET_KEY
 
 mp = Mixpanel(settings.MIXPANEL_TOKEN)
 
@@ -70,17 +76,35 @@ class UserViewSet(ModelViewSet):
         user = self.get_object()  # Get the user instance
         user_id = str(user.id)  # Convert user ID to string if it's not
 
+        # Get stripe_customer_id based on user type and ensure it's set.
+        stripe_customer_id = None
+        if hasattr(user, 'customer') and user.customer.stripe_account:
+            stripe_customer_id = user.customer.stripe_account.id
+        elif hasattr(user, 'driver') and user.driver.stripe_account:
+            stripe_customer_id = user.driver.stripe_account.id
+        elif hasattr(user, 'restaurant') and user.restaurant.stripe_account:
+            stripe_customer_id = user.restaurant.stripe_account.id
+
         # Perform the delete operation
         response = super(UserViewSet, self).destroy(request, *args, **kwargs)
         
         # Delete user data from Mixpanel only if the delete operation is successful
         if response.status_code == 204:
             mp.people_delete(user_id)
-            if user.type == 'Customer':
+            
+            # Delete Stripe Customer
+            if stripe_customer_id:
+                try:
+                    stripe_customer = stripe.Customer.retrieve(stripe_customer_id)
+                    stripe_customer.delete()
+                except stripe.error.StripeError as e:
+                    return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                    
+            if hasattr(user, 'customer'):
                 mp.track(str(user.id), 'Customer Deleted')
-            elif user.type == 'Driver':
+            elif hasattr(user, 'driver'):
                 mp.track(str(user.id), 'Driver Deleted')
-            elif user.type == 'Restaurant':
+            elif hasattr(user, 'restaurant'):
                 mp.track(str(user.id), 'Restaurant Deleted')
 
         return response
