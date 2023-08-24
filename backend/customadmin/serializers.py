@@ -23,7 +23,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
         fields = (
                     'id', 'name', 'first_name', 'last_name', 'email', 'password', 
                     'is_admin', 'type', 'customer', 'driver', 'restaurant', 'is_active', 'flagged',
-                    'flagged_until'
+                    'flagged_until', 'activated_profile'
                 )
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5},
                         'email': {'required': True},
