@@ -55,13 +55,14 @@ class OrderViewSet(ModelViewSet):
             )
         return super().create(request, *args, **kwargs)
 
+    @action(detail=False, methods=['get'])
     def accept(self, request):
-        ongoing_statuses = ["Accepted", "In Progress", "Driver Assigned", "In Transit"]
+        # ongoing_statuses = ["Accepted", "In Progress", "Driver Assigned", "In Transit"]
         order = Order.objects.get(id=request.query_params.get('order'))
 
         # Check if driver already has an ongoing order
-        if Order.objects.filter(driver=request.user, status__in=ongoing_statuses).exists():
-            return Response("You already have an ongoing order.", status=400)
+        # if Order.objects.filter(driver=request.user, status__in=ongoing_statuses).exists():
+            # return Response("You already have an ongoing order.", status=400)
 
         order.status = "Accepted"
         order.accepted_at = timezone.now()
